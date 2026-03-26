@@ -134,6 +134,39 @@ luxembourg-accessibility-skillset/
 └── README.md
 ```
 
+## Reflections
+
+One thing I've been thinking about lately: **a standardised, shareable JSON format for accessibility audits**.
+
+Right now, every audit tool, every consultancy, every automated checker produces results in its own format — making it nearly impossible to compare, merge, or exchange audit data across tools and teams. A common open standard for audit results (criteria ID, verdict, impact level, remediation, evidence, WCAG/EN 301 549 mapping…) would unlock real cross-compatibility between audit interfaces, APIs, CI pipelines, and reporting dashboards.
+
+If you know of an existing initiative or format working toward this goal (EARL, ACT Rules, something newer?), I'd love to hear about it. And if you have ideas on what such a format should look like — feel free to open an issue or a discussion. This feels like something worth collaborating on.
+
+---
+
+## Contributing
+
+Contributions are welcome! Whether it's improving existing skill instructions, adding code examples for a new framework, fixing criteria references, or helping build the RAPDF skills — all help is appreciated.
+
+**How to contribute:**
+1. Fork the repository
+2. Create a branch: `git checkout -b feat/your-improvement`
+3. Make your changes and test the lookup scripts
+4. Open a Pull Request with a clear description
+
+Please keep the skills focused, accurate, and grounded in the official reference JSON data. When in doubt, the source of truth is the official Luxembourg accessibility repositories.
+
+---
+
+## Contributors
+
+| Name | Role | Links |
+|------|------|-------|
+| [Geoffrey Crofte](https://github.com/geoffreycrofte) | Author of the skillset — UX Lead Designer & Accessibility Officer | [geoffreycrofte.com](https://geoffreycrofte.com) · [LinkedIn](https://linkedin.com/in/geoffreycrofte) |
+| [Alain Vagner](https://github.com/alainvagner) | Publisher of RAWeb & RAAM — [@accessibility-luxembourg](https://github.com/accessibility-luxembourg) | [accessibilite.public.lu](https://accessibilite.public.lu) · [LinkedIn](https://linkedin.com/in/avagner) |
+
+---
+
 ## License
 
 - **Skills and scripts**: See [LICENSE](LICENSE) file
