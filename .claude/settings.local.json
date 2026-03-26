@@ -16,7 +16,16 @@
       "Bash(./scripts/raweb-lookup.sh criterion:*)",
       "Bash(./scripts/raweb-lookup.sh methodology:*)",
       "Bash(./scripts/raweb-lookup.sh search:*)",
-      "Bash(./scripts/raweb-lookup.sh glossary:*)"
+      "Bash(./scripts/raweb-lookup.sh glossary:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(chmod +x scripts/raam-lookup.sh)",
+      "Bash(./scripts/raam-lookup.sh topics:*)",
+      "Bash(./scripts/raam-lookup.sh stats:*)",
+      "Bash(./scripts/raam-lookup.sh criterion:*)",
+      "Bash(./scripts/raam-lookup.sh methodology:*)",
+      "Bash(./scripts/raam-lookup.sh search:*)",
+      "Bash(./scripts/raam-lookup.sh glossary:*)"
     ]
   }
 }
