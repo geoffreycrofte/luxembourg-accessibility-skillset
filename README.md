@@ -1,4 +1,4 @@
-# Luxembourg Accessibility Skillset
+# Accessibility Skillset
 
 Agent skills for [RAWeb](https://accessibilite.public.lu/en/raweb1.1/index.html), [RAAM](https://accessibilite.public.lu/en/raam1.1/index.html), and RAPDF — Luxembourg's official accessibility frameworks based on EN 301 549 and WCAG 2.1.
 
