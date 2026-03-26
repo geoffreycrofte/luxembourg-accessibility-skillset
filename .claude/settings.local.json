@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:skills.sh)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cp /tmp/raweb-source/en/json/criteres.json references/raweb/)",
+      "Bash(cp /tmp/raweb-source/en/json/glossaire.json references/raweb/)",
+      "Bash(cp /tmp/raweb-source/en/json/methodologies.json references/raweb/)",
+      "Bash(cp /tmp/raweb-source/en/themes.json references/raweb/)",
+      "Bash(cp /tmp/raweb-source/en/niveaux.json references/raweb/)",
+      "Bash(chmod +x scripts/raweb-lookup.sh)",
+      "Bash(./scripts/raweb-lookup.sh topics:*)",
+      "Bash(./scripts/raweb-lookup.sh stats:*)",
+      "Bash(./scripts/raweb-lookup.sh criterion:*)",
+      "Bash(./scripts/raweb-lookup.sh methodology:*)",
+      "Bash(./scripts/raweb-lookup.sh search:*)",
+      "Bash(./scripts/raweb-lookup.sh glossary:*)"
+    ]
+  }
+}
