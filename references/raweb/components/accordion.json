@@ -1,0 +1,35 @@
+{
+  "slug": "accordion",
+  "name": "Accordion",
+  "description": "A vertically stacked set of interactive headings that each contain a title representing a section of content. Users can expand or collapse associated content panels.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Expands collapsed panel; may collapse other panels if only one can be expanded" },
+    { "key": "Space", "action": "Expands collapsed panel; may collapse other panels if only one can be expanded" },
+    { "key": "Tab", "action": "Moves focus to next focusable element in page tab sequence" },
+    { "key": "Shift + Tab", "action": "Moves focus to previous focusable element in page tab sequence" },
+    { "key": "Down Arrow", "action": "(Optional) Moves focus to next accordion header; wraps from last to first" },
+    { "key": "Up Arrow", "action": "(Optional) Moves focus to previous accordion header; wraps from first to last" },
+    { "key": "Home", "action": "(Optional) Moves focus to first accordion header" },
+    { "key": "End", "action": "(Optional) Moves focus to last accordion header" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "button", "element": "accordion header control", "description": "Applied to each accordion header title element" },
+      { "role": "heading", "element": "element wrapping the button", "description": "Wraps the button element with appropriate aria-level" },
+      { "role": "region", "element": "accordion panel container", "description": "Applied to the container for each panel's content" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-expanded", "element": "accordion header button", "description": "true when panel is visible; false when hidden" },
+      { "attribute": "aria-controls", "element": "accordion header button", "description": "References the ID of the associated panel content element" },
+      { "attribute": "aria-level", "element": "heading element", "description": "Set to appropriate heading level in the document structure" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-disabled", "element": "accordion header button", "description": "true when the panel is visible and cannot be collapsed" },
+      { "attribute": "aria-labelledby", "element": "accordion panel (region)", "description": "References the ID of the header button that controls the panel" }
+    ]
+  },
+  "notes": [
+    "Prefer native <button> inside heading elements (<h2>, <h3>, etc.) over ARIA roles",
+    "The panel content should be hidden with display:none or hidden attribute when collapsed"
+  ]
+}

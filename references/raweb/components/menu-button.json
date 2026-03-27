@@ -1,0 +1,28 @@
+{
+  "slug": "menu-button",
+  "name": "Menu Button",
+  "description": "A button that opens a menu, typically styled with a downward-pointing arrow to indicate that activation will display a list of menu choices.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Opens the menu and places focus on the first menu item" },
+    { "key": "Space", "action": "Opens the menu and places focus on the first menu item" },
+    { "key": "Down Arrow", "action": "(Optional) Opens the menu and focuses the first item" },
+    { "key": "Up Arrow", "action": "(Optional) Opens the menu and focuses the last item" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "button", "element": "button element", "description": "The trigger button" },
+      { "role": "menu", "element": "menu container", "description": "The popup menu" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-haspopup", "element": "button", "description": "Set to 'menu' or true" },
+      { "attribute": "aria-expanded", "element": "button", "description": "true when menu is displayed; false when hidden" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-controls", "element": "button", "description": "References the menu element ID" }
+    ]
+  },
+  "notes": [
+    "Menu items follow the menu/menubar pattern for keyboard interaction",
+    "When the menu closes, focus returns to the button"
+  ]
+}

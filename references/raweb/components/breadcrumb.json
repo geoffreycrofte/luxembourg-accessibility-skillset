@@ -1,0 +1,21 @@
+{
+  "slug": "breadcrumb",
+  "name": "Breadcrumb",
+  "description": "A navigation trail of links to parent pages of the current page in hierarchical order, helping users understand their location within a website.",
+  "keyboard_interactions": [],
+  "aria": {
+    "roles": [
+      { "role": "navigation", "element": "breadcrumb container", "description": "The breadcrumb trail is contained within a navigation landmark" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-label", "element": "nav element", "description": "Provides accessible name (e.g., 'Breadcrumb')" },
+      { "attribute": "aria-current", "element": "link representing current page", "description": "Set to 'page' to identify the current page link" }
+    ],
+    "optional_attributes": []
+  },
+  "notes": [
+    "Use an ordered list (<ol>) inside <nav> for proper structure",
+    "Visual separators between links should be added via CSS, not DOM content",
+    "The current page may be rendered as plain text instead of a link"
+  ]
+}

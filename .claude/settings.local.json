@@ -25,7 +25,11 @@
       "Bash(./scripts/raam-lookup.sh criterion:*)",
       "Bash(./scripts/raam-lookup.sh methodology:*)",
       "Bash(./scripts/raam-lookup.sh search:*)",
-      "Bash(./scripts/raam-lookup.sh glossary:*)"
+      "Bash(./scripts/raam-lookup.sh glossary:*)",
+      "WebFetch(domain:www.w3.org)",
+      "Bash(chmod +x /Users/CRG/Git/luxembourg-accessibility-skillset/scripts/raweb-component-lookup.sh)",
+      "Bash(bash scripts/raweb-component-lookup.sh find \"modal\")",
+      "Bash(bash scripts/raweb-component-lookup.sh show dialog-modal)"
     ]
   }
 }

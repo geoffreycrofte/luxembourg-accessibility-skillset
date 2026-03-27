@@ -1,0 +1,39 @@
+{
+  "slug": "tabs",
+  "name": "Tabs",
+  "description": "A set of layered sections (tab panels) that display one panel at a time, with tab elements that activate corresponding panels.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus into tab list on active tab; next Tab exits to tab panel" },
+    { "key": "Left Arrow", "action": "Moves focus to previous tab (horizontal); wraps from first to last" },
+    { "key": "Right Arrow", "action": "Moves focus to next tab (horizontal); wraps from last to first" },
+    { "key": "Up Arrow", "action": "Moves focus to previous tab (vertical); wraps" },
+    { "key": "Down Arrow", "action": "Moves focus to next tab (vertical); wraps" },
+    { "key": "Space or Enter", "action": "Activates focused tab if not auto-activated on focus" },
+    { "key": "Home", "action": "(Optional) Moves focus to first tab" },
+    { "key": "End", "action": "(Optional) Moves focus to last tab" },
+    { "key": "Delete", "action": "(Optional) Closes the current tab and panel if deletable" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "tablist", "element": "tab container", "description": "Groups the tabs" },
+      { "role": "tab", "element": "each tab element", "description": "Individual tab" },
+      { "role": "tabpanel", "element": "each content panel", "description": "Content associated with a tab" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-selected", "element": "tab", "description": "true on active tab; false on inactive tabs" },
+      { "attribute": "aria-labelledby", "element": "tabpanel", "description": "References the associated tab element" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "tablist", "description": "Accessible name for the tablist" },
+      { "attribute": "aria-controls", "element": "tab", "description": "References the associated tabpanel" },
+      { "attribute": "aria-orientation", "element": "tablist", "description": "vertical or horizontal (default)" },
+      { "attribute": "aria-haspopup", "element": "tab", "description": "menu or true if the tab has a popup" }
+    ]
+  },
+  "notes": [
+    "Only one tab panel should be visible at a time",
+    "Consider automatic activation (focus = activate) for faster navigation",
+    "If tabpanel has no focusable elements, set tabindex='0' on the panel itself",
+    "Inactive tabs should have tabindex='-1'"
+  ]
+}

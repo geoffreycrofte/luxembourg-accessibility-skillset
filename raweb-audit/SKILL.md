@@ -8,7 +8,7 @@ description: >
   test procedures. Default target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.0.0
+  version: 1.2.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -47,6 +47,32 @@ bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh glossary "<term>"
 ```
 
 Raw JSON files: `${CLAUDE_SKILL_DIR}/../references/raweb/`
+
+### Component pattern references (WAI-ARIA APG)
+
+When auditing interactive components (dialogs, tabs, menus, carousels, etc.),
+verify their implementation against the correct WAI-ARIA pattern:
+
+```bash
+# Find the expected pattern for a component
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh find "<keyword>"
+
+# Show full expected keyboard + ARIA spec for a component
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh show <slug>
+
+# Check which patterns use a specific ARIA role
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh roles "<role>"
+
+# List all 30 available patterns
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh list
+```
+
+Individual pattern files: `${CLAUDE_SKILL_DIR}/../references/raweb/components/<slug>.json`
+
+Each pattern file contains the expected `keyboard_interactions`, `aria.roles`,
+`aria.required_attributes`, and `aria.optional_attributes` as defined by the APG.
+Use these as the **source of truth** when checking whether a component's ARIA
+implementation is correct and complete (RAWeb criteria 7.1, 7.3, 12.8).
 
 ---
 
@@ -341,8 +367,9 @@ grep -rn 'color:.*red\|color:.*green\|text-red\|text-green\|text-danger\|text-su
 
 1. **Look up the exact criterion** before rendering a verdict — do not rely on memory
 2. **Apply the official test methodology** from `methodologies.json`
-3. **Use precise RAWeb criterion numbers** (e.g., "RAWeb 11.1", not just "WCAG 1.3.1")
-4. **Include the WCAG mapping** for cross-reference (found in the criterion's `references`)
-5. **Provide actionable remediation** with code examples
-6. **Distinguish between Level A and AA** violations — both are required for conformance, but Level A failures are more critical
-7. **Note when automated testing is insufficient** — many criteria require manual verification (contrast on images, relevance of alternatives, etc.)
+3. **Check the expected ARIA pattern** for interactive components: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh show <slug>` — verify keyboard interactions, required roles, and required attributes match the APG specification
+4. **Use precise RAWeb criterion numbers** (e.g., "RAWeb 11.1", not just "WCAG 1.3.1")
+5. **Include the WCAG mapping** for cross-reference (found in the criterion's `references`)
+6. **Provide actionable remediation** with code examples — when the fix involves an ARIA widget, include the correct pattern from the component reference
+7. **Distinguish between Level A and AA** violations — both are required for conformance, but Level A failures are more critical
+8. **Note when automated testing is insufficient** — many criteria require manual verification (contrast on images, relevance of alternatives, etc.)

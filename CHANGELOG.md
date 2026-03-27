@@ -1,0 +1,43 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [1.2.0] - 2026-03-27
+
+### Added
+- **WAI-ARIA APG component patterns** • 30 individual JSON files in `references/raweb/components/`, each containing keyboard interactions, ARIA roles, required/optional attributes, and implementation notes. Extracted from the [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/).
+- **Component pattern index** (`references/raweb/components/index.json`) • keyword-to-slug mapping for fast pattern lookup (200+ keywords across 30 patterns).
+- **Component lookup script** (`scripts/raweb-component-lookup.sh`) • CLI tool to find, show, list, and search component patterns by keyword or ARIA role.
+- **Contributing section** in README with contribution guidelines.
+- **Contributors section** in README crediting project author and reference data publishers.
+- **Reflections section** in README about standardised audit result formats.
+
+### Changed
+- **raweb-code/SKILL.md** • Replaced static "Component patterns quick reference" table (10 entries) with dynamic component lookup system (30 patterns). Updated "When in doubt" section with component lookup instructions.
+- **raweb-audit/SKILL.md** • Added "Component pattern references" section with lookup commands. Updated "When auditing, ALWAYS" section to include ARIA pattern verification.
+- **README.md** • Updated repository structure to reflect new `components/` directory and `raweb-component-lookup.sh` script. Added component lookup examples to "Lookup scripts" section.
+
+### Fixed
+- **macOS compatibility** • Fixed `${1,,}` bash 4+ syntax in `raweb-component-lookup.sh` to use `tr` for bash 3 compatibility (macOS default shell).
+
+## [1.1.0] - 2026-03-26
+
+### Added
+- **RAAM 1.1 skills** • `raam-code` and `raam-audit` for mobile accessibility (iOS/Android/React Native/Flutter).
+- **RAAM reference data** • `criteres.json`, `glossaire.json`, `methodologies.json` in `references/raam/`.
+- **RAAM lookup script** (`scripts/raam-lookup.sh`) • CLI tool for querying RAAM criteria, methodologies, and glossary.
+
+## [1.0.0] - 2026-03-26
+
+### Added
+- **RAWeb 1.1 skills** • `raweb-code` (accessible web development guide) and `raweb-audit` (accessibility audit skill).
+- **RAWeb reference data** • `criteres.json`, `glossaire.json`, `methodologies.json`, `themes.json`, `niveaux.json` in `references/raweb/`, sourced from [accessibility-luxembourg/ReferentielAccessibiliteWeb](https://github.com/accessibility-luxembourg/ReferentielAccessibiliteWeb).
+- **RAWeb lookup script** (`scripts/raweb-lookup.sh`) • CLI tool for querying RAWeb criteria, test methodologies, glossary, and conformance levels.
+- **README** with installation instructions (npx + manual), usage guide, and reference data documentation.
+- **LICENSE** file.
+
+[Unreleased]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/releases/tag/v1.0.0

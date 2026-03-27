@@ -1,0 +1,42 @@
+{
+  "slug": "menubar",
+  "name": "Menu and Menubar",
+  "description": "A menu offers a list of choices (actions or functions), while a menubar is a visually persistent, typically horizontal menu providing consistent access to commands.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Opens submenu and focuses first item; or activates item and closes menu" },
+    { "key": "Space", "action": "(Optional) Toggles menuitemcheckbox; checks menuitemradio; opens submenu; or activates item" },
+    { "key": "Down Arrow", "action": "In menubar: opens submenu. In menu: moves focus to next item" },
+    { "key": "Up Arrow", "action": "In menu: moves focus to previous item. In menubar (optional): opens submenu, focuses last item" },
+    { "key": "Right Arrow", "action": "In menubar: moves to next item. In submenu: opens child submenu or closes current and moves to next menubar item" },
+    { "key": "Left Arrow", "action": "In menubar: moves to previous item. In submenu: closes submenu, returns to parent" },
+    { "key": "Home", "action": "Moves focus to first item" },
+    { "key": "End", "action": "Moves focus to last item" },
+    { "key": "Escape", "action": "Closes the menu and returns focus to invoking element" },
+    { "key": "Printable Character", "action": "(Optional) Moves focus to next item beginning with that character" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "menu", "element": "dropdown container", "description": "A menu of choices" },
+      { "role": "menubar", "element": "horizontal bar", "description": "A persistent menu bar" },
+      { "role": "menuitem", "element": "each item", "description": "Standard menu item" },
+      { "role": "menuitemcheckbox", "element": "toggleable item", "description": "Checkable menu item" },
+      { "role": "menuitemradio", "element": "exclusive choice item", "description": "Radio-style menu item" },
+      { "role": "separator", "element": "divider", "description": "Visual separator between groups" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-haspopup", "element": "menuitem with submenu", "description": "Set to 'menu' or true" },
+      { "attribute": "aria-expanded", "element": "menuitem with submenu", "description": "false when hidden; true when visible" },
+      { "attribute": "aria-labelledby or aria-label", "element": "menu or menubar", "description": "Accessible name" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-checked", "element": "menuitemcheckbox or menuitemradio", "description": "true when checked" },
+      { "attribute": "aria-disabled", "element": "menuitem", "description": "true for disabled items" },
+      { "attribute": "aria-orientation", "element": "menu or menubar", "description": "vertical or horizontal" }
+    ]
+  },
+  "notes": [
+    "Menus are for application-style actions, not site navigation — use <nav> for navigation",
+    "Focus management uses roving tabindex or aria-activedescendant",
+    "Only the first menubar item should have tabindex='0'; all others should be -1"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "landmarks",
+  "name": "Landmarks",
+  "description": "Eight landmark roles that identify major sections of a page, helping assistive technology users understand page structure typically conveyed visually.",
+  "keyboard_interactions": [],
+  "aria": {
+    "roles": [
+      { "role": "banner", "element": "page header", "description": "Site-wide header, typically containing logo and nav. Use <header> (not inside <article>/<section>)" },
+      { "role": "navigation", "element": "nav sections", "description": "Major navigation blocks. Use <nav>" },
+      { "role": "main", "element": "main content area", "description": "Primary content. Use <main>. Only one per page" },
+      { "role": "complementary", "element": "supporting content", "description": "Content related but separate from main. Use <aside>" },
+      { "role": "contentinfo", "element": "page footer", "description": "Site-wide footer info. Use <footer> (not inside <article>/<section>)" },
+      { "role": "form", "element": "form landmark", "description": "A form when it has an accessible name. Use <form> with aria-label/aria-labelledby" },
+      { "role": "region", "element": "generic landmark", "description": "A perceivable section with accessible name. Use <section> with aria-label/aria-labelledby" },
+      { "role": "search", "element": "search functionality", "description": "Search facility. Use <search> element or role='search'" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "navigation, form, region, complementary (when multiple)", "description": "Unique accessible name to distinguish multiple landmarks of same type" }
+    ],
+    "optional_attributes": []
+  },
+  "notes": [
+    "Prefer HTML5 semantic elements over ARIA roles: <header>, <nav>, <main>, <aside>, <footer>, <section>, <form>, <search>",
+    "When multiple landmarks of the same type exist, each must have a unique accessible name",
+    "All page content should be within a landmark"
+  ]
+}

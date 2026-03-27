@@ -1,0 +1,36 @@
+{
+  "slug": "slider-multithumb",
+  "name": "Slider (Multi-Thumb)",
+  "description": "An extension of the slider with two or more thumbs on a single rail, where each thumb controls one value such as a price range.",
+  "keyboard_interactions": [
+    { "key": "Right Arrow", "action": "Increases focused thumb's value by one step" },
+    { "key": "Up Arrow", "action": "Increases focused thumb's value by one step" },
+    { "key": "Left Arrow", "action": "Decreases focused thumb's value by one step" },
+    { "key": "Down Arrow", "action": "Decreases focused thumb's value by one step" },
+    { "key": "Home", "action": "Sets focused thumb to its minimum" },
+    { "key": "End", "action": "Sets focused thumb to its maximum" },
+    { "key": "Page Up", "action": "(Optional) Increases by a larger step" },
+    { "key": "Page Down", "action": "(Optional) Decreases by a larger step" },
+    { "key": "Tab", "action": "Moves focus between thumbs; tab order stays constant regardless of value" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "slider", "element": "each thumb", "description": "Each thumb is a slider" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-valuenow", "element": "each thumb", "description": "Current value of this thumb" },
+      { "attribute": "aria-valuemin", "element": "each thumb", "description": "Minimum; updated dynamically when dependent on another thumb" },
+      { "attribute": "aria-valuemax", "element": "each thumb", "description": "Maximum; updated dynamically when dependent on another thumb" },
+      { "attribute": "aria-labelledby or aria-label", "element": "each thumb", "description": "Unique accessible name for each thumb" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-valuetext", "element": "thumb", "description": "Human-readable value string" },
+      { "attribute": "aria-orientation", "element": "thumb", "description": "vertical if vertical; default is horizontal" }
+    ]
+  },
+  "notes": [
+    "Each thumb must have a distinct accessible name (e.g., 'Minimum price', 'Maximum price')",
+    "When thumbs cannot pass each other, dynamically update aria-valuemin/max as constraints change",
+    "Tab order between thumbs must remain constant regardless of visual position"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "table",
+  "name": "Table",
+  "description": "A static tabular structure containing rows and cells. It is not an interactive widget — it presents information without interactivity.",
+  "keyboard_interactions": [],
+  "aria": {
+    "roles": [
+      { "role": "table", "element": "container", "description": "The table container" },
+      { "role": "row", "element": "each row", "description": "Row container" },
+      { "role": "cell", "element": "data cells", "description": "Data cells" },
+      { "role": "columnheader", "element": "column header cells", "description": "Column headers" },
+      { "role": "rowheader", "element": "row header cells", "description": "Row headers" },
+      { "role": "rowgroup", "element": "row grouping", "description": "Groups rows (thead, tbody, tfoot)" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "table", "description": "Accessible name for the table" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-describedby", "element": "table", "description": "References table description" },
+      { "attribute": "aria-sort", "element": "column/row header", "description": "Indicates sorted columns or rows" },
+      { "attribute": "aria-colcount", "element": "table", "description": "Total columns" },
+      { "attribute": "aria-rowcount", "element": "table", "description": "Total rows" },
+      { "attribute": "aria-colindex", "element": "cell", "description": "Cell column position" },
+      { "attribute": "aria-rowindex", "element": "row/cell", "description": "Cell row position" }
+    ]
+  },
+  "notes": [
+    "Always prefer native <table>, <tr>, <th>, <td> over ARIA table roles",
+    "For interactive tabular data, use the grid pattern instead",
+    "Use <caption> for the table name and <th scope='col/row'> for headers"
+  ]
+}

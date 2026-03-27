@@ -1,0 +1,20 @@
+{
+  "slug": "alert",
+  "name": "Alert",
+  "description": "Displays a brief, important message that attracts the user's attention without interrupting the user's task. Dynamically rendered alerts are automatically announced by screen readers.",
+  "keyboard_interactions": [],
+  "aria": {
+    "roles": [
+      { "role": "alert", "element": "alert container", "description": "Identifies the element as an alert. Implicitly sets aria-live=assertive and aria-atomic=true" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "alert container", "description": "Set to 'alert'" }
+    ],
+    "optional_attributes": []
+  },
+  "notes": [
+    "Alert is not interactive — no keyboard interaction needed",
+    "The alert element must be present in the DOM before injecting the message for screen readers to announce it",
+    "Use for time-sensitive, important messages; for less urgent info use role=status with aria-live=polite"
+  ]
+}

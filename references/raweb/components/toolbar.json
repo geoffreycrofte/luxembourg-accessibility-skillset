@@ -1,0 +1,30 @@
+{
+  "slug": "toolbar",
+  "name": "Toolbar",
+  "description": "A container grouping controls (buttons, menubuttons, checkboxes) that reduces tab stops by treating the toolbar as a single tab stop with arrow key navigation.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus into toolbar on first or previously focused control" },
+    { "key": "Shift + Tab", "action": "Moves focus out of the toolbar" },
+    { "key": "Left Arrow", "action": "Moves focus to previous control (horizontal); optionally wraps" },
+    { "key": "Right Arrow", "action": "Moves focus to next control (horizontal); optionally wraps" },
+    { "key": "Up Arrow", "action": "Moves focus to previous control (vertical)" },
+    { "key": "Down Arrow", "action": "Moves focus to next control (vertical)" },
+    { "key": "Home", "action": "(Optional) Moves focus to first control" },
+    { "key": "End", "action": "(Optional) Moves focus to last control" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "toolbar", "element": "container", "description": "The toolbar container" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "toolbar", "description": "Accessible name for the toolbar" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-orientation", "element": "toolbar", "description": "vertical for vertical; default is horizontal" }
+    ]
+  },
+  "notes": [
+    "Use roving tabindex for focus management within the toolbar",
+    "Disabled controls should be focusable but not operable"
+  ]
+}

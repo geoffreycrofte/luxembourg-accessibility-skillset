@@ -9,7 +9,7 @@ description: >
   Default conformance target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.0.0
+  version: 1.2.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -419,24 +419,79 @@ button.addEventListener('keydown', (e) => {
 
 ---
 
-## Component patterns quick reference
+## Component patterns (WAI-ARIA APG)
 
-When building the following components, always apply these patterns:
+When building interactive components, look up the correct ARIA pattern from the
+local reference data BEFORE writing any code. The component library contains 30
+patterns extracted from the [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/)
+with keyboard interactions, required/optional ARIA attributes, and implementation notes.
 
-| Component | Key RAWeb criteria | Mandatory pattern |
-|-----------|-------------------|-------------------|
-| Modal/dialog | 7.1, 7.3, 12.8 | `role="dialog"`, `aria-modal="true"`, focus trap, Escape to close |
-| Tabs | 7.1, 9.1, 12.8 | `role="tablist/tab/tabpanel"`, arrow key navigation, `aria-selected` |
-| Accordion | 7.1, 9.1 | `<button aria-expanded>` + `aria-controls`, Enter/Space to toggle |
-| Dropdown menu | 7.1, 12.8 | `aria-expanded`, `aria-haspopup`, arrow keys, Escape to close |
-| Toast/notification | 7.4 | `role="status"` or `role="alert"`, `aria-live="polite"` or `"assertive"` |
-| Carousel/slider | 7.1, 7.5, 13.8 | Pause control, keyboard navigation, `aria-roledescription="carousel"` |
-| Autocomplete | 7.1, 11.1 | `role="combobox"`, `aria-expanded`, `aria-activedescendant`, `aria-autocomplete` |
-| Data table | 5.1–5.8 | `<caption>`, `<th scope>`, `headers` for complex tables |
-| Pagination | 12.8 | `<nav aria-label="Pagination">`, `aria-current="page"` on active |
-| Breadcrumbs | 12.8, 9.2 | `<nav aria-label="Breadcrumb">`, `aria-current="page"` on last item |
+### How to use
 
-For detailed WAI-ARIA patterns, reference: https://www.w3.org/WAI/ARIA/apg/patterns/
+```bash
+# Find the right pattern by keyword (e.g., "modal", "dropdown", "toggle")
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh find "<keyword>"
+
+# Show full pattern details (keyboard, ARIA roles, attributes, notes)
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh show <slug>
+
+# List all 30 available patterns
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh list
+
+# Find patterns that use a specific ARIA role
+bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh roles "<role>"
+```
+
+### Workflow
+
+1. **Identify** the component the developer is building (dialog, tabs, slider, etc.)
+2. **Search** using `find` with the most natural keyword the developer used
+3. **Load** the full pattern with `show <slug>` to get keyboard interactions and ARIA requirements
+4. **Cross-reference** with RAWeb criteria — especially Topics 7 (Scripts), 11 (Forms), and 12 (Navigation)
+5. **Apply** the pattern, preferring native HTML elements over ARIA roles when possible
+
+### Available patterns
+
+The individual pattern files are located at:
+`${CLAUDE_SKILL_DIR}/../references/raweb/components/<slug>.json`
+
+Each file contains:
+- `description` — What the component is
+- `keyboard_interactions` — All required and optional keyboard behaviours
+- `aria.roles` — Which ARIA roles to use and where
+- `aria.required_attributes` — Attributes that MUST be present
+- `aria.optional_attributes` — Attributes to add when applicable
+- `notes` — Implementation tips and common pitfalls
+
+### Quick mapping: common requests → pattern slugs
+
+| When the developer says... | Look up slug |
+|---------------------------|-------------|
+| modal, dialog, popup, overlay, lightbox | `dialog-modal` |
+| tabs, tab panel, tabbed interface | `tabs` |
+| accordion, collapsible, FAQ | `accordion` |
+| dropdown menu, context menu, submenu | `menubar` or `menu-button` |
+| toast, notification, flash message | `alert` |
+| confirm dialog, delete confirmation | `alertdialog` |
+| carousel, slideshow, image gallery | `carousel` |
+| autocomplete, typeahead, combobox | `combobox` |
+| select, dropdown list, listbox | `listbox` |
+| breadcrumb, navigation trail | `breadcrumb` |
+| tooltip, hint, hover text | `tooltip` |
+| toggle, switch, on/off | `switch` |
+| slider, range, volume control | `slider` or `slider-multithumb` |
+| tree, file browser, nested list | `treeview` |
+| data grid, spreadsheet, editable table | `grid` |
+| static table, data table | `table` |
+| toolbar, action bar, button group | `toolbar` |
+| radio buttons, option group | `radio` |
+| checkbox, check all | `checkbox` |
+| show/hide, details, read more | `disclosure` |
+| spinner, number input, stepper | `spinbutton` |
+| meter, gauge, battery level | `meter` |
+| feed, infinite scroll, timeline | `feed` |
+| page structure, landmarks | `landmarks` |
+| split view, resizable panes | `windowsplitter` |
 
 ---
 
@@ -483,8 +538,10 @@ Before considering any code complete, verify:
 
 ## When in doubt
 
-1. Look up the specific RAWeb criterion: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh criterion <topic.criterion>`
-2. Check the test methodology: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh methodology <topic.criterion.test>`
-3. Consult the glossary for precise definitions: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh glossary "<term>"`
-4. Default to the most accessible approach — when two implementations are possible, choose the one with better assistive technology support
-5. Prefer native HTML semantics over ARIA: a `<button>` is better than `<div role="button">`
+1. **Look up the RAWeb criterion**: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh criterion <topic.criterion>`
+2. **Check the test methodology**: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh methodology <topic.criterion.test>`
+3. **Look up the ARIA pattern** for a component: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-component-lookup.sh find "<keyword>"` then `show <slug>`
+4. **Consult the glossary** for precise definitions: `bash ${CLAUDE_SKILL_DIR}/../scripts/raweb-lookup.sh glossary "<term>"`
+5. Default to the most accessible approach — when two implementations are possible, choose the one with better assistive technology support
+6. Prefer native HTML semantics over ARIA: a `<button>` is better than `<div role="button">`
+7. When building an interactive widget, ALWAYS load the APG pattern first — do not guess ARIA attributes from memory

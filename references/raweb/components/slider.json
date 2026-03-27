@@ -1,0 +1,34 @@
+{
+  "slug": "slider",
+  "name": "Slider",
+  "description": "An input where the user selects a value from within a given range by moving a thumb along a bar or track.",
+  "keyboard_interactions": [
+    { "key": "Right Arrow", "action": "Increases value by one step" },
+    { "key": "Up Arrow", "action": "Increases value by one step" },
+    { "key": "Left Arrow", "action": "Decreases value by one step" },
+    { "key": "Down Arrow", "action": "Decreases value by one step" },
+    { "key": "Home", "action": "Sets to minimum value" },
+    { "key": "End", "action": "Sets to maximum value" },
+    { "key": "Page Up", "action": "(Optional) Increases by a larger step" },
+    { "key": "Page Down", "action": "(Optional) Decreases by a larger step" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "slider", "element": "thumb element", "description": "The draggable thumb" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-valuenow", "element": "slider", "description": "Current value" },
+      { "attribute": "aria-valuemin", "element": "slider", "description": "Minimum allowed value" },
+      { "attribute": "aria-valuemax", "element": "slider", "description": "Maximum allowed value" },
+      { "attribute": "aria-labelledby or aria-label", "element": "slider", "description": "Accessible name" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-valuetext", "element": "slider", "description": "Human-readable string when numeric value is not intuitive" },
+      { "attribute": "aria-orientation", "element": "slider", "description": "vertical for vertical sliders; default is horizontal" }
+    ]
+  },
+  "notes": [
+    "Prefer native <input type='range'> when possible",
+    "The thumb must be focusable (tabindex='0')"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "checkbox",
+  "name": "Checkbox",
+  "description": "A widget that allows users to toggle between checked and unchecked states (dual-state), or checked, unchecked, and partially checked states (tri-state).",
+  "keyboard_interactions": [
+    { "key": "Space", "action": "Toggles the checkbox state between checked, unchecked, and (if tri-state) partially checked" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "checkbox", "element": "checkbox element", "description": "Identifies the element as a checkbox" },
+      { "role": "group", "element": "checkbox group container", "description": "Groups related checkboxes together" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-checked", "element": "checkbox element", "description": "true when checked; false when unchecked; 'mixed' when partially checked (tri-state)" },
+      { "attribute": "accessible name", "element": "checkbox element", "description": "Provided via visible text content, aria-labelledby, or aria-label" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-describedby", "element": "checkbox element", "description": "References additional descriptive text" },
+      { "attribute": "aria-labelledby", "element": "checkbox group", "description": "References the visible label for the group" }
+    ]
+  },
+  "notes": [
+    "Prefer native <input type='checkbox'> over ARIA checkbox",
+    "For tri-state checkboxes controlling a group, use aria-checked='mixed' when some but not all children are checked"
+  ]
+}

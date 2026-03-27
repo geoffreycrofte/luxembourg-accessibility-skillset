@@ -1,0 +1,40 @@
+{
+  "slug": "combobox",
+  "name": "Combobox",
+  "description": "An input widget with an associated popup (listbox, grid, tree, or dialog) that helps users set a value by selecting from a collection of possible values, supporting editable and select-only variants.",
+  "keyboard_interactions": [
+    { "key": "Down Arrow", "action": "Opens popup if closed; moves focus to first item or item after auto-selected suggestion" },
+    { "key": "Up Arrow", "action": "(Optional) Opens popup and places focus on the last item" },
+    { "key": "Escape", "action": "Dismisses the popup if visible; optionally clears the value" },
+    { "key": "Enter", "action": "Accepts the current autocomplete suggestion or selected value" },
+    { "key": "Alt + Down Arrow", "action": "(Optional) Displays the popup without moving focus into it" },
+    { "key": "Alt + Up Arrow", "action": "(Optional) Closes the popup or returns focus to combobox" },
+    { "key": "Down Arrow (in popup)", "action": "Moves focus to next option" },
+    { "key": "Up Arrow (in popup)", "action": "Moves focus to previous option" },
+    { "key": "Home (in popup)", "action": "(Optional) Moves focus to first option" },
+    { "key": "End (in popup)", "action": "(Optional) Moves focus to last option" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "combobox", "element": "input element", "description": "Identifies the element as a combobox" },
+      { "role": "listbox", "element": "popup container (default)", "description": "The default popup role" },
+      { "role": "option", "element": "each item in listbox popup", "description": "Individual selectable items" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "input element", "description": "Set to 'combobox'" },
+      { "attribute": "aria-controls", "element": "combobox element", "description": "References the popup element ID" },
+      { "attribute": "aria-expanded", "element": "combobox element", "description": "false when popup is hidden; true when visible" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-haspopup", "element": "combobox element", "description": "Set to 'grid', 'tree', or 'dialog' if popup is not a listbox" },
+      { "attribute": "aria-activedescendant", "element": "combobox element", "description": "References the focused element in the popup when DOM focus remains on combobox" },
+      { "attribute": "aria-autocomplete", "element": "combobox element", "description": "'none', 'list' (filtered suggestions), or 'both' (filtered + inline completion)" },
+      { "attribute": "aria-selected", "element": "option in popup", "description": "true on the highlighted/selected item" }
+    ]
+  },
+  "notes": [
+    "The combobox is one of the most complex ARIA patterns — test thoroughly with screen readers",
+    "Popup type can be listbox, grid, tree, or dialog — listbox is most common",
+    "For select-only comboboxes, type-ahead character matching should be supported"
+  ]
+}

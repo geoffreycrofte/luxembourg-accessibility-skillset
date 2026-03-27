@@ -1,0 +1,41 @@
+{
+  "slug": "treeview",
+  "name": "Tree View",
+  "description": "A hierarchical list where parent items can be expanded and collapsed to show or hide child items, supporting single-select and multi-select modes.",
+  "keyboard_interactions": [
+    { "key": "Right Arrow", "action": "Opens closed node; moves to first child on open node; no-op on end node" },
+    { "key": "Left Arrow", "action": "Closes open node; moves to parent from child node" },
+    { "key": "Down Arrow", "action": "Moves focus to next visible node" },
+    { "key": "Up Arrow", "action": "Moves focus to previous visible node" },
+    { "key": "Home", "action": "Moves focus to first node" },
+    { "key": "End", "action": "Moves focus to last visible node" },
+    { "key": "Enter", "action": "Activates the focused node" },
+    { "key": "Type-ahead", "action": "Moves focus to node matching typed character(s)" },
+    { "key": "* (Asterisk)", "action": "(Optional) Expands all sibling nodes at current level" },
+    { "key": "Space (multi-select)", "action": "Toggles selection of focused node" },
+    { "key": "Control + A (multi-select)", "action": "Selects/deselects all nodes" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "tree", "element": "container", "description": "The tree container" },
+      { "role": "treeitem", "element": "each node", "description": "Individual tree node" },
+      { "role": "group", "element": "child container of parent nodes", "description": "Groups children under a parent" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-expanded", "element": "parent nodes", "description": "true when open; false when closed; omit on end nodes" },
+      { "attribute": "aria-labelledby or aria-label", "element": "tree", "description": "Accessible name for the tree" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-multiselectable", "element": "tree", "description": "true for multi-select trees" },
+      { "attribute": "aria-selected", "element": "treeitem", "description": "true on selected nodes; false on unselected" },
+      { "attribute": "aria-level", "element": "treeitem", "description": "Nesting depth level (for dynamic trees)" },
+      { "attribute": "aria-setsize", "element": "treeitem", "description": "Number of siblings at this level" },
+      { "attribute": "aria-posinset", "element": "treeitem", "description": "Position within the set" }
+    ]
+  },
+  "notes": [
+    "Use nested <ul>/<li> structure as the DOM base",
+    "Only the focused node should have tabindex='0'; all others should be -1",
+    "Aria-checked is an alternative to aria-selected for check-style trees — do not mix both"
+  ]
+}

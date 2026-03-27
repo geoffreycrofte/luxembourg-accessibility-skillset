@@ -1,0 +1,30 @@
+{
+  "slug": "dialog-modal",
+  "name": "Dialog (Modal)",
+  "description": "A window overlaid on the primary window that traps focus and prevents user interaction with content outside the active dialog until it is closed.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first" },
+    { "key": "Shift + Tab", "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last" },
+    { "key": "Escape", "action": "Closes the dialog" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "dialog", "element": "dialog container", "description": "Identifies the element as a dialog" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "dialog container", "description": "Set to 'dialog'" },
+      { "attribute": "aria-modal", "element": "dialog container", "description": "Set to true" },
+      { "attribute": "aria-labelledby or aria-label", "element": "dialog container", "description": "Accessible name, preferably referencing a visible dialog title" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-describedby", "element": "dialog container", "description": "References descriptive content within the dialog" }
+    ]
+  },
+  "notes": [
+    "Focus must be trapped inside the dialog — Tab/Shift+Tab must not escape",
+    "On open, set focus to the first focusable element or a static element for long content",
+    "On close, return focus to the element that invoked the dialog",
+    "Content outside the dialog should be inert (use the inert attribute or aria-hidden='true')",
+    "For destructive actions, focus the least destructive action button"
+  ]
+}

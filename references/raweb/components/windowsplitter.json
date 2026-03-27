@@ -1,0 +1,33 @@
+{
+  "slug": "windowsplitter",
+  "name": "Window Splitter",
+  "description": "A moveable separator between two panes allowing users to adjust relative size of each pane; can be variable or fixed (toggling between two positions).",
+  "keyboard_interactions": [
+    { "key": "Left Arrow", "action": "Moves a vertical splitter to the left" },
+    { "key": "Right Arrow", "action": "Moves a vertical splitter to the right" },
+    { "key": "Up Arrow", "action": "Moves a horizontal splitter up" },
+    { "key": "Down Arrow", "action": "Moves a horizontal splitter down" },
+    { "key": "Enter", "action": "Collapses/restores the primary pane" },
+    { "key": "Home", "action": "(Optional) Sets primary pane to minimum size" },
+    { "key": "End", "action": "(Optional) Sets primary pane to maximum size" },
+    { "key": "F6", "action": "(Optional) Cycles through window panes" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "separator", "element": "splitter element", "description": "Focusable separator between panes" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-valuenow", "element": "separator", "description": "Current splitter position" },
+      { "attribute": "aria-valuemin", "element": "separator", "description": "Minimum primary pane size (typically 0)" },
+      { "attribute": "aria-valuemax", "element": "separator", "description": "Maximum primary pane size (typically 100)" },
+      { "attribute": "aria-labelledby or aria-label", "element": "separator", "description": "Accessible name matching primary pane" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-controls", "element": "separator", "description": "References the primary pane element" }
+    ]
+  },
+  "notes": [
+    "The separator must be focusable (tabindex='0') to be interactive",
+    "A non-focusable separator role is purely decorative"
+  ]
+}
