@@ -38,6 +38,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **README** with installation instructions (npx + manual), usage guide, and reference data documentation.
 - **LICENSE** file.
 
-[Unreleased]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/compare/v1.1.0...HEAD
+[1.2.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/releases/tag/v1.0.0
