@@ -4,6 +4,10 @@ Agent skills for [RAWeb](https://accessibilite.public.lu/en/raweb1.1/index.html)
 
 Compatible with [skills.sh](https://skills.sh) and the [Agent Skills open standard](https://agentskills.io). Works with Claude Code, Cursor, Gemini CLI, GitHub Copilot, and 30+ other AI coding agents.
 
+---
+> **Important:** Always consider auditing your website by a human being. AI isn't ready to replace human evaluation, moreover on a topic as complex as accessibility. With or without skills, your AI is just a junior assistant with a lot of flaws. This skills set is only here as an experiment, and as guidelines to help your AI be better at accessibility, not perfect.
+---
+
 ## Available Skills
 
 | Skill | Framework | Description | Status |
@@ -15,6 +19,7 @@ Compatible with [skills.sh](https://skills.sh) and the [Agent Skills open standa
 | **rapdf-code** | RAPDF | Generate accessible PDFs | 🔜 Planned |
 | **rapdf-audit** | RAPDF | Audit PDFs against RAPDF criteria | 🔜 Planned |
 
+---
 ## Installation
 
 ### Via npx (recommended)
@@ -27,8 +32,10 @@ npx skills add geoffreycrofte/luxembourg-accessibility-skillset
 npx skills add geoffreycrofte/luxembourg-accessibility-skillset -g
 ```
 
+---
 > **Important:** Always install the full repository, not individual skills with `--skill`.
 > Each skill relies on shared `references/` and `scripts/` directories via relative paths (`../references/`, `../scripts/`). Installing a single skill in isolation will result in broken lookups and missing reference data.
+---
 
 ### Manual installation (Claude Code)
 
@@ -44,6 +51,7 @@ cp -r references scripts ~/.claude/skills/
 
 > **Note:** The `references/` and `scripts/` directories must be siblings of the skill folders for the lookup commands to work.
 
+---
 ## Usage
 
 ### Web development • RAWeb
@@ -100,6 +108,7 @@ Standalone CLI tools for querying criteria and component patterns:
 
 Requires `jq` (`brew install jq` on macOS, `apt install jq` on Linux).
 
+---
 ## Reference data
 
 | Framework | Source | Criteria | Themes | Standards |
@@ -111,6 +120,7 @@ All reference data published under **CC-BY 3.0 LU** by Luxembourg's Service info
 
 Default conformance target: **Level AA**.
 
+---
 ## Repository structure
 
 ```
@@ -174,6 +184,8 @@ luxembourg-accessibility-skillset/
 ├── LICENSE
 └── README.md
 ```
+
+---
 
 ## Reflections
 
