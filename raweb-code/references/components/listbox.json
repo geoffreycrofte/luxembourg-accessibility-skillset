@@ -1,0 +1,37 @@
+{
+  "slug": "listbox",
+  "name": "Listbox",
+  "description": "A widget that presents a list of options allowing users to select one or more, communicating option names, states, and positions to assistive technologies.",
+  "keyboard_interactions": [
+    { "key": "Down Arrow", "action": "Moves focus to next option" },
+    { "key": "Up Arrow", "action": "Moves focus to previous option" },
+    { "key": "Home", "action": "(Optional) Moves focus to first option" },
+    { "key": "End", "action": "(Optional) Moves focus to last option" },
+    { "key": "Type-ahead", "action": "Moves focus to next option matching typed character(s)" },
+    { "key": "Space (multi-select)", "action": "Toggles selection of focused option" },
+    { "key": "Shift + Down Arrow (multi-select)", "action": "Moves focus and toggles selection of next option" },
+    { "key": "Shift + Up Arrow (multi-select)", "action": "Moves focus and toggles selection of previous option" },
+    { "key": "Control + A (multi-select)", "action": "Toggles selection of all options" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "listbox", "element": "container", "description": "The list container" },
+      { "role": "option", "element": "each option", "description": "Individual selectable items" },
+      { "role": "group", "element": "option group container", "description": "Groups related options" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "listbox", "description": "Accessible name for the listbox" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-multiselectable", "element": "listbox", "description": "true for multi-select; omit for single-select" },
+      { "attribute": "aria-selected", "element": "option", "description": "true for selected; false for unselectable" },
+      { "attribute": "aria-orientation", "element": "listbox", "description": "horizontal for horizontal arrangement; default is vertical" },
+      { "attribute": "aria-setsize", "element": "option", "description": "Total options when not all in DOM" },
+      { "attribute": "aria-posinset", "element": "option", "description": "Position within complete set" }
+    ]
+  },
+  "notes": [
+    "Prefer native <select> for simple single-select use cases",
+    "Two multi-select keyboard models exist: with and without modifier keys"
+  ]
+}

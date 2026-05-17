@@ -1,0 +1,24 @@
+{
+  "slug": "disclosure",
+  "name": "Disclosure (Show/Hide)",
+  "description": "A button that controls the visibility of a section of content; toggling it shows or hides the associated content.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Toggles the visibility of the disclosure content" },
+    { "key": "Space", "action": "Toggles the visibility of the disclosure content" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "button", "element": "disclosure control", "description": "Identifies the control element as a button (not needed on native <button>)" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-expanded", "element": "disclosure button", "description": "true when content is visible; false when hidden" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-controls", "element": "disclosure button", "description": "References the ID of the content element that is shown or hidden" }
+    ]
+  },
+  "notes": [
+    "Prefer native <details>/<summary> elements when appropriate",
+    "The disclosure pattern is simpler than accordion — use it for standalone show/hide controls"
+  ]
+}

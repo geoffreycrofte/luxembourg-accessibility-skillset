@@ -1,0 +1,32 @@
+{
+  "slug": "spinbutton",
+  "name": "Spinbutton",
+  "description": "An input widget that restricts its value to a set or range of discrete values, featuring a text field with increase/decrease functionality via arrow keys.",
+  "keyboard_interactions": [
+    { "key": "Up Arrow", "action": "Increases the value" },
+    { "key": "Down Arrow", "action": "Decreases the value" },
+    { "key": "Home", "action": "Sets value to minimum (if applicable)" },
+    { "key": "End", "action": "Sets value to maximum (if applicable)" },
+    { "key": "Page Up", "action": "(Optional) Increases by a larger step" },
+    { "key": "Page Down", "action": "(Optional) Decreases by a larger step" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "spinbutton", "element": "input element", "description": "The numeric input widget" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-valuenow", "element": "spinbutton", "description": "Current value" },
+      { "attribute": "aria-labelledby or aria-label", "element": "spinbutton", "description": "Accessible name" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-valuemin", "element": "spinbutton", "description": "Minimum allowed value" },
+      { "attribute": "aria-valuemax", "element": "spinbutton", "description": "Maximum allowed value" },
+      { "attribute": "aria-valuetext", "element": "spinbutton", "description": "Human-readable value when numeric is not user-friendly" },
+      { "attribute": "aria-invalid", "element": "spinbutton", "description": "true when value is outside allowed range" }
+    ]
+  },
+  "notes": [
+    "Prefer native <input type='number'> when possible",
+    "The text field should accept direct typed input in addition to arrow key control"
+  ]
+}

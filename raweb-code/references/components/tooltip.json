@@ -1,0 +1,24 @@
+{
+  "slug": "tooltip",
+  "name": "Tooltip",
+  "description": "A popup element that displays descriptive information when an element receives keyboard focus or mouse hover. The tooltip itself does not receive focus.",
+  "keyboard_interactions": [
+    { "key": "Escape", "action": "Dismisses the tooltip" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "tooltip", "element": "tooltip container", "description": "Identifies the popup as a tooltip" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "tooltip element", "description": "Set to 'tooltip'" },
+      { "attribute": "aria-describedby", "element": "trigger element", "description": "References the tooltip element" }
+    ],
+    "optional_attributes": []
+  },
+  "notes": [
+    "Tooltips should appear on both focus and hover",
+    "The tooltip must remain visible while the trigger has focus or is hovered",
+    "Do not put interactive content inside tooltips",
+    "Keep tooltip text concise — for complex content use a dialog or disclosure"
+  ]
+}

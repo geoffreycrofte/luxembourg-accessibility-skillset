@@ -11,7 +11,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-COMP_DIR="${SCRIPT_DIR}/../references/raweb/components"
+COMP_DIR="${SCRIPT_DIR}/../references/components"
 INDEX="${COMP_DIR}/index.json"
 
 check_deps() {

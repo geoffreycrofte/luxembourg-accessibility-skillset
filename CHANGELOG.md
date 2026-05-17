@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.0] - 2026-05-17
+
+### Changed
+- **Self-contained skills** • Each skill folder now ships its own `references/` and `scripts/` instead of sharing root-level directories. Installing a single skill (e.g. `npx skills add geoffreycrofte/luxembourg-accessibility-skillset --skill raweb-code`) or copying one folder gives you everything that skill needs to run.
+- **`raweb-code/`, `raweb-audit/`, `raam-code/`, `raam-audit/`** • Each now contains its own `scripts/` (lookup CLIs) and `references/` (criteria, glossary, methodologies, and — for RAWeb — themes, niveaux, and 30 WAI-ARIA APG component patterns).
+- **SKILL.md path updates** • All four skills now reference `${CLAUDE_SKILL_DIR}/scripts/...` and `${CLAUDE_SKILL_DIR}/references/...` (previously `${CLAUDE_SKILL_DIR}/../scripts/...`).
+- **README** • Updated repository structure diagram, install instructions (added single-skill example), and lookup script invocations to reflect per-skill paths.
+
+### Removed
+- **Root-level `references/` and `scripts/` directories** • Replaced by per-skill copies inside each skill folder.
+
 ## [1.2.0] - 2026-03-27
 
 ### Added
@@ -38,6 +49,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **README** with installation instructions (npx + manual), usage guide, and reference data documentation.
 - **LICENSE** file.
 
+[1.3.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.3.0
 [1.2.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.2.0
 [1.1.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/e5547c4f2227e525da043104275ce0c03c2174bb
 [1.0.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/b16b50e80a8e66387d7a6b0dfb87286804a0cb48

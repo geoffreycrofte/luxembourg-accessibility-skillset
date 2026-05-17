@@ -1,0 +1,29 @@
+{
+  "slug": "button",
+  "name": "Button",
+  "description": "A widget that enables users to trigger an action or event, such as submitting a form, opening a dialog, canceling an action, or performing a delete operation.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Activates the button" },
+    { "key": "Space", "action": "Activates the button" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "button", "element": "button element", "description": "Identifies the element as a button (not needed on native <button>)" }
+    ],
+    "required_attributes": [
+      { "attribute": "accessible name", "element": "button element", "description": "Computed from text content, aria-labelledby, or aria-label" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-pressed", "element": "toggle button", "description": "true when toggled on; false when toggled off" },
+      { "attribute": "aria-expanded", "element": "button controlling a grouping", "description": "Indicates whether the controlled grouping is expanded or collapsed" },
+      { "attribute": "aria-haspopup", "element": "menu button", "description": "Indicates the button opens a menu popup" },
+      { "attribute": "aria-disabled", "element": "button element", "description": "true to indicate the button is present but not interactive" },
+      { "attribute": "aria-describedby", "element": "button element", "description": "References additional descriptive text" }
+    ]
+  },
+  "notes": [
+    "Always prefer native <button> or <input type='button'> over role='button'",
+    "If using a non-button element, add tabindex='0' and handle Enter+Space key events",
+    "Do not use <div> or <span> as buttons without proper ARIA and keyboard support"
+  ]
+}

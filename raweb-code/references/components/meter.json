@@ -1,0 +1,25 @@
+{
+  "slug": "meter",
+  "name": "Meter",
+  "description": "A graphical display of a numeric value within a defined range, such as battery percentage or fuel level. Not for progress indication.",
+  "keyboard_interactions": [],
+  "aria": {
+    "roles": [
+      { "role": "meter", "element": "meter element", "description": "Identifies the element as a meter" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "meter element", "description": "Set to 'meter'" },
+      { "attribute": "aria-valuenow", "element": "meter", "description": "Current value" },
+      { "attribute": "aria-valuemin", "element": "meter", "description": "Minimum of the range" },
+      { "attribute": "aria-valuemax", "element": "meter", "description": "Maximum of the range" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-valuetext", "element": "meter", "description": "Human-readable value string when numeric alone is insufficient" },
+      { "attribute": "aria-labelledby or aria-label", "element": "meter", "description": "Accessible name" }
+    ]
+  },
+  "notes": [
+    "Prefer native <meter> element when possible",
+    "Do not use meter for progress indicators — use <progress> or role='progressbar' instead"
+  ]
+}

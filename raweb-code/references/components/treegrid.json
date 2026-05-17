@@ -1,0 +1,42 @@
+{
+  "slug": "treegrid",
+  "name": "Treegrid",
+  "description": "A hierarchical data grid where rows can be expanded/collapsed and both rows and individual cells are focusable and interactive.",
+  "keyboard_interactions": [
+    { "key": "Enter", "action": "Expands/collapses child rows or performs default cell action" },
+    { "key": "Right Arrow", "action": "Expands collapsed row; moves to first cell; or moves one cell right" },
+    { "key": "Left Arrow", "action": "Collapses expanded row; moves to row header; or moves one cell left" },
+    { "key": "Down Arrow", "action": "Moves one row or cell down" },
+    { "key": "Up Arrow", "action": "Moves one row or cell up" },
+    { "key": "Home", "action": "Moves to first row or first cell in current row" },
+    { "key": "End", "action": "Moves to last row or last cell in current row" },
+    { "key": "Control + Home", "action": "Moves to first row or top cell in column" },
+    { "key": "Control + End", "action": "Moves to last row or bottom cell in column" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "treegrid", "element": "container", "description": "The hierarchical grid container" },
+      { "role": "row", "element": "each row", "description": "Row container" },
+      { "role": "gridcell", "element": "data cells", "description": "Interactive data cells" },
+      { "role": "columnheader", "element": "column headers", "description": "Column header cells" },
+      { "role": "rowheader", "element": "row headers", "description": "Row header cells" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-expanded", "element": "parent rows", "description": "true when open; false when closed" },
+      { "attribute": "aria-labelledby or aria-label", "element": "treegrid", "description": "Accessible name" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-multiselectable", "element": "treegrid", "description": "true for multi-select" },
+      { "attribute": "aria-selected", "element": "row/cell", "description": "Selection state" },
+      { "attribute": "aria-readonly", "element": "non-editable cells", "description": "true on read-only cells" },
+      { "attribute": "aria-level", "element": "row", "description": "Nesting depth (when not inferable from DOM)" },
+      { "attribute": "aria-colcount", "element": "treegrid", "description": "Total columns" },
+      { "attribute": "aria-rowcount", "element": "treegrid", "description": "Total rows" }
+    ]
+  },
+  "notes": [
+    "Combines the tree and grid patterns — one of the most complex ARIA widgets",
+    "Test thoroughly with screen readers before deploying",
+    "Consider if a simpler pattern (tree or grid alone) would serve the use case"
+  ]
+}

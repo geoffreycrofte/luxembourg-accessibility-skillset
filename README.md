@@ -1,4 +1,4 @@
-# Accessibility Skillset <small><small>• v1.2.0</small></small>
+# Accessibility Skillset <small><small>• v1.3.0</small></small>
 
 Agent skills for [RAWeb](https://accessibilite.public.lu/en/raweb1.1/index.html), [RAAM](https://accessibilite.public.lu/en/raam1.1/index.html), and RAPDF, Luxembourg's official accessibility frameworks based on EN 301 549 and WCAG 2.1.
 
@@ -20,29 +20,27 @@ Compatible with [skills.sh](https://skills.sh) and the [Agent Skills open standa
 ### Via npx (recommended)
 
 ```bash
-# Install the full skillset (recommended)
+# Install the full skillset
 npx skills add geoffreycrofte/luxembourg-accessibility-skillset
 
 # Install globally (available in all projects)
 npx skills add geoffreycrofte/luxembourg-accessibility-skillset -g
+
+# Install a single skill
+npx skills add geoffreycrofte/luxembourg-accessibility-skillset --skill raweb-code
 ```
 
-> **Important:** Always install the full repository, not individual skills with `--skill`.
-> Each skill relies on shared `references/` and `scripts/` directories via relative paths (`../references/`, `../scripts/`). Installing a single skill in isolation will result in broken lookups and missing reference data.
+Each skill is self-contained — its `references/` and `scripts/` ship inside the skill folder, so installing individual skills works out of the box.
 
 ### Manual installation (Claude Code)
 
 ```bash
-# Project-level — copy skills AND shared directories
+# Project-level
 cp -r raweb-code raweb-audit raam-code raam-audit .claude/skills/
-cp -r references scripts .claude/skills/
 
 # User-level (all projects)
 cp -r raweb-code raweb-audit raam-code raam-audit ~/.claude/skills/
-cp -r references scripts ~/.claude/skills/
 ```
-
-> **Note:** The `references/` and `scripts/` directories must be siblings of the skill folders for the lookup commands to work.
 
 ## Usage
 
@@ -70,32 +68,34 @@ Invoke explicitly with `/raam-code`. Audit with `/raam-audit`.
 
 Standalone CLI tools for querying criteria and component patterns:
 
+Scripts live inside each skill folder. From the repo root (or from the installed skill directory), invoke them like:
+
 ```bash
-# RAWeb criteria (web)
-./scripts/raweb-lookup.sh topics                       # List all 17 topics
-./scripts/raweb-lookup.sh stats                        # Summary statistics
-./scripts/raweb-lookup.sh criterion 11.1               # Specific criterion
-./scripts/raweb-lookup.sh topic 11                     # All criteria in a topic
-./scripts/raweb-lookup.sh methodology 11.1.1           # Test procedure
-./scripts/raweb-lookup.sh level AA                     # All Level AA criteria
-./scripts/raweb-lookup.sh search "form"                # Search by keyword
-./scripts/raweb-lookup.sh glossary "text alternative"  # Glossary lookup
+# RAWeb criteria (web) — script lives in raweb-code/scripts/ and raweb-audit/scripts/
+./raweb-code/scripts/raweb-lookup.sh topics                       # List all 17 topics
+./raweb-code/scripts/raweb-lookup.sh stats                        # Summary statistics
+./raweb-code/scripts/raweb-lookup.sh criterion 11.1               # Specific criterion
+./raweb-code/scripts/raweb-lookup.sh topic 11                     # All criteria in a topic
+./raweb-code/scripts/raweb-lookup.sh methodology 11.1.1           # Test procedure
+./raweb-code/scripts/raweb-lookup.sh level AA                     # All Level AA criteria
+./raweb-code/scripts/raweb-lookup.sh search "form"                # Search by keyword
+./raweb-code/scripts/raweb-lookup.sh glossary "text alternative"  # Glossary lookup
 
 # WAI-ARIA APG component patterns
-./scripts/raweb-component-lookup.sh list               # List all 30 patterns
-./scripts/raweb-component-lookup.sh find "modal"       # Find pattern by keyword
-./scripts/raweb-component-lookup.sh show dialog-modal  # Full pattern details
-./scripts/raweb-component-lookup.sh roles "dialog"     # Find patterns by ARIA role
+./raweb-code/scripts/raweb-component-lookup.sh list               # List all 30 patterns
+./raweb-code/scripts/raweb-component-lookup.sh find "modal"       # Find pattern by keyword
+./raweb-code/scripts/raweb-component-lookup.sh show dialog-modal  # Full pattern details
+./raweb-code/scripts/raweb-component-lookup.sh roles "dialog"     # Find patterns by ARIA role
 
-# RAAM criteria (mobile)
-./scripts/raam-lookup.sh topics                        # List all 15 topics
-./scripts/raam-lookup.sh stats                         # Summary statistics
-./scripts/raam-lookup.sh criterion 9.1                 # Specific criterion
-./scripts/raam-lookup.sh topic 9                       # All criteria in a topic
-./scripts/raam-lookup.sh methodology 9.1               # Test procedure (iOS & Android)
-./scripts/raam-lookup.sh level AA                      # All Level AA criteria
-./scripts/raam-lookup.sh search "gesture"              # Search by keyword
-./scripts/raam-lookup.sh glossary "assistive"           # Glossary lookup
+# RAAM criteria (mobile) — script lives in raam-code/scripts/ and raam-audit/scripts/
+./raam-code/scripts/raam-lookup.sh topics                         # List all 15 topics
+./raam-code/scripts/raam-lookup.sh stats                          # Summary statistics
+./raam-code/scripts/raam-lookup.sh criterion 9.1                  # Specific criterion
+./raam-code/scripts/raam-lookup.sh topic 9                        # All criteria in a topic
+./raam-code/scripts/raam-lookup.sh methodology 9.1                # Test procedure (iOS & Android)
+./raam-code/scripts/raam-lookup.sh level AA                       # All Level AA criteria
+./raam-code/scripts/raam-lookup.sh search "gesture"               # Search by keyword
+./raam-code/scripts/raam-lookup.sh glossary "assistive"           # Glossary lookup
 ```
 
 Requires `jq` (`brew install jq` on macOS, `apt install jq` on Linux).
@@ -113,63 +113,47 @@ Default conformance target: **Level AA**.
 
 ## Repository structure
 
+Each skill folder is fully self-contained — its scripts and reference JSON ship inside, so installing a single skill (or copying one folder) gives you everything that skill needs.
+
 ```
 luxembourg-accessibility-skillset/
-├── raweb-code/
-│   └── SKILL.md                        # Web accessible code guidance
-├── raweb-audit/
-│   └── SKILL.md                        # Web accessibility audit skill
-├── raam-code/
-│   └── SKILL.md                        # Mobile accessible code guidance
-├── raam-audit/
-│   └── SKILL.md                        # Mobile accessibility audit skill
-├── references/
-│   ├── raweb/
-│   │   ├── criteres.json               # RAWeb criteria + tests + WCAG mappings
-│   │   ├── glossaire.json              # RAWeb glossary
-│   │   ├── methodologies.json          # RAWeb test procedures
-│   │   ├── themes.json                 # RAWeb topic names
-│   │   ├── niveaux.json                # RAWeb WCAG levels per criterion
-│   │   └── components/                 # WAI-ARIA APG component patterns
-│   │       ├── index.json              # Pattern index with keyword mappings
-│   │       ├── accordion.json          # Accordion pattern
-│   │       ├── alert.json              # Alert pattern
-│   │       ├── alertdialog.json        # Alert dialog pattern
-│   │       ├── breadcrumb.json         # Breadcrumb pattern
-│   │       ├── button.json             # Button pattern
-│   │       ├── carousel.json           # Carousel/slideshow pattern
-│   │       ├── checkbox.json           # Checkbox pattern
-│   │       ├── combobox.json           # Combobox/autocomplete pattern
-│   │       ├── dialog-modal.json       # Modal dialog pattern
-│   │       ├── disclosure.json         # Show/hide (details) pattern
-│   │       ├── feed.json               # Infinite scroll feed pattern
-│   │       ├── grid.json               # Interactive data grid pattern
-│   │       ├── landmarks.json          # Page landmarks pattern
-│   │       ├── link.json               # Link pattern
-│   │       ├── listbox.json            # Listbox/select pattern
-│   │       ├── menu-button.json        # Menu button pattern
-│   │       ├── menubar.json            # Menu and menubar pattern
-│   │       ├── meter.json              # Meter/gauge pattern
-│   │       ├── radio.json              # Radio group pattern
-│   │       ├── slider.json             # Slider/range pattern
-│   │       ├── slider-multithumb.json  # Multi-thumb slider pattern
-│   │       ├── spinbutton.json         # Spinbutton/stepper pattern
-│   │       ├── switch.json             # Toggle switch pattern
-│   │       ├── table.json              # Static data table pattern
-│   │       ├── tabs.json               # Tabs pattern
-│   │       ├── toolbar.json            # Toolbar pattern
-│   │       ├── tooltip.json            # Tooltip pattern
-│   │       ├── treeview.json           # Tree view pattern
-│   │       ├── treegrid.json           # Treegrid pattern
-│   │       └── windowsplitter.json     # Window splitter pattern
-│   └── raam/
+├── raweb-code/                         # Web accessible code guidance
+│   ├── SKILL.md
+│   ├── scripts/
+│   │   ├── raweb-lookup.sh             # RAWeb criteria CLI lookup
+│   │   └── raweb-component-lookup.sh   # WAI-ARIA APG component pattern lookup
+│   └── references/
+│       ├── criteres.json               # RAWeb criteria + tests + WCAG mappings
+│       ├── glossaire.json              # RAWeb glossary
+│       ├── methodologies.json          # RAWeb test procedures
+│       ├── themes.json                 # RAWeb topic names
+│       ├── niveaux.json                # RAWeb WCAG levels per criterion
+│       └── components/                 # 30 WAI-ARIA APG component patterns
+│           ├── index.json              # Pattern index with keyword mappings
+│           └── *.json                  # accordion, alert, alertdialog, breadcrumb,
+│                                       # button, carousel, checkbox, combobox,
+│                                       # dialog-modal, disclosure, feed, grid,
+│                                       # landmarks, link, listbox, menu-button,
+│                                       # menubar, meter, radio, slider,
+│                                       # slider-multithumb, spinbutton, switch,
+│                                       # table, tabs, toolbar, tooltip, treeview,
+│                                       # treegrid, windowsplitter
+├── raweb-audit/                        # Web accessibility audit skill
+│   ├── SKILL.md
+│   ├── scripts/                        # Same scripts as raweb-code/
+│   └── references/                     # Same JSON as raweb-code/
+├── raam-code/                          # Mobile accessible code guidance
+│   ├── SKILL.md
+│   ├── scripts/
+│   │   └── raam-lookup.sh              # RAAM criteria CLI lookup
+│   └── references/
 │       ├── criteres.json               # RAAM criteria + tests + EN 301 549 mappings
 │       ├── glossaire.json              # RAAM glossary
 │       └── methodologies.json          # RAAM test procedures (iOS & Android)
-├── scripts/
-│   ├── raweb-lookup.sh                 # RAWeb criteria CLI lookup
-│   ├── raweb-component-lookup.sh       # WAI-ARIA APG component pattern lookup
-│   └── raam-lookup.sh                  # RAAM criteria CLI lookup
+├── raam-audit/                         # Mobile accessibility audit skill
+│   ├── SKILL.md
+│   ├── scripts/                        # Same script as raam-code/
+│   └── references/                     # Same JSON as raam-code/
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md

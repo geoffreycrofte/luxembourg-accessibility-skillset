@@ -1,0 +1,27 @@
+{
+  "slug": "alertdialog",
+  "name": "Alert Dialog",
+  "description": "A modal dialog that interrupts the user's workflow to communicate an important message and acquire a response, such as action confirmation prompts or error acknowledgments.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first" },
+    { "key": "Shift + Tab", "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last" },
+    { "key": "Escape", "action": "Closes the dialog" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "alertdialog", "element": "dialog container", "description": "Identifies the element as an alert dialog, enabling assistive technologies to give it special treatment" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "dialog container", "description": "Set to 'alertdialog'" },
+      { "attribute": "aria-labelledby or aria-label", "element": "alertdialog element", "description": "Provides accessible name, preferably referencing visible title" },
+      { "attribute": "aria-describedby", "element": "alertdialog element", "description": "References the element containing the alert message text" },
+      { "attribute": "aria-modal", "element": "alertdialog element", "description": "Set to true" }
+    ],
+    "optional_attributes": []
+  },
+  "notes": [
+    "Follows same focus trap pattern as dialog-modal",
+    "Focus should be set to the least destructive action button on open",
+    "When closed, focus returns to the element that invoked the dialog"
+  ]
+}

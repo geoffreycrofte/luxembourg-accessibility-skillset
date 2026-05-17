@@ -1,0 +1,37 @@
+{
+  "slug": "carousel",
+  "name": "Carousel",
+  "description": "A section that displays items sequentially, typically one slide at a time, with controls for navigating between slides and optionally controlling automatic rotation.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus through interactive elements in the carousel" },
+    { "key": "Shift + Tab", "action": "Moves focus to previous interactive element in the carousel" },
+    { "key": "Enter or Space (rotation control)", "action": "Toggles automatic slide rotation on/off" },
+    { "key": "Enter or Space (next/previous buttons)", "action": "Displays next or previous slide" },
+    { "key": "Any key (during auto-rotation)", "action": "Stops automatic rotation" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "region", "element": "carousel container", "description": "Identifies the carousel as a landmark" },
+      { "role": "group", "element": "each slide (basic variant)", "description": "Identifies each slide as a group" },
+      { "role": "tablist", "element": "tab container (tabbed variant)", "description": "Groups the tab elements for slide selection" },
+      { "role": "tab", "element": "each tab (tabbed variant)", "description": "Tab for selecting a slide" },
+      { "role": "tabpanel", "element": "each slide (tabbed variant)", "description": "Used instead of group for tabbed variant" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-roledescription", "element": "carousel container", "description": "Set to 'carousel'" },
+      { "attribute": "aria-labelledby or aria-label", "element": "carousel container", "description": "Provides accessible name for the carousel" },
+      { "attribute": "aria-roledescription", "element": "each slide", "description": "Set to 'slide'" },
+      { "attribute": "aria-labelledby or aria-label", "element": "each slide", "description": "Provides accessible name (e.g., 'X of Y')" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-live", "element": "live region wrapping slides", "description": "Set to 'polite' when not auto-rotating; 'off' during auto-rotation" },
+      { "attribute": "aria-atomic", "element": "live region wrapping slides", "description": "Set to false so only changed content is announced" },
+      { "attribute": "aria-disabled", "element": "current slide picker button", "description": "true on the currently displayed slide's picker control" }
+    ]
+  },
+  "notes": [
+    "Auto-rotating carousels MUST have a visible pause/stop control",
+    "Auto-rotation must stop when any element in the carousel receives focus or on hover",
+    "Prefer the tabbed variant when the number of slides is small and visible tab controls are appropriate"
+  ]
+}

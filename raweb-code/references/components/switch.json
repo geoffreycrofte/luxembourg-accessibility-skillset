@@ -1,0 +1,27 @@
+{
+  "slug": "switch",
+  "name": "Switch",
+  "description": "An input control that toggles between two mutually exclusive states (on and off), distinct from checkboxes in supporting only binary input with no indeterminate state.",
+  "keyboard_interactions": [
+    { "key": "Space", "action": "Toggles the switch state" },
+    { "key": "Enter", "action": "(Optional) Toggles the switch state" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "switch", "element": "switch element", "description": "Identifies the element as a switch" }
+    ],
+    "required_attributes": [
+      { "attribute": "role", "element": "switch element", "description": "Set to 'switch'" },
+      { "attribute": "aria-checked", "element": "switch element", "description": "true when ON; false when OFF" },
+      { "attribute": "accessible name", "element": "switch element", "description": "Via aria-labelledby, aria-label, or text content" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-describedby", "element": "switch element", "description": "References descriptive text" },
+      { "attribute": "role='group'", "element": "grouping container", "description": "Groups related switches with aria-labelledby" }
+    ]
+  },
+  "notes": [
+    "Switches are for immediate effect (like toggling a setting); use checkboxes for form submissions",
+    "The visual state should clearly indicate on/off"
+  ]
+}

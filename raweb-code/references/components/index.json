@@ -1,0 +1,157 @@
+{
+  "source": "WAI-ARIA Authoring Practices Guide (APG)",
+  "url": "https://www.w3.org/WAI/ARIA/apg/patterns/",
+  "version": "2024",
+  "patterns": [
+    {
+      "slug": "accordion",
+      "name": "Accordion",
+      "keywords": ["accordion", "collapsible", "expandable", "expand", "collapse", "panel", "section", "faq", "toggle section"]
+    },
+    {
+      "slug": "alert",
+      "name": "Alert",
+      "keywords": ["alert", "notification", "message", "warning", "error message", "success message", "flash message", "toast", "snackbar"]
+    },
+    {
+      "slug": "alertdialog",
+      "name": "Alert Dialog",
+      "keywords": ["alert dialog", "confirmation", "confirm", "confirm dialog", "warning dialog", "destructive action", "delete confirm"]
+    },
+    {
+      "slug": "breadcrumb",
+      "name": "Breadcrumb",
+      "keywords": ["breadcrumb", "breadcrumbs", "trail", "navigation trail", "path", "hierarchy", "location"]
+    },
+    {
+      "slug": "button",
+      "name": "Button",
+      "keywords": ["button", "btn", "toggle", "toggle button", "action", "submit", "click", "press"]
+    },
+    {
+      "slug": "carousel",
+      "name": "Carousel",
+      "keywords": ["carousel", "slider", "slideshow", "gallery", "image gallery", "rotator", "banner", "hero slider", "swiper"]
+    },
+    {
+      "slug": "checkbox",
+      "name": "Checkbox",
+      "keywords": ["checkbox", "check", "tick", "toggle", "tri-state", "indeterminate", "check all", "select all"]
+    },
+    {
+      "slug": "combobox",
+      "name": "Combobox",
+      "keywords": ["combobox", "autocomplete", "autosuggest", "typeahead", "search input", "select with search", "combo", "datalist", "filterable select"]
+    },
+    {
+      "slug": "dialog-modal",
+      "name": "Dialog (Modal)",
+      "keywords": ["dialog", "modal", "popup", "overlay", "lightbox", "popover", "drawer", "sheet", "bottom sheet", "dialog box"]
+    },
+    {
+      "slug": "disclosure",
+      "name": "Disclosure (Show/Hide)",
+      "keywords": ["disclosure", "show hide", "details", "summary", "expand", "collapse", "toggle content", "show more", "read more"]
+    },
+    {
+      "slug": "feed",
+      "name": "Feed",
+      "keywords": ["feed", "infinite scroll", "news feed", "timeline", "stream", "activity feed", "social feed", "lazy load list"]
+    },
+    {
+      "slug": "grid",
+      "name": "Grid",
+      "keywords": ["grid", "data grid", "datagrid", "spreadsheet", "editable table", "interactive table", "layout grid", "cell navigation"]
+    },
+    {
+      "slug": "landmarks",
+      "name": "Landmarks",
+      "keywords": ["landmarks", "regions", "header", "footer", "nav", "main", "aside", "banner", "contentinfo", "search", "page structure"]
+    },
+    {
+      "slug": "link",
+      "name": "Link",
+      "keywords": ["link", "anchor", "hyperlink", "href", "navigation link", "a tag"]
+    },
+    {
+      "slug": "listbox",
+      "name": "Listbox",
+      "keywords": ["listbox", "list", "select", "dropdown list", "option list", "multi select", "selection list", "picker"]
+    },
+    {
+      "slug": "menubar",
+      "name": "Menu and Menubar",
+      "keywords": ["menu", "menubar", "navigation menu", "app menu", "context menu", "dropdown menu", "submenu", "menuitem"]
+    },
+    {
+      "slug": "menu-button",
+      "name": "Menu Button",
+      "keywords": ["menu button", "dropdown button", "split button", "action menu", "more actions", "kebab menu", "hamburger", "overflow menu"]
+    },
+    {
+      "slug": "meter",
+      "name": "Meter",
+      "keywords": ["meter", "gauge", "level", "battery", "fuel", "capacity", "usage indicator", "score"]
+    },
+    {
+      "slug": "radio",
+      "name": "Radio Group",
+      "keywords": ["radio", "radio button", "radio group", "option group", "single select", "exclusive choice", "segmented control"]
+    },
+    {
+      "slug": "slider",
+      "name": "Slider",
+      "keywords": ["slider", "range", "range input", "volume", "brightness", "scrubber", "seek bar", "track"]
+    },
+    {
+      "slug": "slider-multithumb",
+      "name": "Slider (Multi-Thumb)",
+      "keywords": ["multi thumb slider", "range slider", "dual slider", "price range", "min max", "double slider", "two handle slider"]
+    },
+    {
+      "slug": "spinbutton",
+      "name": "Spinbutton",
+      "keywords": ["spinbutton", "spinner", "number input", "stepper", "increment", "decrement", "quantity", "counter"]
+    },
+    {
+      "slug": "switch",
+      "name": "Switch",
+      "keywords": ["switch", "toggle switch", "on off", "toggle", "boolean", "setting toggle", "flip"]
+    },
+    {
+      "slug": "table",
+      "name": "Table",
+      "keywords": ["table", "data table", "static table", "tabular data", "thead", "tbody", "th", "td", "caption"]
+    },
+    {
+      "slug": "tabs",
+      "name": "Tabs",
+      "keywords": ["tabs", "tab", "tablist", "tab panel", "tabbed interface", "tab navigation", "tab bar", "segmented view"]
+    },
+    {
+      "slug": "toolbar",
+      "name": "Toolbar",
+      "keywords": ["toolbar", "action bar", "button group", "tool bar", "formatting bar", "control strip"]
+    },
+    {
+      "slug": "tooltip",
+      "name": "Tooltip",
+      "keywords": ["tooltip", "hint", "title", "hover text", "info tip", "popover text", "help text"]
+    },
+    {
+      "slug": "treeview",
+      "name": "Tree View",
+      "keywords": ["tree", "treeview", "tree view", "file tree", "directory tree", "hierarchy", "nested list", "expandable list", "sidebar tree"]
+    },
+    {
+      "slug": "treegrid",
+      "name": "Treegrid",
+      "keywords": ["treegrid", "tree grid", "hierarchical grid", "expandable table", "nested table", "tree table"]
+    },
+    {
+      "slug": "windowsplitter",
+      "name": "Window Splitter",
+      "keywords": ["splitter", "window splitter", "pane splitter", "resize", "resizable", "split view", "divider", "separator"]
+    }
+  ]
+}

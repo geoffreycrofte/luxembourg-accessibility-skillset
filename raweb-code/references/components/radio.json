@@ -1,0 +1,32 @@
+{
+  "slug": "radio",
+  "name": "Radio Group",
+  "description": "A set of checkable buttons where no more than one can be checked at a time, with keyboard navigation that moves focus and selection together.",
+  "keyboard_interactions": [
+    { "key": "Tab", "action": "Moves focus into the group on checked button, or first button if none checked" },
+    { "key": "Space", "action": "Checks the focused radio button if not already checked" },
+    { "key": "Right Arrow", "action": "Moves focus and checks next button; wraps from last to first" },
+    { "key": "Down Arrow", "action": "Moves focus and checks next button; wraps from last to first" },
+    { "key": "Left Arrow", "action": "Moves focus and checks previous button; wraps from first to last" },
+    { "key": "Up Arrow", "action": "Moves focus and checks previous button; wraps from first to last" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "radiogroup", "element": "container", "description": "Groups the radio buttons" },
+      { "role": "radio", "element": "each button", "description": "Individual radio button" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-checked", "element": "radio", "description": "true when checked; false when unchecked" },
+      { "attribute": "aria-labelledby or aria-label", "element": "radiogroup", "description": "Accessible name for the group" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "radio", "description": "Accessible name for individual button" },
+      { "attribute": "aria-describedby", "element": "radiogroup or radio", "description": "References descriptive information" }
+    ]
+  },
+  "notes": [
+    "Prefer native <input type='radio'> with <fieldset>/<legend> grouping",
+    "Arrow keys both move focus AND change selection in a radio group",
+    "Only the checked radio (or first if none checked) should have tabindex='0'"
+  ]
+}

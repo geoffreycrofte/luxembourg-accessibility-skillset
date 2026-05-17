@@ -1,0 +1,48 @@
+{
+  "slug": "grid",
+  "name": "Grid",
+  "description": "A composite widget container enabling users to navigate information or interactive elements using directional keys, serving as either a data grid or layout grid.",
+  "keyboard_interactions": [
+    { "key": "Right Arrow", "action": "Moves focus one cell to the right" },
+    { "key": "Left Arrow", "action": "Moves focus one cell to the left" },
+    { "key": "Down Arrow", "action": "Moves focus one cell down" },
+    { "key": "Up Arrow", "action": "Moves focus one cell up" },
+    { "key": "Page Down", "action": "Moves focus down an author-determined number of rows" },
+    { "key": "Page Up", "action": "Moves focus up an author-determined number of rows" },
+    { "key": "Home", "action": "Moves focus to the first cell in the current row" },
+    { "key": "End", "action": "Moves focus to the last cell in the current row" },
+    { "key": "Control + Home", "action": "Moves focus to the first cell in the first row" },
+    { "key": "Control + End", "action": "Moves focus to the last cell in the last row" },
+    { "key": "Enter", "action": "Places focus in editable input field or first widget within cell" },
+    { "key": "F2", "action": "Places focus in input field; subsequent F2 restores grid navigation" },
+    { "key": "Escape", "action": "Restores grid navigation; may undo edits" }
+  ],
+  "aria": {
+    "roles": [
+      { "role": "grid", "element": "container", "description": "The interactive grid container" },
+      { "role": "row", "element": "each row", "description": "Row container" },
+      { "role": "gridcell", "element": "data cells", "description": "Interactive data cells" },
+      { "role": "columnheader", "element": "column header cells", "description": "Column header" },
+      { "role": "rowheader", "element": "row header cells", "description": "Row header" },
+      { "role": "rowgroup", "element": "row grouping elements", "description": "Groups rows (thead, tbody, tfoot)" }
+    ],
+    "required_attributes": [
+      { "attribute": "aria-labelledby or aria-label", "element": "grid", "description": "Provides accessible name for the grid" }
+    ],
+    "optional_attributes": [
+      { "attribute": "aria-describedby", "element": "grid", "description": "References grid description or caption" },
+      { "attribute": "aria-sort", "element": "columnheader or rowheader", "description": "ascending, descending, other, or none" },
+      { "attribute": "aria-selected", "element": "gridcell, row, or columnheader", "description": "true on selected elements" },
+      { "attribute": "aria-readonly", "element": "gridcell", "description": "true on non-editable cells" },
+      { "attribute": "aria-colcount", "element": "grid", "description": "Total columns when some are hidden" },
+      { "attribute": "aria-rowcount", "element": "grid", "description": "Total rows when some are hidden" },
+      { "attribute": "aria-colindex", "element": "gridcell or columnheader", "description": "Cell column position" },
+      { "attribute": "aria-rowindex", "element": "row", "description": "Row position within grid" }
+    ]
+  },
+  "notes": [
+    "For non-interactive tabular data, use the table pattern instead",
+    "Layout grids may optionally wrap focus at row/column boundaries",
+    "Grid has two interaction modes: navigation mode (arrow keys) and edit mode (Enter/F2)"
+  ]
+}

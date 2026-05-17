@@ -15,7 +15,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REF_DIR="${SCRIPT_DIR}/../references/raweb"
+REF_DIR="${SCRIPT_DIR}/../references"
 
 CRITERES="${REF_DIR}/criteres.json"
 METHODOLOGIES="${REF_DIR}/methodologies.json"
