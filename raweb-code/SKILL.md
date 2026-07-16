@@ -9,7 +9,7 @@ description: >
   Default conformance target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.3.0
+  version: 1.4.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -65,11 +65,23 @@ run `search "form"` and `topic 11`.
 **ALWAYS:**
 - Every `<img>` conveying information MUST have a meaningful `alt` attribute (1.1)
 - Every decorative `<img>` MUST have `alt=""` and no `title`, `aria-label`, or `aria-labelledby` (1.2)
-- Every `<svg>` conveying information MUST have `role="img"` + text alternative via `aria-label` or `aria-labelledby` (1.1)
+- Every `<svg>` conveying information MUST have `role="img"` — this one is mandatory, 1.1.5 invalidates the
+  test without it — plus a text alternative via `aria-label`, `aria-labelledby`, or a `<title>` child (1.1)
 - Decorative `<svg>` MUST have `aria-hidden="true"` (1.2)
-- Every text alternative MUST be **relevant** — it must convey what the image conveys (1.3). Keeping it short (~80 characters) is good practice, not the criterion itself
-- Complex images (charts, infographics) need a detailed description accessible via adjacent link or `aria-describedby` (1.6)
-- Avoid images of text unless the visual effect cannot be achieved with CSS (1.8 — Level AA)
+- Every text alternative MUST be **relevant** — it must convey what the image conveys (1.3), **and short and
+  concise** (test 1.3.9). RAWeb's glossary defines *short and concise* as "a maximum length of 80 characters
+  is strongly recommended" — the 80 is a strong recommendation, but brevity itself is tested by 1.3
+- Complex images (charts, infographics) need a detailed description (1.6) — but **the accepted routes differ
+  by element type**:
+  - `<img>`, `<object>`, `<embed>`: only two routes — a text alternative *referencing* an adjacent detailed
+    description, or an **adjacent link/button** to it. **`aria-describedby` is not a route here** (1.6.1–1.6.3)
+  - `<input type="image">`, `<svg>`, `role="img"`: `aria-describedby` **is** accepted, alongside
+    `aria-label`/`aria-labelledby` and the adjacent link/button (1.6.4, 1.6.5, 1.6.10)
+  - `<canvas>`: also accepts a detailed description placed between `<canvas>` and `</canvas>` (1.6.7)
+  - Whichever you use, it must actually resolve for AT — tests 1.6.6, 1.6.8 and 1.6.9 validate the wiring
+    rather than grant a route
+- Avoid images of text unless a **replacement mechanism** exists, or the visual effect cannot be reproduced
+  in CSS — 1.8 accepts either escape (1.8 — Level AA)
 - Where an image has a visible caption, that caption MUST be correctly linked to the image — `<figure>`/`<figcaption>` (1.9)
 
 **NEVER:**
@@ -115,9 +127,16 @@ run `search "form"` and `topic 11`.
 
 ### 3. Colours (Topic 3)
 
-- Information must NEVER be conveyed by colour alone (3.1)
-- Text contrast ratio: at least **4.5:1** (normal text) or **3:1** (large text ≥18pt / bold ≥14pt) (3.2 — Level AA)
+- Information must NEVER be conveyed by colour alone (3.1) — and RAWeb requires **both** complements, not
+  either: additional information **in the code** (`aria-label`, visually hidden text, `aria-current`…)
+  **and** an additional **visual** cue (icon, shape, position, typographic effect). An icon alone does not
+  discharge 3.1. Applies to text, **colour named in text** ("click the green button"), images, CSS
+  properties, and media
+- Text contrast ratio: at least **4.5:1**, or **3:1** for large text — which RAWeb defines in **px**:
+  **≥24px** non-bold, **≥18.5px** bold (3.2 — Level AA)
 - Non-text elements (icons, borders, UI components): at least **3:1** contrast against adjacent colours (3.3)
+- Both 3.2 and 3.3 also accept a **mechanism** that lets the user display a compliant ratio; if you ship one,
+  it must itself be compliant (3.2.5, 3.3.4)
 
 ```html
 <!-- BAD: colour alone conveys meaning -->
@@ -133,12 +152,30 @@ run `search "form"` and `topic 11`.
 
 ### 4. Multimedia (Topic 4)
 
-- Pre-recorded video with audio MUST have captions (4.1, 4.3)
+- Pre-recorded video with audio MUST have captions (**4.3** — captions are 4.3, *not* 4.1; 4.1 is the
+  transcript/audio-description criterion). Captions delivered via `<track>` MUST use `kind="captions"`
+  (4.3.2). Live synchronised media needs captions too (4.3.3)
 - Pre-recorded audio MUST have a text transcript (4.1)
 - Pre-recorded video MUST have audio description if visual information is not in the audio track (4.5, 4.6 — Level AA)
-- Every automatically triggered sound MUST be controllable by the user — pause, stop, or mute (4.10)
-- Media viewing controls (play, pause, volume, captions) MUST be operable by keyboard AND any pointing device (4.11)
-- Time-based media MUST be compatible with assistive technologies (4.13)
+- Every automatically triggered sound MUST be controllable by the user — stop it, or control its volume
+  independently of the system volume (4.10). Exempt if the sequence lasts **3 seconds or less**
+- Media viewing controls MUST **exist** (4.11.1): at least play/pause or stop; sound on/off if there is
+  sound; a captions toggle if there are captions; an **audio-description toggle if there is AD**. Each MUST
+  then be operable by keyboard AND any pointing device (4.11.2/4.11.3)
+- Time-based **and non-time-based** media MUST be compatible with assistive technologies (4.13)
+- Interactive `<canvas>`/`<svg>` content is **non-time-based media**: it MUST have an alternative reachable
+  via a clearly identifiable adjacent link or button (4.8), that alternative MUST give the same content and
+  similar features (4.9), and its controls MUST be keyboard- and pointer-operable (4.12)
+
+These have **no WCAG equivalent** — they are EN 301 549 §7 requirements that no WCAG-based scanner reports:
+
+- Caption and audio-description toggles MUST be presented at the **same level** as play/pause — not buried
+  one extra click deep in a menu (4.14 — Level AA)
+- Any transmit/convert/record feature MUST preserve captions (4.15) and audio description (4.16) — Level AA
+- Caption presentation MUST be user-controllable: honour the OS caption settings, or provide an on-page
+  control (4.17 — Level AA)
+- Subtitles MUST be vocalisable — a spoken-subtitle track, a TTS feature, or an alternative version
+  (4.18 — Level AA)
 
 ```html
 <video controls>
@@ -150,12 +187,21 @@ run `search "form"` and `topic 11`.
 
 ### 5. Tables (Topic 5)
 
-- Every **complex** data table MUST have a summary (5.1), and that summary must be relevant (5.2)
-- For each **layout** table, the linearised content must remain comprehensible (5.3)
+- Every **complex** data table MUST have a summary (5.1) — in the `<caption>` or a passage of text linked by
+  `aria-describedby`, *not* the obsolete `summary` attribute — and that summary must be relevant (5.2).
+  A table is "complex" when its headers are not confined to the first row and/or first column, or a header's
+  scope is not valid for the whole row/column
+- For each **layout** table, the linearised content must remain comprehensible **and** the `<table>` MUST
+  carry `role="presentation"` — 5.3 requires both
 - Where a data table has a title, it MUST be correctly associated — `<caption>`, `aria-label`, or `aria-labelledby` (5.4) — and the title must be relevant (5.5)
-- Data tables MUST declare every column and row header with `<th>` (5.6)
-- Each cell MUST be associated with its headers: `scope` for simple tables, `headers`/`id` for complex ones (5.7)
-- Layout tables MUST NOT use `<th>`, `<caption>`, `scope`, or `headers` (5.8)
+- Data tables MUST declare headers that span a whole column/row with `<th>` **or** `role="columnheader"`/
+  `role="rowheader"` (5.6.1/5.6.2). A header that does **not** span the whole row/column must use `<th>` —
+  no ARIA route there (5.6.3)
+- Each cell MUST be associated with its headers: `scope` for simple tables, `headers`/`id` for complex ones (5.7).
+  Use `scope="rowgroup"`/`scope="colgroup"` for header **groups** (5.7.6). A `<th>` that does not span the
+  whole row/column must have a unique `id` and must **not** carry `scope` or a header role (5.7.3)
+- Layout tables MUST NOT use `<th>`, `<caption>`, `<thead>`, `<tfoot>`, `role="rowheader"`/`"columnheader"`,
+  a `summary` attribute, or `scope`/`headers`/`axis` on cells (5.8)
 
 Note: 5.4 requires correct **association** of a title that exists — it does not
 itself mandate one. In practice always give a data table a `<caption>`; just
@@ -184,10 +230,13 @@ don't cite 5.4 as the reason.
 
 ### 6. Links (Topic 6)
 
-- Every link MUST have an explicit accessible name (6.1)
+- Every link MUST have an accessible name (**6.2**), and that name must be explicit (6.1)
+- Links with identical accessible names MUST lead to the same destination, or be distinguished by their
+  context (6.1.6)
 - The link's accessible name must be relevant and describe the destination or function (6.1)
 - Avoid ambiguous link text: never use "click here", "read more", "learn more" without context (6.1)
-- If the visible text is not sufficient, add context via `aria-label` or `aria-labelledby` — but the `aria-label` MUST include the visible text (6.1, 6.2)
+- If the visible text is not sufficient, add context via `aria-label` or `aria-labelledby` — but the
+  `aria-label` MUST include the visible text (6.1, test 6.1.5 — *Label in Name*)
 
 ```html
 <!-- BAD -->
@@ -210,7 +259,18 @@ don't cite 5.4 as the reason.
 - Where a script has an alternative, that alternative MUST be relevant (7.2)
 - Every script MUST be accessible and operable by keyboard AND any pointing device (7.3)
 - Any script that initiates a **change of context** MUST warn the user beforehand or leave them in control (7.4)
-- Status messages MUST be communicated without moving focus, using `role="status"`, `role="alert"`, `role="log"`, `aria-live`, or `aria-relevant` (7.5 — Level AA)
+- Status messages MUST be communicated without moving focus (7.5 — Level AA). RAWeb maps **message type to
+  technique** — the wrong role for the type fails the test:
+
+  | Message type | Use (7.5.1–7.5.3) |
+  |---|---|
+  | Success, result of an action, app state | `role="status"` **or** `aria-live="polite"` + `aria-atomic="true"` |
+  | A suggestion, or warning of an error | `role="alert"` **or** `aria-live="assertive"` + `aria-atomic="true"` |
+  | Progress of a process | `role="log"`, `role="progressbar"` or `role="status"` (or the matching `aria-live="polite"`) |
+
+  Every `aria-live` branch requires **`aria-atomic="true"`** alongside it — bare `aria-live="polite"` fails
+  7.5.1. `aria-relevant` is **not** a technique 7.5 recognises; it satisfies nothing here
+- A script MUST NOT remove focus from an element that receives it (7.3.2)
 
 Related criteria that live in other topics — do not cite them as Topic 7:
 - Moving or blinking content must be controllable (pause, stop, hide) → **13.8**
@@ -243,12 +303,17 @@ button.addEventListener('keydown', (e) => {
 ### 8. Mandatory Elements (Topic 8)
 
 - Every page MUST have a valid `<!DOCTYPE html>` (8.1)
-- Every page MUST have a `lang` attribute on `<html>` matching the primary language (8.3)
+- Every page MUST have a `lang` attribute on `<html>` (8.3); its code must be valid and relevant to the
+  page's main language (8.4)
 - Language changes in content MUST be marked with `lang` on the relevant element (8.7 — Level AA)
 - Every page MUST have a unique and relevant `<title>` (8.5, 8.6)
-- The page `<title>` MUST be updated when the page state changes significantly (8.6)
+- In an SPA, update the page `<title>` when the view changes — a title left at "Home" across views stops
+  being relevant, which is what 8.6 tests (8.6 tests relevance; the update rule is the practical consequence)
 - No duplicate `id` attributes in the page (8.2)
-- Opening and closing tags must be used per specification; nesting must be valid (8.1)
+- Opening and closing tags must be used per specification; nesting must be valid (**8.2** — source-code
+  validity. 8.1 is only the presence of a document type)
+- Text whose reading direction differs from the page default must sit in a tag with a `dir` attribute
+  (8.10), and that value must be a valid, relevant `rtl`/`ltr` (8.10.2)
 
 ```html
 <!DOCTYPE html>
@@ -265,10 +330,19 @@ button.addEventListener('keydown', (e) => {
 
 ### 9. Information Structure (Topic 9)
 
-- Use headings (`<h1>`–`<h6>`) with a logical hierarchy — no skipped levels (9.1)
-- Use semantic HTML5 landmarks: `<header>`, `<nav>`, `<main>`, `<footer>`, `<aside>` (9.2)
+- Use headings (`<h1>`–`<h6>`, or `role="heading"` + `aria-level`) with a logical hierarchy (9.1.1). Each
+  heading's text must be relevant (9.1.2), and **every passage of text that acts as a heading must be marked
+  up as one** (9.1.3) — a styled `<div class="title">` fails 9.1.3 even when the hierarchy is clean
+- Use the landmarks 9.2.1 actually requires: `<header>`→`banner`, `<nav>`→`navigation`,
+  **`<search>`→`search`**, `<main>`→`main`, `<footer>`→`contentinfo`. (`<aside>`/`complementary` is fine to
+  use but is **not** required by 9.2)
+- Exactly **one visible** `main`, `banner` and `contentinfo` per page, and reserve `navigation` for primary
+  and secondary navigation only (9.2.2)
+- A `<header>`/`<footer>` without an explicit role must **not** be nested inside `article`, `complementary`,
+  `main`, `navigation` or `section` (9.2.3/9.2.4) — a `<header>` inside `<main>` fails
 - Use lists (`<ul>`, `<ol>`, `<dl>`) for list content (9.3)
-- Use `<blockquote>` for quotations with proper `cite` if applicable (9.4)
+- Use `<q>` for short inline quotations (9.4.1) and `<blockquote>` for quotation blocks (9.4.2). `cite` is
+  good practice — 9.4 does not test it
 
 ```html
 <body>
@@ -289,10 +363,17 @@ button.addEventListener('keydown', (e) => {
 ### 10. Presentation of Information (Topic 10)
 
 - Content must remain readable and functional at 200% zoom (10.4 — Level AA)
-- Content must reflow at 320px CSS width without horizontal scrolling (10.11 — Level AA)
-- Use CSS for all visual presentation; do not use HTML presentation attributes (10.1)
-- No loss of information when CSS is disabled (10.2, 10.3)
-- Visible focus indicator must be present on all interactive elements (10.7)
+- Content must reflow at 320px CSS width without horizontal scrolling — and, for vertically-read content, at
+  256px height without vertical scrolling (10.11 — Level AA)
+- Use CSS for all visual presentation. 10.1 forbids an enumerated set — `<font>`, `<center>`, `<big>`,
+  `<blink>`, `<marquee>`, `<s>`, `<strike>`, `<tt>` and attributes like `align`, `bgcolor`, `border`,
+  `cellpadding`, `hspace`, `valign`, `vspace`. **`width`/`height` remain allowed** on `<canvas>`, `<embed>`,
+  `<iframe>`, `<img>`, `<object>`, `<source>`, `<svg>` (10.1.2) — keep them on images to prevent layout shift
+- Never use spaces to separate letters in a word, or to simulate tables or columns (10.1.3)
+- Visible content that conveys information must be reachable by AT — a CSS background image carrying meaning
+  needs a text alternative on the page (10.2). Separately, the **reading order** must stay understandable
+  with CSS disabled (10.3)
+- Visible focus indicator on all interactive elements, with a **contrast ratio ≥ 3:1** (10.7)
 - Do not hide content in a way that becomes unreachable (10.8)
 - Text spacing: users must be able to override line-height (1.5×), paragraph spacing (2×), letter-spacing (0.12em), word-spacing (0.16em) without loss of content (10.12 — Level AA)
 
@@ -317,16 +398,37 @@ button.addEventListener('keydown', (e) => {
 
 **This is a critical topic. Always look up criteria with `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh topic 11` when implementing forms.**
 
-- Every form field MUST have a visible label (11.1) AND a programmatically associated label (11.1)
+- Every form field MUST have a programmatically associated label (11.1). Always give it a **visible** one
+  too — that is 11.4 (label next to its field) plus good practice; 11.1 itself also accepts `aria-label`
+  or `title` with nothing visible
 - Label association: `<label for="id">`, `aria-labelledby`, `aria-label`, or `title` (11.1)
 - The `<label>` element with `for` attribute is the preferred method (11.1)
 - The accessible name MUST include the visible label text (11.2)
 - Labels must be relevant — clearly describe the expected input (11.2)
-- Related fields MUST be grouped with `<fieldset>` and `<legend>` (11.5)
+- Labels for fields with the same function MUST stay consistent across the set of pages (11.3 — Level AA)
+- The label MUST sit next to its field (11.4): immediately **above or left** for normal fields (LTR), and
+  immediately **below or right** for `checkbox`, `radio`, and `role="switch"`
+- Related fields MUST be grouped — `<fieldset>`, `role="group"`, or `role="radiogroup"` for radios (11.5)
+- Every group MUST have a legend (11.6): `<legend>` in a `<fieldset>`, or `aria-label`/`aria-labelledby`
+  on a `role="group"`/`role="radiogroup"`. The legend must be relevant (11.7)
+- Group `<select>` options of the same type with `<optgroup>`, each with a relevant `label` (11.8)
+- Button labels MUST be relevant, and the accessible name MUST contain at least the visible label (11.9)
 - Required fields must be indicated before the form or at the field level (11.10)
-- Use `required` and/or `aria-required="true"` for mandatory fields (11.10)
-- Error messages must be linked to the field and describe the error and expected format (11.11 — Level AA)
+- Use `required` and/or `aria-required="true"` for mandatory fields (11.10) — **and keep a visible
+  indication**: the attribute alone passes 11.10.1 but fails 11.10.2, which applies specifically to fields
+  carrying `required`/`aria-required` and demands a visible indication in the label, an associated passage
+  of text, or the legend
+- Error messages MUST identify the field by name and be linked to it via `aria-invalid="true"`
+  (11.10 — **Level A**)
+- Error messages MUST also suggest the expected data type/format and examples of valid values
+  (11.11 — Level AA)
+- Forms that modify or delete data, submit exam answers, or carry financial/legal consequences MUST be
+  reversible, checkable before submit, or explicitly confirmed (11.12 — Level AA)
 - Input purpose for personal data must use `autocomplete` with appropriate values (11.13 — Level AA)
+
+Note: **error *identification* is 11.10 (Level A); 11.11 is *only* error *suggestion* (AA).** Linking a
+message to its field is 11.10, not 11.11 — filing it under 11.11 downgrades a Level A requirement.
+`<legend>` is **11.6**, not 11.5 — 11.5 is the grouping alone.
 
 ```html
 <form novalidate>
@@ -364,15 +466,22 @@ button.addEventListener('keydown', (e) => {
 ### 12. Navigation (Topic 12)
 
 - At least two navigation mechanisms among: main nav, sitemap, search engine (12.1 — Level AA)
-- Skip links must be present to bypass repeated content blocks (12.7)
+- Repeated content blocks must be reachable or avoidable (**12.6**) — a landmark role, a heading, a hide
+  button, or a skip link all satisfy it
+- A skip link to the **main content region** must be present and functional (12.7)
 - Skip links must be visible on focus (12.7)
-- Tab order must be logical and consistent with visual reading order (12.8)
-- Never use positive `tabindex` values (12.8)
+- Tab order must be logical and consistent (12.8), and must **stay** consistent after a script inserts or
+  updates content — reposition focus correctly (12.8.2)
+- Avoid positive `tabindex` values — they almost always break the coherent order 12.8.1 requires. (12.8
+  tests the *order*, not the attribute; RAWeb notes the sequence need not follow natural reading order as
+  long as it stays coherent.)
 - Navigation MUST NOT contain keyboard traps (12.9) — a modal's Tab loop is legal *only* because Escape and a close button let the user out
 - Single-key shortcuts must be remappable or disableable (12.10)
 - Content appearing on hover or focus (tooltips, popovers) must be keyboard accessible (12.11 — Level AA)
-- Navigation landmarks must be consistent across pages (12.2 — Level AA)
-- The active page must be indicated in navigation menus (12.2 — Level AA)
+- Menus and navigation bars must stay in the **same place in the presentation** and the **same relative
+  order in the source** across the set of pages (12.2 — Level AA)
+- Indicating the active page (e.g. `aria-current="page"`) is **good practice, not a RAWeb criterion** — 12.2
+  only tests consistent placement. Do it, but don't cite 12.2 for it
 
 ```html
 <body>
@@ -411,12 +520,28 @@ button.addEventListener('keydown', (e) => {
 ### 13. Consultation (Topic 13)
 
 - The user must have control over every time limit that modifies content — adjustable, extendable, or removable (13.1)
+- A `<meta http-equiv="refresh">` redirect admits no user control: it must be **immediate** (`content="0"`)
+  or at least **twenty hours** (`content` ≥ 72000) (13.1.2)
 - A new window MUST NOT open without a user action (13.2)
 - Every downloadable office document must have an accessible version (13.3), and that version must offer the same information (13.4)
-- Sudden changes in brightness or flashing must be used correctly — no more than 3 flashes per second (13.7)
-- Moving or blinking content must be controllable by the user: pause, stop, hide (13.8)
+- Sudden changes in brightness or flashing must be used correctly — no more than 3 flashes per second, **or**
+  a cumulative effect area ≤ 21824 px² (13.7). Applies to media, scripted effects, and CSS animation alike
+- Moving or blinking content must be controllable by the user: stop/restart, show/hide, or offer the same
+  information without the movement (13.8). Exempt if it lasts **≤ 5 seconds**. Pausing **on focus only does
+  not count**; content that cannot be stopped (a progress bar) is NA
 - Content must be viewable in any screen orientation (13.9 — Level AA)
-- Any feature using a complex gesture must also be usable with a simple gesture (13.10)
+- Any feature using a complex gesture must also be usable with a simple gesture (13.10) — this covers
+  **multi-touch** (13.10.1) *and* **path-based** gestures (13.10.2). A drag with no single-point
+  alternative — a slider that only drags, a splitter with no reset — fails 13.10.2. Widely missed, because
+  13.10 reads as though it were only about pinch
+- Single-point actions must be cancellable (13.11): trigger on **release**, or on press-then-cancel-on-
+  release, or provide an abort/undo mechanism
+- Motion-actuated features must work via UI components instead (13.12), and the user must be able to
+  **disable motion detection** entirely (13.12.3)
+- Biometric identification or control (fingerprint, face, voice) MUST have an alternative — non-biometric,
+  or a sufficiently *different* biological characteristic (13.14). EN 301 549 §5.3, **Level A**, no WCAG
+  equivalent
+- Document conversion features must preserve accessibility information (13.13 — Level AA, EN 301 549 §5.4)
 
 Note: indicating a link's file format and size is **good practice, not a RAWeb
 criterion** — do it, but do not cite 13.3 for it. Warning the user before a

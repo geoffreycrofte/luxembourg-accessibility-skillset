@@ -1,4 +1,4 @@
-# Accessibility Skillset <small><small>• [v1.4.0](./CHANGELOG.md)</small></small>
+# Accessibility Skillset <small><small>• [v1.5.0](./CHANGELOG.md)</small></small>
 
 Agent skills for [RAWeb](https://accessibilite.public.lu/en/raweb1.1/index.html), [RAAM](https://accessibilite.public.lu/en/raam1.1/index.html), and RAPDF, Luxembourg's official accessibility frameworks based on EN 301 549 and WCAG 2.1.
 
@@ -68,7 +68,8 @@ The `raweb-code` skill activates automatically when you write front-end web code
 Invoke explicitly with `/raweb-code`.
 
 The `raweb-audit` skill reviews existing code against RAWeb. It provides:
-- Theme-by-theme checklists for all 17 themes, every criterion number verified against the official data
+- Theme-by-theme checklists covering **every criterion in themes 1–13 (136/136)**, with each number *and* each description verified against the **304 official test methodologies** — not against the criterion titles, which summarise and routinely under-state scope
+- **The 7 EN 301 549-only criteria that hide inside ordinary themes** (4.14–4.18, 13.13, and 13.14 at Level A) called out explicitly — no WCAG-based scanner reports them, and nothing around them looks unusual enough to prompt a lookup
 - **Per-component audit scope** — `show <slug>` states which RAWeb criteria a component must satisfy and why, with levels resolved live so they can't be stale
 - **A defect catalogue** — `code <slug>` gives real production failure modes with their user impact, plus a manual test procedure that states explicitly *what axe and Lighthouse will not catch* for that pattern
 - Structured report format with verdicts (C / NC / NA), severity classification, and WCAG cross-references

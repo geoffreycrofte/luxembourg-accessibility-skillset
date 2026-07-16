@@ -8,7 +8,7 @@ description: >
   test procedures. Default target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.3.0
+  version: 1.4.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -125,6 +125,21 @@ tests define the scope, and they are often broader. Criterion 11.10 is titled
 **mandatory-field indication** and `aria-required`. Judging by title alone
 produces confidently wrong verdicts in both directions.
 
+The same trap in its other three forms:
+
+- **The title omits a whole test.** 1.3 reads "is this alternative relevant?" — but test **1.3.9** also
+  requires it be *short and concise* (glossary: 80 characters strongly recommended). Brevity is the
+  criterion, not merely good practice.
+- **The tests offer escapes the title never mentions.** 3.2/3.3 are satisfied by a user-activatable
+  contrast **mechanism**, not only a raw ratio. 13.7 exempts flashes under 21824 px². 13.8 exempts
+  movement under 5 s. 4.10 exempts sounds ≤ 3 s. Missing these produces false **NC** verdicts.
+- **Adjacent criteria split presence from relevance.** 10.9 asks whether an alternative *exists*; 10.10
+  asks whether it is *relevant*. Same for 1.1/1.3, 4.1/4.2, 5.4/5.5, 6.2/6.1, 8.5/8.6, 11.6/11.7. One
+  verdict for both is one criterion unevaluated.
+
+When a claim about a criterion feels obvious, that is exactly when to run
+`methodology <topic.criterion.test>` and read what it actually says.
+
 ### Step 3: Audit interactive components against their pattern
 
 When the scope contains a dialog, tabs, a menu, a combobox, a carousel:
@@ -159,9 +174,9 @@ Scan for: `<img>`, `<svg>`, `<canvas>`, `<object>`, `<embed>`, `<area>`, `[role=
 |-------|----------|
 | Informative images have text alternatives | 1.1 |
 | Decorative images are properly hidden | 1.2 |
-| Text alternatives are relevant | 1.3 |
-| CAPTCHA/test image alternatives are relevant | 1.4 |
-| CAPTCHA has a non-visual alternative | 1.5 |
+| Text alternatives are relevant, **and short and concise** (≤80 chars recommended — test 1.3.9) | 1.3 |
+| CAPTCHA/test image alternatives identify the image's nature and function | 1.4 |
+| CAPTCHA has a **non-graphical** alternative, **or** another route to the secured function | 1.5 |
 | Complex images have detailed descriptions | 1.6 |
 | Detailed descriptions are relevant | 1.7 |
 | Images of text replaced by styled text where possible — AA | 1.8 |
@@ -180,9 +195,15 @@ Requires visual inspection and contrast analysis tools.
 
 | Check | Criteria |
 |-------|----------|
-| Information not conveyed by colour alone | 3.1 |
-| Text contrast ≥ 4.5:1 (normal) / 3:1 (large) — AA | 3.2 |
-| Non-text contrast ≥ 3:1 | 3.3 |
+| Information not conveyed by colour alone — needs a code complement **and** a visual complement | 3.1 |
+| Text contrast ≥ 4.5:1; ≥ 3:1 for **≥24px** non-bold or **≥18.5px** bold — AA | 3.2 |
+| Non-text contrast ≥ 3:1 (UI components, graphic elements, adjacent colours within them) | 3.3 |
+
+Note: RAWeb states 3.2's thresholds in **px, not pt** — 24px non-bold / 18.5px bold (tests 3.2.1–3.2.4).
+Both 3.2 and 3.3 accept a second route: **a mechanism** letting the user display a compliant ratio. Where
+one exists, tests **3.2.5** and **3.3.4** check the mechanism itself. 3.1 requires *both* complements —
+methodology 3.1.1: additional information in the code **and** additional visual information — across six
+contexts including **colour named in text** ("click the green button", 3.1.2).
 
 ### Theme 4 — Multimedia
 Scan for: `<video>`, `<audio>`, `<object>`, `<embed>`, `<canvas>`, `<svg>`, `<bgsound>`
@@ -191,31 +212,50 @@ Scan for: `<video>`, `<audio>`, `<object>`, `<embed>`, `<canvas>`, `<svg>`, `<bg
 |-------|----------|
 | Pre-recorded media has a transcript or audio description | 4.1 |
 | That transcript / audio description is relevant | 4.2 |
-| Synchronised media has synchronised captions | 4.3 |
+| Synchronised media has synchronised captions (incl. **live**; `<track kind="captions">`) | 4.3 |
 | Those captions are relevant | 4.4 |
 | Synchronised audio description present — AA | 4.5 |
 | That audio description is relevant — AA | 4.6 |
 | Time-based media is clearly identifiable | 4.7 |
-| Automatically triggered sound is controllable by the user | 4.10 |
-| Media viewing controls operable by keyboard and pointer | 4.11 |
-| Media is compatible with assistive technologies | 4.13 |
+| Non-time-based media (interactive `<canvas>`/`<svg>`) has an alternative | 4.8 |
+| That alternative gives the same content and similar features | 4.9 |
+| Automatically triggered sound is controllable by the user (exempt if ≤ 3 s) | 4.10 |
+| Media viewing controls **exist** (play/pause, sound, captions, AD toggles) and are operable by keyboard and pointer | 4.11 |
+| Non-time-based media controls operable by keyboard and pointer | 4.12 |
+| Time-based **and non-time-based** media are compatible with assistive technologies | 4.13 |
+| Caption/AD toggles are at the same level as play/pause — AA | 4.14 |
+| Captions preserved through transmit/convert/record — AA | 4.15 |
+| Audio description preserved through transmit/convert/record — AA | 4.16 |
+| Caption presentation controllable by the user — AA | 4.17 |
+| Subtitles can be vocalised (spoken subtitles) — AA | 4.18 |
+
+**4.14–4.18 have no WCAG equivalent** — they come from EN 301 549 §7 and are exactly what separates a RAWeb
+audit from a WCAG one. Do not skip them because a WCAG-based scanner is silent.
+
+**4.11 is two requirements, not one.** Test 4.11.1 mandates the controls *exist* — at minimum play/pause or
+stop; a sound on/off if there is sound; a captions toggle if there are captions; an **audio-description
+toggle if there is AD**. Tests 4.11.2/4.11.3 then require they be keyboard- and pointer-operable. A player
+with no caption toggle fails 4.11.1 even if everything present is operable.
+
+**Captions are 4.3, not 4.1.** 4.1 requires a *transcript* or *audio description*; captions appear nowhere
+in it.
 
 ### Theme 5 — Tables
 Scan for: `<table>`, `<th>`, `<td>`, `<caption>`, `[role="table"]`
 
 | Check | Criteria |
 |-------|----------|
-| Complex data tables have a summary | 5.1 |
+| Complex data tables have a summary (`<caption>` or `aria-describedby`) | 5.1 |
 | That summary is relevant | 5.2 |
-| Layout tables: linearised content still comprehensible | 5.3 |
-| Where a data table has a title, it is correctly associated (`<caption>`) | 5.4 |
+| Layout tables: linearised content still comprehensible **and** `role="presentation"` present | 5.3 |
+| Where a data table has a title, it is correctly associated (`<caption>`, `title`, `aria-label`, or `aria-labelledby`) | 5.4 |
 | That title is relevant | 5.5 |
-| Column and row headers declared with `<th>` | 5.6 |
-| Cells associated with their headers (`scope`, or `headers`/`id` when complex) | 5.7 |
+| Full-span headers use `<th>` **or** `role="columnheader"`/`"rowheader"`; partial headers must use `<th>` | 5.6 |
+| Cells associated with their headers (`scope`, incl. `rowgroup`/`colgroup`, or `headers`/`id` when complex) | 5.7 |
 | Layout tables do not use data-table semantics | 5.8 |
 
 ### Theme 6 — Links
-Scan for: `<a>`, `[role="link"]`
+Scan for: `<a>`, `[role="link"]`, `<area href>`, `<svg><a>` (SVG links), image and composite links
 
 | Check | Criteria |
 |-------|----------|
@@ -231,11 +271,16 @@ Scan for: `onclick`, `onkeydown`, `addEventListener`, `[role]`, `[aria-*]`, `[ta
 
 | Check | Criteria |
 |-------|----------|
-| Script-driven UI is compatible with AT (correct role, name, value) | 7.1 |
+| Script-driven UI is compatible with AT (correct role, name, value; name contains the visible label) | 7.1 |
 | Where a script has an alternative, that alternative is relevant | 7.2 |
-| Scripts operable by keyboard AND any pointing device | 7.3 |
+| Scripts operable by keyboard AND any pointing device — **and no script removes focus** (7.3.2) | 7.3 |
 | Change of context is announced or user-controlled | 7.4 |
-| Status messages correctly rendered to AT — AA | 7.5 |
+| Status messages correctly rendered to AT — role matches message type — AA | 7.5 |
+
+Note: **7.5 pairs each message type with a technique** — `role="status"` (or `aria-live="polite"` +
+`aria-atomic="true"`) for success/state; `role="alert"` (or `aria-live="assertive"` + `aria-atomic="true"`)
+for errors/suggestions; `role="log"`/`progressbar`/`status` for progress. `aria-atomic="true"` is required
+in every `aria-live` branch. Using `role="status"` for an error **fails 7.5.2**.
 
 Do **not** look for these under Theme 7 — they live elsewhere, and citing 7.x for
 them is a reporting error:
@@ -263,29 +308,33 @@ Full-page checks.
 | Changes in reading direction indicated | 8.10 |
 
 ### Theme 9 — Information Structure
-Scan for: `<h1>`–`<h6>`, `<ul>`, `<ol>`, `<dl>`, `<blockquote>`, `<header>`, `<nav>`, `<main>`, `<footer>`, `<aside>`, `<section>`, `<article>`
+Scan for: `<h1>`–`<h6>`, `[role="heading"]`, `<ul>`, `<ol>`, `<dl>`, `<q>`, `<blockquote>`, `<header>`, `<nav>`, `<search>`, `<main>`, `<footer>`, `<aside>`, `<section>`, `<article>`
 
 | Check | Criteria |
 |-------|----------|
-| Headings logically ordered (no skipped levels) | 9.1 |
-| Document structure uses landmarks | 9.2 |
+| Heading hierarchy is coherent; heading text is relevant; **every visual heading is marked up as one** | 9.1 |
+| Landmarks: `banner`, `navigation`, **`search`**, `main`, `contentinfo`; one visible `main`/`banner`/`contentinfo`; `<header>`/`<footer>` not nested in `main`/`section`/etc. | 9.2 |
 | Lists use proper markup | 9.3 |
-| Quotations properly marked | 9.4 |
+| Quotations properly marked — `<q>` inline, `<blockquote>` for blocks | 9.4 |
+
+Note: **9.1.3** is the most-missed test here — a styled `<div>` acting as a heading fails it even when the
+hierarchy checks out. **9.2 requires a `search` landmark** and does *not* require `complementary`/`<aside>`.
 
 ### Theme 10 — Presentation of Information
 CSS and layout checks.
 
 | Check | Criteria |
 |-------|----------|
-| Style sheets used to control presentation | 10.1 |
-| Visible content conveying information is accessible to AT | 10.2 |
-| Information remains understandable with style sheets disabled | 10.3 |
+| Style sheets used to control presentation; no presentation tags/attributes; no spaces faking layout (10.1.3) | 10.1 |
+| Visible content conveying information is accessible to AT (e.g. CSS background images) | 10.2 |
+| Reading order remains understandable with style sheets disabled | 10.3 |
 | Text readable at 200% font size — AA | 10.4 |
 | Background and font colour declarations used together — AA | 10.5 |
-| Links whose nature is not obvious are visible against surrounding text | 10.6 |
-| Visible focus on every element receiving keyboard focus | 10.7 |
-| Hidden content is correctly ignored by AT | 10.8 |
-| Information not conveyed by shape, size or location alone | 10.9, 10.10 |
+| Colour-only links: ≥3:1 vs surrounding text, **plus** non-colour hover **and** focus indications | 10.6 |
+| Visible focus on every element receiving keyboard focus, **contrast ≥ 3:1** | 10.7 |
+| Hidden content is correctly ignored by AT, or made renderable on user action | 10.8 |
+| Information not conveyed by shape, size or location alone | 10.9 |
+| That alternative means of conveying it is relevant | 10.10 |
 | Content reflows at 320px width / 256px height — AA | 10.11 |
 | Text spacing can be redefined without loss — AA | 10.12 |
 | Additional content on hover/focus is dismissible, hoverable, persistent — AA | 10.13 |
@@ -299,10 +348,30 @@ Scan for: `<form>`, `<input>`, `<select>`, `<textarea>`, `<button>`, `<fieldset>
 | All fields have associated labels | 11.1 |
 | Labels are relevant | 11.2 |
 | Labels include visible text in accessible name | 11.2 |
-| Grouped fields use `<fieldset>/<legend>` | 11.5 |
-| Required fields indicated before or at field | 11.10 |
-| Error messages linked to fields and descriptive (AA) | 11.11 |
-| `autocomplete` used for personal data (AA) | 11.13 |
+| Labels for same-function fields are consistent across the set of pages — AA | 11.3 |
+| Label and its field are located next to each other | 11.4 |
+| Related fields are grouped (`<fieldset>`, `role="group"`, or `role="radiogroup"`) | 11.5 |
+| Each group has a legend (`<legend>`, or `aria-label`/`aria-labelledby` on `role="group"`) | 11.6 |
+| That legend is relevant | 11.7 |
+| `<select>` options grouped with `<optgroup>`, each with a relevant `label` | 11.8 |
+| Button labels are relevant, and contain at least the visible label | 11.9 |
+| Required fields indicated before or at the field | 11.10 |
+| Error messages identify the field by name and are linked to it (`aria-invalid`) | 11.10 |
+| Error messages suggest the expected data type/format and examples — AA | 11.11 |
+| Forms with legal/financial/data consequences are reversible, checkable, or confirmed — AA | 11.12 |
+| `autocomplete` used for personal data — AA | 11.13 |
+
+**11.10 vs 11.11 — the most misfiled pair in RAWeb.** *Identifying* an error and linking it to its field
+is **11.10** (tests .3/.4/.6/.7, via `aria-invalid` — WCAG 3.3.1, **Level A**). **11.11** is *only*
+suggestions: expected data types/formats and examples (WCAG 3.3.3, AA). Filing error-linking under 11.11
+downgrades a Level A failure to AA.
+
+**11.4 has exact geometry** (tests 11.4.2/11.4.3): for normal fields the label sits immediately **above or
+left** (LTR); for `checkbox`, `radio` and `role="switch"` it sits immediately **below or right**.
+
+**Trap in 11.10**: `required`/`aria-required` alone satisfies 11.10.1 — but it then *triggers* 11.10.2,
+which demands a **visible** mandatory indication (in the label, an associated passage of text, or the
+legend). Attribute-only marking passes 11.10.1 and fails 11.10.2.
 
 ### Theme 12 — Navigation
 Full-page/site checks.
@@ -311,15 +380,25 @@ Full-page/site checks.
 |-------|----------|
 | ≥2 navigation systems across the set of pages — AA | 12.1 |
 | Menus and navigation bars always in the same place — AA | 12.2 |
-| Site map page is relevant — AA | 12.3 |
+| Site map is representative of the architecture; its links work and go where their text says — AA | 12.3 |
 | Site map reachable identically across pages — AA | 12.4 |
 | Search engine reachable in the same way — AA | 12.5 |
 | Repeated content-grouping blocks can be reached or bypassed | 12.6 |
 | Skip link to the main content region present and functional | 12.7 |
-| Navigation sequence is consistent (tab order; no positive `tabindex`) | 12.8 |
+| Navigation sequence is consistent — including **after scripts insert content** | 12.8 |
 | **No keyboard traps** | 12.9 |
 | Single-key shortcuts are remappable or disableable | 12.10 |
 | Content appearing on hover/focus/activation is keyboard reachable — AA | 12.11 |
+
+**12.8 does not mention `tabindex`.** Its tests are: the navigation sequence is consistent (12.8.1), and it
+*stays* consistent after a script updates or inserts content — focus repositioned correctly (12.8.2). A
+positive `tabindex` is a reliable *smell* because it usually breaks 12.8.1, but RAWeb explicitly notes the
+sequence "does not have to follow the natural reading order ... as long as the elements are accessible in a
+coherent order". Report the incoherent order, not the attribute.
+
+**12.6 vs 12.7**: bypassing *repeated content blocks* is 12.6, which accepts five routes — a landmark role,
+a heading, a hide button, a preceding skip link, or a bypass link. 12.7 is narrower: a skip link **to the
+main content region** specifically.
 
 ### Theme 13 — Consultation
 Behavioural and interaction checks.
@@ -332,22 +411,62 @@ Behavioural and interaction checks.
 | That accessible version offers the same information | 13.4 |
 | Cryptic content is identified | 13.5 |
 | Alternatives to cryptic content are relevant | 13.6 |
-| No flashing more than 3 times per second | 13.7 |
-| Moving or blinking content is controllable — pause, stop, hide | 13.8 |
+| No flashing more than 3×/second — **or** cumulative area ≤ 21824 px² (media, script, CSS) | 13.7 |
+| Moving or blinking content is controllable — pause, stop, hide (exempt if ≤ 5 s) | 13.8 |
 | Content viewable in any screen orientation — AA | 13.9 |
 | Complex gestures have a single-point alternative (multi-touch **and path-based**) | 13.10 |
 | Single-point actions can be cancelled | 13.11 |
-| Motion-triggered features have a non-motion alternative | 13.12 |
+| Motion-triggered features have a non-motion alternative, **and motion detection can be disabled** | 13.12 |
+| Document conversion preserves accessibility information — AA | 13.13 |
+| Biometric identification/control has an alternative | 13.14 |
 
 Note: warning the user before a **change of context** is **7.4**, not 13.1.
 Test **13.10.2** covers *path-based* gestures — a drag with no single-point
 alternative (a slider that only drags, a splitter with no reset) fails it. This
 is widely missed because 13.10 reads as though it were only about pinch.
 
+**13.13 and 13.14 have no WCAG equivalent** (EN 301 549 §5.4 and §5.3). **13.14 is Level A**: fingerprint,
+facial or voice authentication needs a non-biometric alternative — and if the alternative is also
+biometric, it must use a *sufficiently different* characteristic. No WCAG-based scanner reports either.
+
+**13.7 and 13.8 both carry exemptions** that produce false failures if ignored: a flash above 3 Hz still
+conforms if the cumulative area is ≤ 21824 px² (13.7), and movement lasting ≤ 5 s needs no control at all
+(13.8). Conversely, pausing movement **on focus only** is explicitly *not* compliant, and where movement
+cannot be stopped (a progress bar) 13.8 is **NA**.
+
+### The EN 301 549-only criteria — what WCAG tooling can never see
+
+RAWeb has **30 criteria with no WCAG mapping at all**. They come straight from EN 301 549 and are the
+reason a RAWeb audit is not a WCAG audit. No axe/Lighthouse/WAVE rule will ever mention one.
+
+**23 of them live in Themes 14–17** (below). The other **7 hide inside ordinary themes** and are the
+easiest in the whole referential to miss, because nothing around them looks unusual:
+
+| Criterion | Level | What it requires |
+|-----------|-------|------------------|
+| 4.14 | AA | Caption/AD toggles at the same level as play/pause |
+| 4.15 | AA | Captions preserved through transmit/convert/record |
+| 4.16 | AA | Audio description preserved through transmit/convert/record |
+| 4.17 | AA | Caption presentation controllable by the user |
+| 4.18 | AA | Subtitles can be vocalised |
+| 13.13 | AA | Document conversion preserves accessibility information |
+| **13.14** | **A** | **Biometric identification/control has an alternative** |
+
+If the scope has a media player, a document export, or biometric login, these apply — and a clean
+automated scan says nothing about them.
+
 ### Themes 14–17 (EN 301 549 Extended)
 These themes go beyond standard WCAG web testing and cover documentation,
-editing tools, support services, and real-time communication. Query them
-individually when relevant:
+editing tools, support services, and real-time communication. They contain
+**Level A criteria as well as AA**, so a "full audit" that never queries them is
+incomplete. Query a theme when its trigger is in scope:
+
+| Query when the scope has… | Theme |
+|---------------------------|-------|
+| Accessibility documentation, or a page describing accessibility features | 14 |
+| A CMS, rich-text editor, or anything that generates/transforms content | 15 |
+| A help desk, contact form, or support channel | 16 |
+| Chat, voice/video calling, RTT, or telecoms features | 17 |
 
 ```bash
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh topic 14  # Documentation & accessibility features
