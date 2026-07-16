@@ -258,6 +258,11 @@ Please keep the skills focused, accurate, and grounded in the official reference
 
 ## License
 
-- **Skills and scripts**: See [LICENSE](LICENSE) file
+- **Skills and scripts**: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) • Geoffrey Crofte — see [LICENSE](LICENSE)
 - **RAWeb reference data**: [CC-BY 3.0 LU](https://creativecommons.org/licenses/by/3.0/lu/) • Service information et presse, Luxembourg
 - **RAAM reference data**: [CC-BY 3.0 LU](https://creativecommons.org/licenses/by/3.0/lu/) • Service information et presse, Luxembourg
+
+The skills are a derivative work of the RAWeb and RAAM referentials. CC-BY 3.0 §4(b)
+permits licensing a derivative under a later version of the licence, which is what CC-BY
+4.0 here does; attribution to *Service information et presse, Luxembourg* is retained for
+the reference data regardless.

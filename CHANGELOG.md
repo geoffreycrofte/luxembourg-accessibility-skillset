@@ -187,6 +187,22 @@ and its WCAG mapping.
 - Scan hints corrected where they disagreed with the tests: Theme 9 gained `<q>` (9.4.1),
   `<search>` (9.2.1) and `[role="heading"]` (9.1.3); Theme 6 gained image, composite and
   SVG links (`<area href>`, `<svg><a>` — tests 6.1.2/6.1.3/6.1.4).
+- **Skill metadata now distinguishes the skillset from the referential.** The `metadata`
+  block in all four skills described two different subjects without marking the switch:
+  `author`/`version` referred to the skillset while `source`/`license` referred to the
+  Luxembourg referential. `source:` is now **`reference:`** (the upstream referential) and
+  **`repository:`** (this skillset), and the referential's licence is stated explicitly as
+  **`reference-license:`** rather than being conflated with the skills' own `license:`.
+  `author:` is now `Geoffrey Crofte` rather than the repository slug.
+- **Licence: CC0 1.0 → CC-BY 4.0 for the skills and scripts.** Disentangling the metadata
+  surfaced that `LICENSE` was CC0 while every skill's frontmatter claimed CC-BY-3.0-LU —
+  the referential's licence, not the skillset's. Resolved in favour of CC-BY: the skills
+  are a derivative work of RAWeb/RAAM, and CC-BY 3.0 §4(b) permits a derivative under a
+  later version of the licence. `LICENSE` now carries the CC-BY 4.0 legalcode and the
+  README states the terms explicitly rather than deferring to the file. Reference data
+  remains CC-BY 3.0 LU • *Service information et presse, Luxembourg*. **Releases up to
+  and including 1.4.0 were published under CC0 1.0 and stay CC0 — this applies from 1.5.0
+  onward.**
 
 ### Notes
 
