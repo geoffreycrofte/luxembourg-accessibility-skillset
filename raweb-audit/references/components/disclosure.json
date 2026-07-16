@@ -2,23 +2,34 @@
   "slug": "disclosure",
   "name": "Disclosure (Show/Hide)",
   "description": "A button that controls the visibility of a section of content; toggling it shows or hides the associated content.",
+  "code_examples": "patterns/disclosure.md",
+  "native_element": "<details> / <summary> (zero JS), or <button aria-expanded> + hidden",
+  "raweb_criteria": [
+    { "id": "7.1", "reason": "The button's expanded/collapsed state must be exposed via aria-expanded — a visual chevron alone tells assistive technologies nothing." },
+    { "id": "7.3", "reason": "The control must be a real button so Enter and Space work without a keydown handler." },
+    { "id": "10.7", "reason": "The trigger must show a visible focus indicator." },
+    { "id": "10.8", "reason": "Collapsed content must be genuinely hidden from assistive technologies. Hiding it with opacity or visual clipping alone leaves it readable and tabbable while invisible." }
+  ],
   "keyboard_interactions": [
     { "key": "Enter", "action": "Toggles the visibility of the disclosure content" },
     { "key": "Space", "action": "Toggles the visibility of the disclosure content" }
   ],
   "aria": {
     "roles": [
-      { "role": "button", "element": "disclosure control", "description": "Identifies the control element as a button (not needed on native <button>)" }
+      { "role": "button", "element": "disclosure control", "description": "Identifies the control element as a button. Implicit on `<button>` — do not add it manually." }
     ],
     "required_attributes": [
-      { "attribute": "aria-expanded", "element": "disclosure button", "description": "true when content is visible; false when hidden" }
+      { "attribute": "aria-expanded", "element": "disclosure button", "values": ["true", "false"], "description": "State. Goes on the BUTTON, never on the panel: it describes what the button does, not what the panel is." }
     ],
     "optional_attributes": [
-      { "attribute": "aria-controls", "element": "disclosure button", "description": "References the ID of the content element that is shown or hidden" }
+      { "attribute": "aria-controls", "element": "disclosure button", "description": "References the id of the controlled panel. Support is thin — treat it as a bonus, never as the thing that conveys state. The panel must always exist in the DOM for the reference to resolve." }
     ]
   },
   "notes": [
-    "Prefer native <details>/<summary> elements when appropriate",
+    "Prefer native `<details>`/`<summary>`: the browser supplies the button semantics, aria-expanded, Enter/Space, and the show/hide behaviour with zero JS.",
+    "aria-expanded belongs on the control, not the panel — this is the single most common disclosure bug.",
+    "Hide the panel with the `hidden` attribute or `display: none`. Never with `opacity: 0`, `visibility: hidden` + `height: 0`, or off-screen positioning: those leave the content in the accessibility tree and in the tab order.",
+    "Do not toggle the button's accessible name (Show/Hide) AND aria-expanded — a screen reader then announces the state twice, and contradictorily. Keep the name stable and let aria-expanded carry the state.",
     "The disclosure pattern is simpler than accordion — use it for standalone show/hide controls"
   ]
 }

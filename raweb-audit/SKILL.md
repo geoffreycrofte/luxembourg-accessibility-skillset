@@ -8,7 +8,7 @@ description: >
   test procedures. Default target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.2.0
+  version: 1.3.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -50,15 +50,21 @@ Raw JSON files: `${CLAUDE_SKILL_DIR}/references/`
 
 ### Component pattern references (WAI-ARIA APG)
 
-When auditing interactive components (dialogs, tabs, menus, carousels, etc.),
-verify their implementation against the correct WAI-ARIA pattern:
+All 30 APG patterns ship with a **criteria mapping**, an **expected contract**,
+and a **catalogue of known defects**. Use all three when auditing an interactive
+component.
 
 ```bash
 # Find the expected pattern for a component
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh find "<keyword>"
 
-# Show full expected keyboard + ARIA spec for a component
+# The contract, as markdown tables: which RAWeb criteria apply and WHY,
+# the expected keyboard interaction, and every ARIA attribute with its
+# allowed values/states
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh show <slug>
+
+# Known defects + the manual test procedure for this pattern
+bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh code <slug>
 
 # Check which patterns use a specific ARIA role
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh roles "<role>"
@@ -67,12 +73,31 @@ bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh roles "<role>"
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh list
 ```
 
-Individual pattern files: `${CLAUDE_SKILL_DIR}/references/components/<slug>.json`
+**`show <slug>` gives you the per-component audit scope.** Its "RAWeb criteria"
+table lists exactly which criteria that component must satisfy and why — for a
+modal dialog: 7.1, 7.3, 7.4, 10.7, 12.8, 12.9. Levels and official titles are
+resolved at render time from `niveaux.json` and `criteres.json`, so they cannot
+be stale. Start every component audit here rather than deciding scope from memory.
 
-Each pattern file contains the expected `keyboard_interactions`, `aria.roles`,
-`aria.required_attributes`, and `aria.optional_attributes` as defined by the APG.
-Use these as the **source of truth** when checking whether a component's ARIA
-implementation is correct and complete (RAWeb criteria 7.1, 7.3, 12.8).
+**`code <slug>` is a defect catalogue, not just example code.** Each pattern file
+holds:
+
+- **`### Don't` blocks** — real production defects, each stating the concrete
+  failure it causes for a real user. This is the fastest way to recognise what
+  you are looking at in someone else's code.
+- **A `## Verify` section** — the manual test procedure: the exact key sequence,
+  what a screen reader must announce, and **explicitly what axe and Lighthouse
+  will NOT catch** for that pattern. Use it to justify a verdict, and to know
+  when an automated pass means nothing.
+- **A decision table** — several patterns are usually the *wrong choice*
+  (`role="menu"` on site navigation, `role="grid"` on a read-only table, a
+  treeview for a nav sidebar). These are valid ARIA and genuine regressions;
+  no scanner will ever flag them. Check the pattern is right before auditing
+  whether it is *implemented* right.
+
+Files: `${CLAUDE_SKILL_DIR}/references/components/<slug>.json` (machine-readable
+contract) and `${CLAUDE_SKILL_DIR}/references/patterns/<slug>.md` (defects +
+test procedure).
 
 ---
 
@@ -94,7 +119,28 @@ ALWAYS look up the detailed methodology before marking a criterion as pass/fail:
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh methodology <topic.criterion.test>
 ```
 
-### Step 3: Report findings
+**Read the criterion's tests, not just its title.** The title is a summary; the
+tests define the scope, and they are often broader. Criterion 11.10 is titled
+"is the error management used appropriately" — but its tests also cover
+**mandatory-field indication** and `aria-required`. Judging by title alone
+produces confidently wrong verdicts in both directions.
+
+### Step 3: Audit interactive components against their pattern
+
+When the scope contains a dialog, tabs, a menu, a combobox, a carousel:
+
+1. `find "<keyword>"` → identify the pattern
+2. **Check the pattern is the right one.** `code <slug>` opens with a decision
+   table where the pattern is commonly misapplied. `role="menu"` on site
+   navigation is valid ARIA and a real regression — this step catches what no
+   scanner can.
+3. `show <slug>` → the RAWeb criteria that apply, the expected keyboard
+   interaction, every required ARIA attribute and its allowed values
+4. `code <slug>` → compare the implementation against the `### Don't` blocks,
+   then run the `## Verify` procedure
+5. Record verdicts against the criteria from step 3
+
+### Step 4: Report findings
 
 Use the structured report format below.
 
@@ -113,13 +159,13 @@ Scan for: `<img>`, `<svg>`, `<canvas>`, `<object>`, `<embed>`, `<area>`, `[role=
 |-------|----------|
 | Informative images have text alternatives | 1.1 |
 | Decorative images are properly hidden | 1.2 |
-| Text alternatives are relevant and concise | 1.3 |
-| CAPTCHA/test images have correct alternatives | 1.4 |
+| Text alternatives are relevant | 1.3 |
+| CAPTCHA/test image alternatives are relevant | 1.4 |
 | CAPTCHA has a non-visual alternative | 1.5 |
 | Complex images have detailed descriptions | 1.6 |
 | Detailed descriptions are relevant | 1.7 |
-| Images of text have CSS alternatives (AA) | 1.8 |
-| Images of text with captions have relevant alternatives | 1.9 |
+| Images of text replaced by styled text where possible — AA | 1.8 |
+| Image captions correctly linked to their image (`<figure>`/`<figcaption>`) | 1.9 |
 
 ### Theme 2 — Frames
 Scan for: `<iframe>`, `<frame>`
@@ -136,61 +182,85 @@ Requires visual inspection and contrast analysis tools.
 |-------|----------|
 | Information not conveyed by colour alone | 3.1 |
 | Text contrast ≥ 4.5:1 (normal) / 3:1 (large) — AA | 3.2 |
-| Non-text contrast ≥ 3:1 — AA | 3.3 |
+| Non-text contrast ≥ 3:1 | 3.3 |
 
 ### Theme 4 — Multimedia
 Scan for: `<video>`, `<audio>`, `<object>`, `<embed>`, `<canvas>`, `<svg>`, `<bgsound>`
 
 | Check | Criteria |
 |-------|----------|
-| Pre-recorded media has text transcript | 4.1 |
-| Captions present and relevant | 4.1, 4.3 |
-| Audio description available (AA) | 4.5, 4.6 |
-| Media controls are keyboard accessible | 4.10 |
-| No auto-playing audio > 3 seconds | 4.11 |
+| Pre-recorded media has a transcript or audio description | 4.1 |
+| That transcript / audio description is relevant | 4.2 |
+| Synchronised media has synchronised captions | 4.3 |
+| Those captions are relevant | 4.4 |
+| Synchronised audio description present — AA | 4.5 |
+| That audio description is relevant — AA | 4.6 |
+| Time-based media is clearly identifiable | 4.7 |
+| Automatically triggered sound is controllable by the user | 4.10 |
+| Media viewing controls operable by keyboard and pointer | 4.11 |
+| Media is compatible with assistive technologies | 4.13 |
 
 ### Theme 5 — Tables
 Scan for: `<table>`, `<th>`, `<td>`, `<caption>`, `[role="table"]`
 
 | Check | Criteria |
 |-------|----------|
-| Data tables identified with appropriate markup | 5.1, 5.3 |
-| Tables have captions/titles | 5.4 |
-| Tables have summaries when complex | 5.5 |
-| Header cells use `<th>` with `scope` | 5.6, 5.7 |
-| Layout tables do not use table semantics | 5.8 |
+| Complex data tables have a summary | 5.1 |
+| That summary is relevant | 5.2 |
+| Layout tables: linearised content still comprehensible | 5.3 |
+| Where a data table has a title, it is correctly associated (`<caption>`) | 5.4 |
+| That title is relevant | 5.5 |
+| Column and row headers declared with `<th>` | 5.6 |
+| Cells associated with their headers (`scope`, or `headers`/`id` when complex) | 5.7 |
+| Layout tables do not use data-table semantics | 5.8 |
 
 ### Theme 6 — Links
 Scan for: `<a>`, `[role="link"]`
 
 | Check | Criteria |
 |-------|----------|
-| Links have accessible names | 6.1 |
-| Link text is relevant to destination | 6.1 |
-| Link accessible names include visible text | 6.2 |
+| Every link is explicit — purpose clear from text or context | 6.1 |
+| Every link has an accessible name | 6.2 |
+| Link whose nature is not obvious is visible against surrounding text | 10.6 |
+
+Note: indicating a link's file format and size is **good practice, not a RAWeb
+criterion**. Recommend it, but do not record it as a 13.3 failure.
 
 ### Theme 7 — Scripts
 Scan for: `onclick`, `onkeydown`, `addEventListener`, `[role]`, `[aria-*]`, `[tabindex]`
 
 | Check | Criteria |
 |-------|----------|
-| Script elements keyboard operable | 7.1 |
-| Script content accessible to AT | 7.2 |
-| Script elements can be navigated in order | 7.3 |
-| Status messages use appropriate ARIA roles | 7.4 |
-| Animated/moving content has controls (AA) | 7.5 |
+| Script-driven UI is compatible with AT (correct role, name, value) | 7.1 |
+| Where a script has an alternative, that alternative is relevant | 7.2 |
+| Scripts operable by keyboard AND any pointing device | 7.3 |
+| Change of context is announced or user-controlled | 7.4 |
+| Status messages correctly rendered to AT — AA | 7.5 |
+
+Do **not** look for these under Theme 7 — they live elsewhere, and citing 7.x for
+them is a reporting error:
+
+| Frequently misfiled here | Actually |
+|--------------------------|----------|
+| Moving/blinking content has pause-stop-hide controls | **13.8** |
+| Flashing more than 3 times per second | **13.7** |
+| Keyboard traps | **12.9** |
 
 ### Theme 8 — Mandatory Elements
 Full-page checks.
 
 | Check | Criteria |
 |-------|----------|
-| Valid DOCTYPE and no parsing errors | 8.1, 8.2 |
-| `lang` attribute on `<html>` is valid | 8.3, 8.4 |
-| Page `<title>` is present and relevant | 8.5, 8.6 |
-| Language changes marked with `lang` (AA) | 8.7, 8.8 |
-| No duplicate `id` attributes | 8.2 |
-| Opening/closing tags properly nested | 8.1 |
+| Page has a defined document type (`<!DOCTYPE html>`) | 8.1 |
+| Source code is valid — nesting, no duplicate `id` | 8.2 |
+| Default language present on `<html>` | 8.3 |
+| That language code is relevant | 8.4 |
+| Page has a `<title>` | 8.5 |
+| That title is relevant | 8.6 |
+| Each language change indicated in the source — AA | 8.7 |
+| Each language-change code valid and relevant — AA | 8.8 |
+| Tags not used only for layout purposes | 8.9 |
+| Changes in reading direction indicated | 8.10 |
 
 ### Theme 9 — Information Structure
 Scan for: `<h1>`–`<h6>`, `<ul>`, `<ol>`, `<dl>`, `<blockquote>`, `<header>`, `<nav>`, `<main>`, `<footer>`, `<aside>`, `<section>`, `<article>`
@@ -207,14 +277,19 @@ CSS and layout checks.
 
 | Check | Criteria |
 |-------|----------|
-| CSS used for presentation, not HTML attributes | 10.1 |
-| Content readable without CSS | 10.2, 10.3 |
-| Content usable at 200% zoom (AA) | 10.4 |
-| Content reflows at 320px CSS width (AA) | 10.11 |
-| Visible focus on all interactive elements | 10.7 |
-| Hidden content not keyboard-trapping | 10.8 |
-| Custom text spacing does not break content (AA) | 10.12 |
-| Custom user properties can override (AA) | 10.13 |
+| Style sheets used to control presentation | 10.1 |
+| Visible content conveying information is accessible to AT | 10.2 |
+| Information remains understandable with style sheets disabled | 10.3 |
+| Text readable at 200% font size — AA | 10.4 |
+| Background and font colour declarations used together — AA | 10.5 |
+| Links whose nature is not obvious are visible against surrounding text | 10.6 |
+| Visible focus on every element receiving keyboard focus | 10.7 |
+| Hidden content is correctly ignored by AT | 10.8 |
+| Information not conveyed by shape, size or location alone | 10.9, 10.10 |
+| Content reflows at 320px width / 256px height — AA | 10.11 |
+| Text spacing can be redefined without loss — AA | 10.12 |
+| Additional content on hover/focus is dismissible, hoverable, persistent — AA | 10.13 |
+| CSS-only additional content can be made visible by keyboard | 10.14 |
 
 ### Theme 11 — Forms
 Scan for: `<form>`, `<input>`, `<select>`, `<textarea>`, `<button>`, `<fieldset>`, `<legend>`, `<label>`, `[role="form"]`
@@ -234,26 +309,40 @@ Full-page/site checks.
 
 | Check | Criteria |
 |-------|----------|
-| ≥2 navigation mechanisms (nav, sitemap, search) — AA | 12.1 |
-| Navigation consistent across pages (AA) | 12.2 |
-| Skip links present and functional | 12.7 |
-| Tab order logical | 12.8 |
-| No positive `tabindex` values | 12.8 |
-| Active page indicated in navigation | 12.2 |
-| Navigation landmarks labelled when multiple | 12.3 |
+| ≥2 navigation systems across the set of pages — AA | 12.1 |
+| Menus and navigation bars always in the same place — AA | 12.2 |
+| Site map page is relevant — AA | 12.3 |
+| Site map reachable identically across pages — AA | 12.4 |
+| Search engine reachable in the same way — AA | 12.5 |
+| Repeated content-grouping blocks can be reached or bypassed | 12.6 |
+| Skip link to the main content region present and functional | 12.7 |
+| Navigation sequence is consistent (tab order; no positive `tabindex`) | 12.8 |
+| **No keyboard traps** | 12.9 |
+| Single-key shortcuts are remappable or disableable | 12.10 |
+| Content appearing on hover/focus/activation is keyboard reachable — AA | 12.11 |
 
 ### Theme 13 — Consultation
 Behavioural and interaction checks.
 
 | Check | Criteria |
 |-------|----------|
-| No uncontrollable refreshes or redirects | 13.1 |
-| New windows indicated to user | 13.2 |
-| Downloads indicate format and size | 13.3 |
-| Time limits adjustable | 13.1 |
-| No unexpected context changes | 13.1 |
-| No content flashing > 3 times/second | 13.8 |
-| Moving content has pause/stop controls | 13.8 |
+| User controls every time limit — refreshes, redirects, session limits | 13.1 |
+| A new window is never opened without user action | 13.2 |
+| Downloadable office documents have an accessible version | 13.3 |
+| That accessible version offers the same information | 13.4 |
+| Cryptic content is identified | 13.5 |
+| Alternatives to cryptic content are relevant | 13.6 |
+| No flashing more than 3 times per second | 13.7 |
+| Moving or blinking content is controllable — pause, stop, hide | 13.8 |
+| Content viewable in any screen orientation — AA | 13.9 |
+| Complex gestures have a single-point alternative (multi-touch **and path-based**) | 13.10 |
+| Single-point actions can be cancelled | 13.11 |
+| Motion-triggered features have a non-motion alternative | 13.12 |
+
+Note: warning the user before a **change of context** is **7.4**, not 13.1.
+Test **13.10.2** covers *path-based* gestures — a drag with no single-point
+alternative (a slider that only drags, a splitter with no reset) fails it. This
+is widely missed because 13.10 reads as though it were only about pinch.
 
 ### Themes 14–17 (EN 301 549 Extended)
 These themes go beyond standard WCAG web testing and cover documentation,
@@ -365,11 +454,28 @@ grep -rn 'color:.*red\|color:.*green\|text-red\|text-green\|text-danger\|text-su
 
 ## When auditing, ALWAYS:
 
-1. **Look up the exact criterion** before rendering a verdict — do not rely on memory
-2. **Apply the official test methodology** from `methodologies.json`
-3. **Check the expected ARIA pattern** for interactive components: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh show <slug>` — verify keyboard interactions, required roles, and required attributes match the APG specification
-4. **Use precise RAWeb criterion numbers** (e.g., "RAWeb 11.1", not just "WCAG 1.3.1")
-5. **Include the WCAG mapping** for cross-reference (found in the criterion's `references`)
-6. **Provide actionable remediation** with code examples — when the fix involves an ARIA widget, include the correct pattern from the component reference
-7. **Distinguish between Level A and AA** violations — both are required for conformance, but Level A failures are more critical
-8. **Note when automated testing is insufficient** — many criteria require manual verification (contrast on images, relevance of alternatives, etc.)
+1. **Look up the exact criterion** before rendering a verdict — never from memory.
+   RAWeb numbering is **not** WCAG numbering: RAWeb 7.3 is keyboard operability;
+   WCAG 2.1.1 is. A wrong number in a report is worse than no number, because it
+   is confidently wrong and the reader cannot tell
+2. **Read the criterion's tests, not just its title** — the title summarises, the
+   tests define the scope (see 11.10, which covers mandatory-field indication
+   despite being titled "error management")
+3. **Apply the official test methodology** from `methodologies.json`
+4. **For interactive components, start with `show <slug>`** — its RAWeb criteria
+   table *is* the audit scope for that component. Then `code <slug>` for the
+   known defects and the manual test procedure
+5. **Check the pattern itself is right**, not only its implementation. A
+   `role="menu"` site nav, a `role="grid"` read-only table, or a treeview used
+   for navigation are all valid ARIA and genuine regressions. `code <slug>` opens
+   with the decision table for this
+6. **Use precise RAWeb criterion numbers** (e.g., "RAWeb 11.1", not just "WCAG 1.3.1")
+7. **Include the WCAG mapping** for cross-reference — note that one RAWeb
+   criterion usually maps to **several** WCAG success criteria; cite them all
+8. **Provide actionable remediation** with code examples — the `### Do` blocks in
+   `references/patterns/<slug>.md` are ready to quote
+9. **Distinguish between Level A and AA** violations — both are required for
+   conformance, but Level A failures are more critical
+10. **State what automation cannot decide.** Each pattern's `## Verify` section
+    lists explicitly what axe and Lighthouse miss for it. A clean automated scan
+    is not a pass — say so in the report rather than letting silence imply it

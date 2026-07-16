@@ -2,29 +2,104 @@
   "slug": "dialog-modal",
   "name": "Dialog (Modal)",
   "description": "A window overlaid on the primary window that traps focus and prevents user interaction with content outside the active dialog until it is closed.",
+  "code_examples": "patterns/dialog-modal.md",
+  "native_element": "<dialog> + .showModal()",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "The dialog's role and accessible name must be exposed to assistive technologies."
+    },
+    {
+      "id": "7.3",
+      "reason": "Open, close and every control inside must work with keyboard and any pointing device."
+    },
+    {
+      "id": "7.4",
+      "reason": "Opening a modal is a change of context: it must be user-initiated, never automatic on load or on focus."
+    },
+    {
+      "id": "10.7",
+      "reason": "Focus must stay visible on every control inside the dialog, including against the backdrop."
+    },
+    {
+      "id": "12.8",
+      "reason": "Focus moves into the dialog on open and returns to the invoking element on close, keeping the navigation sequence coherent."
+    },
+    {
+      "id": "12.9",
+      "reason": "The Tab loop is only compliant because Escape and a visible close button let the keyboard user leave. A loop with no keyboard exit is a keyboard trap."
+    }
+  ],
   "keyboard_interactions": [
-    { "key": "Tab", "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first" },
-    { "key": "Shift + Tab", "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last" },
-    { "key": "Escape", "action": "Closes the dialog" }
+    {
+      "key": "Tab",
+      "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first"
+    },
+    {
+      "key": "Shift + Tab",
+      "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last"
+    },
+    {
+      "key": "Escape",
+      "action": "Closes the dialog"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "dialog", "element": "dialog container", "description": "Identifies the element as a dialog" }
+      {
+        "role": "dialog",
+        "element": "dialog container",
+        "description": "Identifies the element as a dialog. Implicit on `<dialog>` — do not add it manually."
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "dialog container", "description": "Set to 'dialog'" },
-      { "attribute": "aria-modal", "element": "dialog container", "description": "Set to true" },
-      { "attribute": "aria-labelledby or aria-label", "element": "dialog container", "description": "Accessible name, preferably referencing a visible dialog title" }
+      {
+        "attribute": "role",
+        "element": "dialog container",
+        "values": [
+          "dialog"
+        ],
+        "description": "Set to 'dialog'. Implicit on the native `<dialog>` element — only needed when building from a `<div>`."
+      },
+      {
+        "attribute": "aria-modal",
+        "element": "dialog container",
+        "values": [
+          "true"
+        ],
+        "description": "Marks content outside the dialog as inert to assistive technologies. Set automatically by showModal() — only needed when building from a `<div>`."
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "dialog container",
+        "description": "Accessible name, preferably aria-labelledby referencing the visible dialog title."
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-describedby", "element": "dialog container", "description": "References descriptive content within the dialog" }
+      {
+        "attribute": "aria-describedby",
+        "element": "dialog container",
+        "description": "References descriptive content within the dialog, announced after the name."
+      },
+      {
+        "attribute": "open",
+        "element": "dialog container",
+        "values": [
+          "present",
+          "absent"
+        ],
+        "description": "State reflecting whether the dialog is rendered. Read it, never set it: the open attribute opens a NON-modal dialog with no focus trap, no top layer and no inert background."
+      }
     ]
   },
   "notes": [
+    "Prefer the native `<dialog>` element with .showModal(): the browser provides the focus trap, Escape handling, background inertness, top layer stacking and focus restoration for free.",
+    "Never open a `<dialog>` by setting the open attribute or property — that produces a non-modal dialog. Only .showModal() creates modal semantics.",
     "Focus must be trapped inside the dialog — Tab/Shift+Tab must not escape",
     "On open, set focus to the first focusable element or a static element for long content",
     "On close, return focus to the element that invoked the dialog",
     "Content outside the dialog should be inert (use the inert attribute or aria-hidden='true')",
+    "Never put aria-hidden='true' on a container that still holds focusable elements — use inert instead, which removes both semantics and focusability",
     "For destructive actions, focus the least destructive action button"
   ]
 }

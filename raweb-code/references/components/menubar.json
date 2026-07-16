@@ -3,40 +3,150 @@
   "name": "Menu and Menubar",
   "description": "A menu offers a list of choices (actions or functions), while a menubar is a visually persistent, typically horizontal menu providing consistent access to commands.",
   "keyboard_interactions": [
-    { "key": "Enter", "action": "Opens submenu and focuses first item; or activates item and closes menu" },
-    { "key": "Space", "action": "(Optional) Toggles menuitemcheckbox; checks menuitemradio; opens submenu; or activates item" },
-    { "key": "Down Arrow", "action": "In menubar: opens submenu. In menu: moves focus to next item" },
-    { "key": "Up Arrow", "action": "In menu: moves focus to previous item. In menubar (optional): opens submenu, focuses last item" },
-    { "key": "Right Arrow", "action": "In menubar: moves to next item. In submenu: opens child submenu or closes current and moves to next menubar item" },
-    { "key": "Left Arrow", "action": "In menubar: moves to previous item. In submenu: closes submenu, returns to parent" },
-    { "key": "Home", "action": "Moves focus to first item" },
-    { "key": "End", "action": "Moves focus to last item" },
-    { "key": "Escape", "action": "Closes the menu and returns focus to invoking element" },
-    { "key": "Printable Character", "action": "(Optional) Moves focus to next item beginning with that character" }
+    {
+      "key": "Enter",
+      "action": "Opens submenu and focuses first item; or activates item and closes menu"
+    },
+    {
+      "key": "Space",
+      "action": "(Optional) Toggles menuitemcheckbox; checks menuitemradio; opens submenu; or activates item"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "In menubar: opens submenu. In menu: moves focus to next item"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "In menu: moves focus to previous item. In menubar (optional): opens submenu, focuses last item"
+    },
+    {
+      "key": "Right Arrow",
+      "action": "In menubar: moves to next item. In submenu: opens child submenu or closes current and moves to next menubar item"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "In menubar: moves to previous item. In submenu: closes submenu, returns to parent"
+    },
+    {
+      "key": "Home",
+      "action": "Moves focus to first item"
+    },
+    {
+      "key": "End",
+      "action": "Moves focus to last item"
+    },
+    {
+      "key": "Escape",
+      "action": "Closes the menu and returns focus to invoking element"
+    },
+    {
+      "key": "Printable Character",
+      "action": "(Optional) Moves focus to next item beginning with that character"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "menu", "element": "dropdown container", "description": "A menu of choices" },
-      { "role": "menubar", "element": "horizontal bar", "description": "A persistent menu bar" },
-      { "role": "menuitem", "element": "each item", "description": "Standard menu item" },
-      { "role": "menuitemcheckbox", "element": "toggleable item", "description": "Checkable menu item" },
-      { "role": "menuitemradio", "element": "exclusive choice item", "description": "Radio-style menu item" },
-      { "role": "separator", "element": "divider", "description": "Visual separator between groups" }
+      {
+        "role": "menu",
+        "element": "dropdown container",
+        "description": "A menu of choices"
+      },
+      {
+        "role": "menubar",
+        "element": "horizontal bar",
+        "description": "A persistent menu bar"
+      },
+      {
+        "role": "menuitem",
+        "element": "each item",
+        "description": "Standard menu item"
+      },
+      {
+        "role": "menuitemcheckbox",
+        "element": "toggleable item",
+        "description": "Checkable menu item"
+      },
+      {
+        "role": "menuitemradio",
+        "element": "exclusive choice item",
+        "description": "Radio-style menu item"
+      },
+      {
+        "role": "separator",
+        "element": "divider",
+        "description": "Visual separator between groups"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-haspopup", "element": "menuitem with submenu", "description": "Set to 'menu' or true" },
-      { "attribute": "aria-expanded", "element": "menuitem with submenu", "description": "false when hidden; true when visible" },
-      { "attribute": "aria-labelledby or aria-label", "element": "menu or menubar", "description": "Accessible name" }
+      {
+        "attribute": "aria-haspopup",
+        "element": "menuitem with submenu",
+        "description": "Set to 'menu' or true"
+      },
+      {
+        "attribute": "aria-expanded",
+        "element": "menuitem with submenu",
+        "description": "false when hidden; true when visible"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "menu or menubar",
+        "description": "Accessible name"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-checked", "element": "menuitemcheckbox or menuitemradio", "description": "true when checked" },
-      { "attribute": "aria-disabled", "element": "menuitem", "description": "true for disabled items" },
-      { "attribute": "aria-orientation", "element": "menu or menubar", "description": "vertical or horizontal" }
+      {
+        "attribute": "aria-checked",
+        "element": "menuitemcheckbox or menuitemradio",
+        "description": "true when checked"
+      },
+      {
+        "attribute": "aria-disabled",
+        "element": "menuitem",
+        "description": "true for disabled items"
+      },
+      {
+        "attribute": "aria-orientation",
+        "element": "menu or menubar",
+        "description": "vertical or horizontal"
+      }
     ]
   },
   "notes": [
-    "Menus are for application-style actions, not site navigation — use <nav> for navigation",
-    "Focus management uses roving tabindex or aria-activedescendant",
-    "Only the first menubar item should have tabindex='0'; all others should be -1"
+    "role='menubar' models a DESKTOP APPLICATION menu bar (File, Edit, View). It is almost never correct on a website. See patterns/menu-button.md for the decision table — this is the same mistake, one level up.",
+    "Site navigation is <nav> + <ul> + <a>, with no ARIA. A menubar over site nav switches screen readers into application mode and breaks their normal reading keys.",
+    "Use it only when you are genuinely building an application menu bar in a web app — an editor, an IDE, a design tool.",
+    "It is one Tab stop, with roving tabindex. Left/Right move along the bar; Down opens a submenu and focuses its first item; Escape closes and returns to the bar.",
+    "Real focus moves (.focus()); do not use aria-activedescendant.",
+    "Submenus need aria-haspopup='menu' and aria-expanded on their parent menuitem.",
+    "Never make a hover-only submenu: it must open on Enter/Space/Down as well (RAWeb 7.3)."
+  ],
+  "code_examples": "patterns/menubar.md",
+  "native_element": "none — and for websites, the answer is almost always <nav> instead",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "menubar/menu/menuitem roles, aria-haspopup and aria-expanded must all be exposed."
+    },
+    {
+      "id": "7.3",
+      "reason": "Full two-dimensional keyboard navigation: Left/Right across the bar, Up/Down into submenus, Escape out."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused menu item must be visibly indicated."
+    },
+    {
+      "id": "10.8",
+      "reason": "Closed submenus must be hidden from assistive technologies."
+    },
+    {
+      "id": "12.8",
+      "reason": "One Tab stop for the whole menubar; focus returns predictably on close."
+    },
+    {
+      "id": "12.9",
+      "reason": "Escape and Tab must always let the user out."
+    }
   ]
 }

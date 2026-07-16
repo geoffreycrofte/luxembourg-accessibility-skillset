@@ -3,24 +3,88 @@
   "name": "Checkbox",
   "description": "A widget that allows users to toggle between checked and unchecked states (dual-state), or checked, unchecked, and partially checked states (tri-state).",
   "keyboard_interactions": [
-    { "key": "Space", "action": "Toggles the checkbox state between checked, unchecked, and (if tri-state) partially checked" }
+    {
+      "key": "Space",
+      "action": "Toggles the checkbox state between checked, unchecked, and (if tri-state) partially checked"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "checkbox", "element": "checkbox element", "description": "Identifies the element as a checkbox" },
-      { "role": "group", "element": "checkbox group container", "description": "Groups related checkboxes together" }
+      {
+        "role": "checkbox",
+        "element": "checkbox element",
+        "description": "Identifies the element as a checkbox"
+      },
+      {
+        "role": "group",
+        "element": "checkbox group container",
+        "description": "Groups related checkboxes together"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-checked", "element": "checkbox element", "description": "true when checked; false when unchecked; 'mixed' when partially checked (tri-state)" },
-      { "attribute": "accessible name", "element": "checkbox element", "description": "Provided via visible text content, aria-labelledby, or aria-label" }
+      {
+        "attribute": "aria-checked",
+        "element": "checkbox element",
+        "description": "State. 'mixed' is the tri-state (indeterminate) value — the one thing a native checkbox cannot express through an attribute, and the only real reason to use role='checkbox'.",
+        "values": [
+          "true",
+          "false",
+          "mixed"
+        ]
+      },
+      {
+        "attribute": "accessible name",
+        "element": "checkbox element",
+        "description": "Provided via visible text content, aria-labelledby, or aria-label"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-describedby", "element": "checkbox element", "description": "References additional descriptive text" },
-      { "attribute": "aria-labelledby", "element": "checkbox group", "description": "References the visible label for the group" }
+      {
+        "attribute": "aria-describedby",
+        "element": "checkbox element",
+        "description": "References additional descriptive text"
+      },
+      {
+        "attribute": "aria-labelledby",
+        "element": "checkbox group",
+        "description": "References the visible label for the group"
+      }
     ]
   },
   "notes": [
-    "Prefer native <input type='checkbox'> over ARIA checkbox",
-    "For tri-state checkboxes controlling a group, use aria-checked='mixed' when some but not all children are checked"
+    "Use <input type='checkbox'>. It is focusable, toggles on Space, announces correctly, and posts a form value. role='checkbox' on a div reimplements all of that, worse.",
+    "Tri-state: a native checkbox's indeterminate state is a JS PROPERTY (el.indeterminate = true), not an attribute. It maps to aria-checked='mixed' automatically — you do not set aria-checked yourself on a native input.",
+    "indeterminate is purely visual+a11y: the checkbox still submits as checked or unchecked. Track the real tri-state in your own model.",
+    "Group related checkboxes in <fieldset><legend> (RAWeb 11.5). Without it, 'Email' is announced with no hint that the question was 'How should we contact you?'.",
+    "Do not use aria-checked on a native <input type='checkbox'> — the browser derives it from .checked. Setting both can conflict.",
+    "A checkbox that applies immediately is probably a switch — see patterns/switch.md."
+  ],
+  "code_examples": "patterns/checkbox.md",
+  "native_element": "<input type=\"checkbox\"> — use it; the ARIA version exists only for tri-state",
+  "raweb_criteria": [
+    {
+      "id": "11.1",
+      "reason": "A checkbox is a form field: it needs a real associated label."
+    },
+    {
+      "id": "11.2",
+      "reason": "The label must describe what checking it means, not just repeat the field name."
+    },
+    {
+      "id": "11.5",
+      "reason": "Related checkboxes must be grouped in a fieldset with a legend, or the group's question is never announced."
+    },
+    {
+      "id": "7.1",
+      "reason": "Only for role='checkbox': the checked state must be exposed via aria-checked, including 'mixed'."
+    },
+    {
+      "id": "7.3",
+      "reason": "Space must toggle it."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focus indicator must be visible, including on a custom-styled checkbox."
+    }
   ]
 }

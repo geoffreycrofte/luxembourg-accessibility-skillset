@@ -83,13 +83,14 @@ cmd_topic() {
     echo "=== RAWeb 1.1 — Topic ${topic_num}: ${topic_title} ==="
     echo ""
 
+    # A RAWeb criterion usually maps to SEVERAL WCAG success criteria. Showing only
+    # the first one made correct data look wrong (7.3 appeared to be "1.3.1 Info and
+    # Relationships" while hiding "2.1.1 Keyboard"). Join them all.
     jq -r --argjson tn "$topic_num" '
         .topics[] | select(.number == $tn) |
         .criteria[] | .criterium |
         "  \($tn).\(.number) [\(
-            if .references then
-                (.references[] | to_entries[] | select(.key == "wcag") | .value[0] // "") // ""
-            else "" end
+            [.references[]? | to_entries[] | select(.key == "wcag") | .value[]] | join(" + ")
         )] \(.title)"
     ' "$CRITERES"
 }

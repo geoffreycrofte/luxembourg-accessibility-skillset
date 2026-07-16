@@ -3,27 +3,101 @@
   "name": "Button",
   "description": "A widget that enables users to trigger an action or event, such as submitting a form, opening a dialog, canceling an action, or performing a delete operation.",
   "keyboard_interactions": [
-    { "key": "Enter", "action": "Activates the button" },
-    { "key": "Space", "action": "Activates the button" }
+    {
+      "key": "Enter",
+      "action": "Activates the button"
+    },
+    {
+      "key": "Space",
+      "action": "Activates the button"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "button", "element": "button element", "description": "Identifies the element as a button (not needed on native <button>)" }
+      {
+        "role": "button",
+        "element": "button element",
+        "description": "Identifies the element as a button (not needed on native <button>)"
+      }
     ],
     "required_attributes": [
-      { "attribute": "accessible name", "element": "button element", "description": "Computed from text content, aria-labelledby, or aria-label" }
+      {
+        "attribute": "accessible name",
+        "element": "button element",
+        "description": "Computed from text content, aria-labelledby, or aria-label"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-pressed", "element": "toggle button", "description": "true when toggled on; false when toggled off" },
-      { "attribute": "aria-expanded", "element": "button controlling a grouping", "description": "Indicates whether the controlled grouping is expanded or collapsed" },
-      { "attribute": "aria-haspopup", "element": "menu button", "description": "Indicates the button opens a menu popup" },
-      { "attribute": "aria-disabled", "element": "button element", "description": "true to indicate the button is present but not interactive" },
-      { "attribute": "aria-describedby", "element": "button element", "description": "References additional descriptive text" }
+      {
+        "attribute": "aria-pressed",
+        "element": "toggle button",
+        "description": "Toggle-button state. Do NOT combine with role='switch' or aria-expanded — one state mechanism per control.",
+        "values": [
+          "true",
+          "false",
+          "mixed"
+        ]
+      },
+      {
+        "attribute": "aria-expanded",
+        "element": "button controlling a grouping",
+        "description": "Only when the button shows/hides content — that makes it a disclosure. See patterns/disclosure.md.",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-haspopup",
+        "element": "menu button",
+        "description": "Indicates the button opens a menu popup"
+      },
+      {
+        "attribute": "aria-disabled",
+        "element": "button element",
+        "description": "Keeps the button focusable while marking it unavailable — unlike `disabled`, which removes it from the tab order entirely. Prefer this when the user needs to discover WHY it is unavailable.",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-describedby",
+        "element": "button element",
+        "description": "References additional descriptive text"
+      }
     ]
   },
   "notes": [
-    "Always prefer native <button> or <input type='button'> over role='button'",
-    "If using a non-button element, add tabindex='0' and handle Enter+Space key events",
-    "Do not use <div> or <span> as buttons without proper ARIA and keyboard support"
+    "Always <button type=\"button\">. Omitting type inside a <form> defaults to type=\"submit\" — an enormous source of accidental submissions.",
+    "A control that NAVIGATES is a link (<a href>), not a button. A control that ACTS is a button. Enter activates both; Space only activates buttons; only links offer 'open in new tab'.",
+    "An icon-only button needs an accessible name: aria-label, or visually hidden text. The <svg> inside must be aria-hidden='true' focusable='false'.",
+    "`disabled` removes the button from the tab order, so a keyboard user cannot reach it to find out why it is unavailable, and cannot receive a tooltip on it. aria-disabled='true' keeps it focusable and announced as dimmed.",
+    "Do not stack state attributes: aria-pressed AND aria-expanded on one button announces two states and means neither clearly.",
+    "Disabled buttons are exempt from contrast requirements, but that does not make an unreadable one acceptable."
+  ],
+  "code_examples": "patterns/button.md",
+  "native_element": "<button type=\"button\"> — there is essentially no valid reason to build this from a div",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "Role, name and any state (aria-pressed/aria-expanded) must be exposed."
+    },
+    {
+      "id": "7.3",
+      "reason": "Must activate with both Enter and Space, and with any pointing device."
+    },
+    {
+      "id": "6.1",
+      "reason": "Only if it is really a link: a control that navigates must be an <a href>, and its name must describe the destination."
+    },
+    {
+      "id": "10.7",
+      "reason": "Visible focus indicator."
+    },
+    {
+      "id": "11.9",
+      "reason": "In a form, the button's label must say what it does — 'Submit' is weaker than 'Create account'."
+    }
   ]
 }

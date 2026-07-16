@@ -3,26 +3,137 @@
   "name": "Menu Button",
   "description": "A button that opens a menu, typically styled with a downward-pointing arrow to indicate that activation will display a list of menu choices.",
   "keyboard_interactions": [
-    { "key": "Enter", "action": "Opens the menu and places focus on the first menu item" },
-    { "key": "Space", "action": "Opens the menu and places focus on the first menu item" },
-    { "key": "Down Arrow", "action": "(Optional) Opens the menu and focuses the first item" },
-    { "key": "Up Arrow", "action": "(Optional) Opens the menu and focuses the last item" }
+    {
+      "key": "Enter",
+      "action": "Opens the menu and places focus on the first menu item"
+    },
+    {
+      "key": "Space",
+      "action": "Opens the menu and places focus on the first menu item"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Opens the menu and focuses the first item"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Opens the menu and focuses the last item"
+    },
+    {
+      "key": "Down Arrow (in menu)",
+      "action": "Moves focus to next item; wraps from last to first"
+    },
+    {
+      "key": "Up Arrow (in menu)",
+      "action": "Moves focus to previous item; wraps from first to last"
+    },
+    {
+      "key": "Home / End (in menu)",
+      "action": "Moves focus to first / last item"
+    },
+    {
+      "key": "Escape (in menu)",
+      "action": "Closes the menu and returns focus to the button"
+    },
+    {
+      "key": "Tab (in menu)",
+      "action": "Closes the menu and moves focus onward — must never be trapped"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "button", "element": "button element", "description": "The trigger button" },
-      { "role": "menu", "element": "menu container", "description": "The popup menu" }
+      {
+        "role": "button",
+        "element": "button element",
+        "description": "The trigger button"
+      },
+      {
+        "role": "menu",
+        "element": "menu container",
+        "description": "The popup menu"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-haspopup", "element": "button", "description": "Set to 'menu' or true" },
-      { "attribute": "aria-expanded", "element": "button", "description": "true when menu is displayed; false when hidden" }
+      {
+        "attribute": "aria-haspopup",
+        "element": "button",
+        "description": "Set to 'menu' or true",
+        "values": [
+          "menu",
+          "true"
+        ]
+      },
+      {
+        "attribute": "aria-expanded",
+        "element": "button",
+        "description": "State. On the BUTTON, never on the menu.",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "role",
+        "element": "each menu item",
+        "values": [
+          "menuitem",
+          "menuitemradio",
+          "menuitemcheckbox"
+        ],
+        "description": "Menu items are NOT links or buttons. Inside role='menu', only menuitem roles are valid children."
+      },
+      {
+        "attribute": "tabindex",
+        "element": "each menu item",
+        "values": [
+          "-1"
+        ],
+        "description": "Roving tabindex: items are focused programmatically with .focus(), never by Tab. Unlike combobox, real DOM focus DOES move here."
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-controls", "element": "button", "description": "References the menu element ID" }
+      {
+        "attribute": "aria-controls",
+        "element": "button",
+        "description": "References the menu element ID"
+      }
     ]
   },
   "notes": [
     "Menu items follow the menu/menubar pattern for keyboard interaction",
-    "When the menu closes, focus returns to the button"
+    "When the menu closes, focus returns to the button",
+    "role='menu' is for ACTIONS (Edit, Duplicate, Delete) — the desktop-application menu pattern. It is NOT for site navigation.",
+    "A nav bar of links is not a menu: use <nav> + <ul> + <a>. Adding role='menu' to it makes screen readers announce a menu and demand arrow keys that links do not provide.",
+    "A show/hide of arbitrary content is a disclosure, not a menu — see patterns/disclosure.md.",
+    "Unlike combobox, this pattern uses REAL focus: call .focus() on the item. Do not use aria-activedescendant here.",
+    "role='menu' children must be menuitem/menuitemradio/menuitemcheckbox. Putting <a href> or <button> inside role='menu' produces invalid, inconsistently-announced markup."
+  ],
+  "code_examples": "patterns/menu-button.md",
+  "native_element": "none — but most 'menus' are not menus. See the decision table in patterns/menu-button.md.",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "aria-haspopup and aria-expanded must be exposed so the button announces that it opens a menu, and whether it is open."
+    },
+    {
+      "id": "7.3",
+      "reason": "Enter/Space/Down must open the menu; arrows must move between items; Escape must close and restore focus."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused menu item must be visibly indicated — real focus moves here, unlike combobox."
+    },
+    {
+      "id": "10.8",
+      "reason": "A closed menu must be hidden from assistive technologies, not just visually."
+    },
+    {
+      "id": "12.8",
+      "reason": "Focus moves to the first item on open and returns to the button on close, keeping the sequence coherent."
+    },
+    {
+      "id": "12.9",
+      "reason": "Escape and Tab must always let the keyboard user out of the menu."
+    }
   ]
 }

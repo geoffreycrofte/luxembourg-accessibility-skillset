@@ -5,21 +5,70 @@
   "keyboard_interactions": [],
   "aria": {
     "roles": [
-      { "role": "meter", "element": "meter element", "description": "Identifies the element as a meter" }
+      {
+        "role": "meter",
+        "element": "meter element",
+        "description": "Identifies the element as a meter"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "meter element", "description": "Set to 'meter'" },
-      { "attribute": "aria-valuenow", "element": "meter", "description": "Current value" },
-      { "attribute": "aria-valuemin", "element": "meter", "description": "Minimum of the range" },
-      { "attribute": "aria-valuemax", "element": "meter", "description": "Maximum of the range" }
+      {
+        "attribute": "role",
+        "element": "meter element",
+        "description": "Set to 'meter'"
+      },
+      {
+        "attribute": "aria-valuenow",
+        "element": "meter",
+        "description": "Current value"
+      },
+      {
+        "attribute": "aria-valuemin",
+        "element": "meter",
+        "description": "Minimum of the range"
+      },
+      {
+        "attribute": "aria-valuemax",
+        "element": "meter",
+        "description": "Maximum of the range"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-valuetext", "element": "meter", "description": "Human-readable value string when numeric alone is insufficient" },
-      { "attribute": "aria-labelledby or aria-label", "element": "meter", "description": "Accessible name" }
+      {
+        "attribute": "aria-valuetext",
+        "element": "meter",
+        "description": "Human-readable value string when numeric alone is insufficient"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "meter",
+        "description": "Accessible name"
+      }
     ]
   },
   "notes": [
-    "Prefer native <meter> element when possible",
-    "Do not use meter for progress indicators — use <progress> or role='progressbar' instead"
+    "<meter> = a measurement within a known range (disk usage, score). <progress> = how far a task has got. They are not interchangeable.",
+    "Neither is a form control and neither is focusable — do not put tabindex on them.",
+    "Screen reader support for role='meter' has historically been patchy. ALWAYS render the value as visible text next to it; do not rely on the element alone to convey it.",
+    "aria-valuenow/min/max are only needed on a div-built meter. <meter> derives them from value/min/max.",
+    "aria-valuetext when the raw number is not meaningful: aria-valuenow='2' aria-valuetext='Medium'.",
+    "A meter is never interactive. If the user can change the value it is a slider (patterns/slider.md).",
+    "<progress> with no value attribute is INDETERMINATE (a spinner) — omitting value by accident is a real bug."
+  ],
+  "code_examples": "patterns/meter.md",
+  "native_element": "<meter> for a measurement in a range; <progress> for task completion",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "The value must be exposed. Screen reader support for role='meter' is uneven, so a visible text value is not optional."
+    },
+    {
+      "id": "3.1",
+      "reason": "A gauge that only changes colour (green/amber/red) conveys its state by colour alone — add a text value."
+    },
+    {
+      "id": "3.2",
+      "reason": "The text value must meet contrast against its background."
+    }
   ]
 }

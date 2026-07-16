@@ -3,39 +3,144 @@
   "name": "Tree View",
   "description": "A hierarchical list where parent items can be expanded and collapsed to show or hide child items, supporting single-select and multi-select modes.",
   "keyboard_interactions": [
-    { "key": "Right Arrow", "action": "Opens closed node; moves to first child on open node; no-op on end node" },
-    { "key": "Left Arrow", "action": "Closes open node; moves to parent from child node" },
-    { "key": "Down Arrow", "action": "Moves focus to next visible node" },
-    { "key": "Up Arrow", "action": "Moves focus to previous visible node" },
-    { "key": "Home", "action": "Moves focus to first node" },
-    { "key": "End", "action": "Moves focus to last visible node" },
-    { "key": "Enter", "action": "Activates the focused node" },
-    { "key": "Type-ahead", "action": "Moves focus to node matching typed character(s)" },
-    { "key": "* (Asterisk)", "action": "(Optional) Expands all sibling nodes at current level" },
-    { "key": "Space (multi-select)", "action": "Toggles selection of focused node" },
-    { "key": "Control + A (multi-select)", "action": "Selects/deselects all nodes" }
+    {
+      "key": "Right Arrow",
+      "action": "Opens closed node; moves to first child on open node; no-op on end node"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "Closes open node; moves to parent from child node"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Moves focus to next visible node"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves focus to previous visible node"
+    },
+    {
+      "key": "Home",
+      "action": "Moves focus to first node"
+    },
+    {
+      "key": "End",
+      "action": "Moves focus to last visible node"
+    },
+    {
+      "key": "Enter",
+      "action": "Activates the focused node"
+    },
+    {
+      "key": "Type-ahead",
+      "action": "Moves focus to node matching typed character(s)"
+    },
+    {
+      "key": "* (Asterisk)",
+      "action": "(Optional) Expands all sibling nodes at current level"
+    },
+    {
+      "key": "Space (multi-select)",
+      "action": "Toggles selection of focused node"
+    },
+    {
+      "key": "Control + A (multi-select)",
+      "action": "Selects/deselects all nodes"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "tree", "element": "container", "description": "The tree container" },
-      { "role": "treeitem", "element": "each node", "description": "Individual tree node" },
-      { "role": "group", "element": "child container of parent nodes", "description": "Groups children under a parent" }
+      {
+        "role": "tree",
+        "element": "container",
+        "description": "The tree container"
+      },
+      {
+        "role": "treeitem",
+        "element": "each node",
+        "description": "Individual tree node"
+      },
+      {
+        "role": "group",
+        "element": "child container of parent nodes",
+        "description": "Groups children under a parent"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-expanded", "element": "parent nodes", "description": "true when open; false when closed; omit on end nodes" },
-      { "attribute": "aria-labelledby or aria-label", "element": "tree", "description": "Accessible name for the tree" }
+      {
+        "attribute": "aria-expanded",
+        "element": "parent nodes",
+        "description": "true when open; false when closed; omit on end nodes"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "tree",
+        "description": "Accessible name for the tree"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-multiselectable", "element": "tree", "description": "true for multi-select trees" },
-      { "attribute": "aria-selected", "element": "treeitem", "description": "true on selected nodes; false on unselected" },
-      { "attribute": "aria-level", "element": "treeitem", "description": "Nesting depth level (for dynamic trees)" },
-      { "attribute": "aria-setsize", "element": "treeitem", "description": "Number of siblings at this level" },
-      { "attribute": "aria-posinset", "element": "treeitem", "description": "Position within the set" }
+      {
+        "attribute": "aria-multiselectable",
+        "element": "tree",
+        "description": "true for multi-select trees"
+      },
+      {
+        "attribute": "aria-selected",
+        "element": "treeitem",
+        "description": "true on selected nodes; false on unselected"
+      },
+      {
+        "attribute": "aria-level",
+        "element": "treeitem",
+        "description": "Nesting depth level (for dynamic trees)"
+      },
+      {
+        "attribute": "aria-setsize",
+        "element": "treeitem",
+        "description": "Number of siblings at this level"
+      },
+      {
+        "attribute": "aria-posinset",
+        "element": "treeitem",
+        "description": "Position within the set"
+      }
     ]
   },
   "notes": [
-    "Use nested <ul>/<li> structure as the DOM base",
-    "Only the focused node should have tabindex='0'; all others should be -1",
-    "Aria-checked is an alternative to aria-selected for check-style trees — do not mix both"
+    "Ask first whether you need a tree. A navigation sidebar with expandable sections is usually a <nav> containing nested <ul>s with disclosure buttons — far simpler, and it keeps normal link semantics.",
+    "role='tree' switches screen readers into application mode: normal reading keys stop working and the user must know the tree keyboard model. That is a real cost.",
+    "One Tab stop, roving tabindex. Right expands (or moves to the first child), Left collapses (or moves to the parent), Up/Down move through VISIBLE items only — not through collapsed children.",
+    "aria-level, aria-setsize and aria-posinset are required when the DOM structure does not express the nesting (a flattened tree). With genuinely nested <ul>/role='group' the browser computes level for you.",
+    "aria-expanded goes only on items that HAVE children. A leaf with aria-expanded='false' claims children it does not have.",
+    "Type-ahead is expected: typing a letter jumps to the next visible item starting with it.",
+    "Collapsed branches must be `hidden` or removed from the DOM (RAWeb 10.8)."
+  ],
+  "code_examples": "patterns/treeview.md",
+  "native_element": "none — nested <ul> with <a> is a better fit for a site tree or file listing",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "aria-expanded, aria-level, aria-selected and the tree/treeitem roles must all be exposed — nothing here is native."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrows navigate and expand/collapse; the whole widget must be keyboard operable."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused item must be visibly indicated as focus roves."
+    },
+    {
+      "id": "10.8",
+      "reason": "Collapsed branches must be hidden from assistive technologies, not just visually."
+    },
+    {
+      "id": "12.8",
+      "reason": "Roving tabindex keeps the tree a single Tab stop."
+    },
+    {
+      "id": "12.9",
+      "reason": "Tab must leave the tree — arrows navigate within it."
+    }
   ]
 }

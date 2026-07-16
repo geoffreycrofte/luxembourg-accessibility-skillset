@@ -3,28 +3,93 @@
   "name": "Toolbar",
   "description": "A container grouping controls (buttons, menubuttons, checkboxes) that reduces tab stops by treating the toolbar as a single tab stop with arrow key navigation.",
   "keyboard_interactions": [
-    { "key": "Tab", "action": "Moves focus into toolbar on first or previously focused control" },
-    { "key": "Shift + Tab", "action": "Moves focus out of the toolbar" },
-    { "key": "Left Arrow", "action": "Moves focus to previous control (horizontal); optionally wraps" },
-    { "key": "Right Arrow", "action": "Moves focus to next control (horizontal); optionally wraps" },
-    { "key": "Up Arrow", "action": "Moves focus to previous control (vertical)" },
-    { "key": "Down Arrow", "action": "Moves focus to next control (vertical)" },
-    { "key": "Home", "action": "(Optional) Moves focus to first control" },
-    { "key": "End", "action": "(Optional) Moves focus to last control" }
+    {
+      "key": "Tab",
+      "action": "Moves focus into toolbar on first or previously focused control"
+    },
+    {
+      "key": "Shift + Tab",
+      "action": "Moves focus out of the toolbar"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "Moves focus to previous control (horizontal); optionally wraps"
+    },
+    {
+      "key": "Right Arrow",
+      "action": "Moves focus to next control (horizontal); optionally wraps"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves focus to previous control (vertical)"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Moves focus to next control (vertical)"
+    },
+    {
+      "key": "Home",
+      "action": "(Optional) Moves focus to first control"
+    },
+    {
+      "key": "End",
+      "action": "(Optional) Moves focus to last control"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "toolbar", "element": "container", "description": "The toolbar container" }
+      {
+        "role": "toolbar",
+        "element": "container",
+        "description": "The toolbar container"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-labelledby or aria-label", "element": "toolbar", "description": "Accessible name for the toolbar" }
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "toolbar",
+        "description": "Accessible name for the toolbar"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-orientation", "element": "toolbar", "description": "vertical for vertical; default is horizontal" }
+      {
+        "attribute": "aria-orientation",
+        "element": "toolbar",
+        "description": "vertical for vertical; default is horizontal"
+      }
     ]
   },
   "notes": [
-    "Use roving tabindex for focus management within the toolbar",
-    "Disabled controls should be focusable but not operable"
+    "role='toolbar' exists to make a long row of buttons ONE Tab stop instead of twenty. If you have three buttons, you do not need it — plain buttons are better.",
+    "Roving tabindex is mandatory: tabindex='0' on exactly one control, '-1' on the rest. Without it the role is a lie — it claims to be one stop and is not.",
+    "Real focus moves here (call .focus()). Do not use aria-activedescendant.",
+    "Name the toolbar (aria-label='Text formatting'). Several unnamed toolbars are indistinguishable.",
+    "Do not nest interactive controls that need their own arrow keys (a listbox, a combobox) directly in a toolbar — the arrow handling collides. Wrap them, or reconsider.",
+    "aria-orientation='vertical' if the toolbar is vertical, so Up/Down are the expected keys instead of Left/Right.",
+    "A toolbar containing only links is just navigation — use <nav>."
+  ],
+  "code_examples": "patterns/toolbar.md",
+  "native_element": "none — but a plain group of <button>s with no toolbar role is often better",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "The toolbar role and its accessible name must be exposed."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrow keys must move between controls; every control stays operable by pointer."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused control must be visibly indicated as focus roves."
+    },
+    {
+      "id": "12.8",
+      "reason": "Roving tabindex makes the toolbar a single, coherent Tab stop."
+    },
+    {
+      "id": "12.9",
+      "reason": "Tab must always leave the toolbar — the classic roving-tabindex trap."
+    }
   ]
 }

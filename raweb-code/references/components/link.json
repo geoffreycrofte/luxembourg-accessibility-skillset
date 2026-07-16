@@ -3,22 +3,65 @@
   "name": "Link",
   "description": "An interactive reference to a resource that navigates the user to a target when activated.",
   "keyboard_interactions": [
-    { "key": "Enter", "action": "Executes the link and navigates to the target" }
+    {
+      "key": "Enter",
+      "action": "Executes the link and navigates to the target"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "link", "element": "element containing link text or graphic", "description": "Identifies the element as a link (not needed on native <a>)" }
+      {
+        "role": "link",
+        "element": "element containing link text or graphic",
+        "description": "Identifies the element as a link (not needed on native <a>)"
+      }
     ],
     "required_attributes": [
-      { "attribute": "accessible name", "element": "link element", "description": "Computed from text content, aria-labelledby, or aria-label" }
+      {
+        "attribute": "accessible name",
+        "element": "link element",
+        "description": "Computed from text content, aria-labelledby, or aria-label"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "tabindex", "element": "link element (if not natively focusable)", "description": "Set to 0 to include in tab sequence" }
+      {
+        "attribute": "tabindex",
+        "element": "link element (if not natively focusable)",
+        "description": "Set to 0 to include in tab sequence"
+      }
     ]
   },
   "notes": [
-    "Always prefer native <a href='...'> over role='link'",
-    "Links navigate; buttons perform actions — do not confuse the two",
-    "If using a non-anchor element, add tabindex='0' and handle Enter key"
+    "An <a> without href is not a link: it is not focusable, has no role, and is announced as plain text. If it has no destination it should be a <button>.",
+    "The accessible name must contain the visible text (RAWeb 6.1) — voice control users say what they see.",
+    "'Click here', 'Read more', 'Learn more' fail 6.1 when the surrounding context does not disambiguate. Screen reader users often pull up a list of all links on a page, out of context: ten identical 'Read more' entries are useless.",
+    "Indicating file format and size is good practice, NOT a RAWeb criterion. Do it — but do not cite 13.3 for it (that criterion is about accessible versions of office documents).",
+    "target='_blank' should be announced, and always needs rel='noopener'. Warn the user in the link text or with visually hidden text.",
+    "Links in a block of text must not be identified by colour alone (RAWeb 3.1). Underline them, or ensure a 3:1 contrast with surrounding text PLUS a non-colour cue on hover/focus.",
+    "Do not nest interactive elements: a <button> inside an <a> is invalid and unusable by keyboard."
+  ],
+  "code_examples": "patterns/link.md",
+  "native_element": "<a href>",
+  "raweb_criteria": [
+    {
+      "id": "6.1",
+      "reason": "THE criterion for this pattern. Every link must be explicit: its purpose must be understandable, from the link text alone or from its context."
+    },
+    {
+      "id": "6.2",
+      "reason": "Every link must have an accessible name. An icon-only or image-only link with no name is announced as just 'link'."
+    },
+    {
+      "id": "7.1",
+      "reason": "aria-current must be exposed on the link representing the current page."
+    },
+    {
+      "id": "10.7",
+      "reason": "Links must show a visible focus indicator."
+    },
+    {
+      "id": "3.1",
+      "reason": "A link inside body text must not be distinguished by colour alone — underline it, or guarantee a non-colour cue."
+    }
   ]
 }

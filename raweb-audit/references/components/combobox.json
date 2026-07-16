@@ -3,38 +3,157 @@
   "name": "Combobox",
   "description": "An input widget with an associated popup (listbox, grid, tree, or dialog) that helps users set a value by selecting from a collection of possible values, supporting editable and select-only variants.",
   "keyboard_interactions": [
-    { "key": "Down Arrow", "action": "Opens popup if closed; moves focus to first item or item after auto-selected suggestion" },
-    { "key": "Up Arrow", "action": "(Optional) Opens popup and places focus on the last item" },
-    { "key": "Escape", "action": "Dismisses the popup if visible; optionally clears the value" },
-    { "key": "Enter", "action": "Accepts the current autocomplete suggestion or selected value" },
-    { "key": "Alt + Down Arrow", "action": "(Optional) Displays the popup without moving focus into it" },
-    { "key": "Alt + Up Arrow", "action": "(Optional) Closes the popup or returns focus to combobox" },
-    { "key": "Down Arrow (in popup)", "action": "Moves focus to next option" },
-    { "key": "Up Arrow (in popup)", "action": "Moves focus to previous option" },
-    { "key": "Home (in popup)", "action": "(Optional) Moves focus to first option" },
-    { "key": "End (in popup)", "action": "(Optional) Moves focus to last option" }
+    {
+      "key": "Down Arrow",
+      "action": "Opens popup if closed; moves focus to first item or item after auto-selected suggestion"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "(Optional) Opens popup and places focus on the last item"
+    },
+    {
+      "key": "Escape",
+      "action": "Dismisses the popup if visible; optionally clears the value"
+    },
+    {
+      "key": "Enter",
+      "action": "Accepts the current autocomplete suggestion or selected value"
+    },
+    {
+      "key": "Alt + Down Arrow",
+      "action": "(Optional) Displays the popup without moving focus into it"
+    },
+    {
+      "key": "Alt + Up Arrow",
+      "action": "(Optional) Closes the popup or returns focus to combobox"
+    },
+    {
+      "key": "Down Arrow (in popup)",
+      "action": "Moves focus to next option"
+    },
+    {
+      "key": "Up Arrow (in popup)",
+      "action": "Moves focus to previous option"
+    },
+    {
+      "key": "Home (in popup)",
+      "action": "(Optional) Moves focus to first option"
+    },
+    {
+      "key": "End (in popup)",
+      "action": "(Optional) Moves focus to last option"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "combobox", "element": "input element", "description": "Identifies the element as a combobox" },
-      { "role": "listbox", "element": "popup container (default)", "description": "The default popup role" },
-      { "role": "option", "element": "each item in listbox popup", "description": "Individual selectable items" }
+      {
+        "role": "combobox",
+        "element": "input element",
+        "description": "Identifies the element as a combobox"
+      },
+      {
+        "role": "listbox",
+        "element": "popup container (default)",
+        "description": "The default popup role"
+      },
+      {
+        "role": "option",
+        "element": "each item in listbox popup",
+        "description": "Individual selectable items"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "input element", "description": "Set to 'combobox'" },
-      { "attribute": "aria-controls", "element": "combobox element", "description": "References the popup element ID" },
-      { "attribute": "aria-expanded", "element": "combobox element", "description": "false when popup is hidden; true when visible" }
+      {
+        "attribute": "role",
+        "element": "the <input> itself",
+        "description": "Goes on the INPUT element (ARIA 1.2). The old ARIA 1.0 pattern put it on a wrapper div — that is obsolete and breaks in current screen readers.",
+        "values": [
+          "combobox"
+        ]
+      },
+      {
+        "attribute": "aria-controls",
+        "element": "combobox element",
+        "description": "References the popup's id. The popup must stay in the DOM for this to resolve."
+      },
+      {
+        "attribute": "aria-expanded",
+        "element": "combobox element",
+        "description": "State. On the input, not the wrapper. false when the popup is hidden.",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-haspopup", "element": "combobox element", "description": "Set to 'grid', 'tree', or 'dialog' if popup is not a listbox" },
-      { "attribute": "aria-activedescendant", "element": "combobox element", "description": "References the focused element in the popup when DOM focus remains on combobox" },
-      { "attribute": "aria-autocomplete", "element": "combobox element", "description": "'none', 'list' (filtered suggestions), or 'both' (filtered + inline completion)" },
-      { "attribute": "aria-selected", "element": "option in popup", "description": "true on the highlighted/selected item" }
+      {
+        "attribute": "aria-haspopup",
+        "element": "combobox element",
+        "description": "Set to 'grid', 'tree', or 'dialog' if popup is not a listbox"
+      },
+      {
+        "attribute": "aria-activedescendant",
+        "element": "combobox element",
+        "description": "The id of the visually-active option, while DOM focus STAYS on the input. This is the core of the pattern: never call .focus() on an option as well — pick one mechanism."
+      },
+      {
+        "attribute": "aria-autocomplete",
+        "element": "combobox element",
+        "description": "'none', 'list' (filtered suggestions), or 'both' (filtered + inline completion)",
+        "values": [
+          "none",
+          "list",
+          "both"
+        ]
+      },
+      {
+        "attribute": "aria-selected",
+        "element": "option in popup",
+        "description": "true on the active option only. Since it is not real focus, this attribute is also what your CSS must key off to show the highlight.",
+        "values": [
+          "true",
+          "false"
+        ]
+      }
     ]
   },
   "notes": [
     "The combobox is one of the most complex ARIA patterns — test thoroughly with screen readers",
-    "Popup type can be listbox, grid, tree, or dialog — listbox is most common",
-    "For select-only comboboxes, type-ahead character matching should be supported"
+    "For a select-only combobox, use native <select>. It is keyboard-complete, screen-reader-complete, and works on mobile. Only build the ARIA pattern when you genuinely need filtering, multi-select chips, or rich option markup.",
+    "role='combobox' goes on the <input>, per ARIA 1.2. The ARIA 1.0 pattern (role='combobox' on a wrapper div with the input inside) is obsolete — do not copy old tutorials.",
+    "aria-activedescendant means DOM focus never leaves the input. Options must not be tabbable and must never be .focus()ed.",
+    "Because the active option has no real focus, the browser will NOT scroll it into view. You must call scrollIntoView({ block: 'nearest' }) yourself.",
+    "Announce the result count through a separate polite live region (RAWeb 7.5). Never put aria-live on the listbox itself — it will read every option on every keystroke.",
+    "Clear aria-activedescendant when the popup closes, or the input keeps announcing an option that is no longer visible.",
+    "<datalist> looks like the native answer but its screen reader support and styling are too limited to depend on."
+  ],
+  "code_examples": "patterns/combobox.md",
+  "native_element": "<select> for select-only (strongly preferred). No native element for autocomplete — <datalist> support is too poor to rely on.",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "combobox/listbox/option roles, aria-expanded and the active option must all be exposed — nothing here is conveyed by a native element."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrows must open and traverse the list, Escape must close, Enter must select — all without a pointer."
+    },
+    {
+      "id": "7.5",
+      "reason": "Filtering is a status message: '3 results available' must be announced via a live region, or a screen reader user types and hears nothing back."
+    },
+    {
+      "id": "10.7",
+      "reason": "The active option's highlight is NOT real focus, so :focus-visible never fires on it. You must style [aria-selected=true] yourself or the keyboard user sees nothing move."
+    },
+    {
+      "id": "11.1",
+      "reason": "The combobox is a form input field and needs a real associated label."
+    },
+    {
+      "id": "12.9",
+      "reason": "Tab must always close the popup and leave the widget."
+    }
   ]
 }

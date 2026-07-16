@@ -3,37 +3,148 @@
   "name": "Tabs",
   "description": "A set of layered sections (tab panels) that display one panel at a time, with tab elements that activate corresponding panels.",
   "keyboard_interactions": [
-    { "key": "Tab", "action": "Moves focus into tab list on active tab; next Tab exits to tab panel" },
-    { "key": "Left Arrow", "action": "Moves focus to previous tab (horizontal); wraps from first to last" },
-    { "key": "Right Arrow", "action": "Moves focus to next tab (horizontal); wraps from last to first" },
-    { "key": "Up Arrow", "action": "Moves focus to previous tab (vertical); wraps" },
-    { "key": "Down Arrow", "action": "Moves focus to next tab (vertical); wraps" },
-    { "key": "Space or Enter", "action": "Activates focused tab if not auto-activated on focus" },
-    { "key": "Home", "action": "(Optional) Moves focus to first tab" },
-    { "key": "End", "action": "(Optional) Moves focus to last tab" },
-    { "key": "Delete", "action": "(Optional) Closes the current tab and panel if deletable" }
+    {
+      "key": "Tab",
+      "action": "Moves focus into tab list on active tab; next Tab exits to tab panel"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "Moves focus to previous tab (horizontal); wraps from first to last"
+    },
+    {
+      "key": "Right Arrow",
+      "action": "Moves focus to next tab (horizontal); wraps from last to first"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves focus to previous tab (vertical); wraps"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Moves focus to next tab (vertical); wraps"
+    },
+    {
+      "key": "Space or Enter",
+      "action": "Activates focused tab if not auto-activated on focus"
+    },
+    {
+      "key": "Home",
+      "action": "(Optional) Moves focus to first tab"
+    },
+    {
+      "key": "End",
+      "action": "(Optional) Moves focus to last tab"
+    },
+    {
+      "key": "Delete",
+      "action": "(Optional) Closes the current tab and panel if deletable"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "tablist", "element": "tab container", "description": "Groups the tabs" },
-      { "role": "tab", "element": "each tab element", "description": "Individual tab" },
-      { "role": "tabpanel", "element": "each content panel", "description": "Content associated with a tab" }
+      {
+        "role": "tablist",
+        "element": "tab container",
+        "description": "Groups the tabs"
+      },
+      {
+        "role": "tab",
+        "element": "each tab element",
+        "description": "Individual tab"
+      },
+      {
+        "role": "tabpanel",
+        "element": "each content panel",
+        "description": "Content associated with a tab"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-selected", "element": "tab", "description": "true on active tab; false on inactive tabs" },
-      { "attribute": "aria-labelledby", "element": "tabpanel", "description": "References the associated tab element" }
+      {
+        "attribute": "aria-selected",
+        "element": "tab",
+        "description": "State. Exactly one tab is true. Does NOT control focus — pair it with roving tabindex.",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-labelledby",
+        "element": "tabpanel",
+        "description": "References the associated tab element"
+      },
+      {
+        "attribute": "tabindex",
+        "element": "tab",
+        "values": [
+          "0",
+          "-1"
+        ],
+        "description": "Roving tabindex: 0 on the selected tab, -1 on all others. Not an ARIA attribute, but non-optional for this pattern — without it every tab is a Tab stop."
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-labelledby or aria-label", "element": "tablist", "description": "Accessible name for the tablist" },
-      { "attribute": "aria-controls", "element": "tab", "description": "References the associated tabpanel" },
-      { "attribute": "aria-orientation", "element": "tablist", "description": "vertical or horizontal (default)" },
-      { "attribute": "aria-haspopup", "element": "tab", "description": "menu or true if the tab has a popup" }
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "tablist",
+        "description": "Accessible name for the tablist"
+      },
+      {
+        "attribute": "aria-controls",
+        "element": "tab",
+        "description": "References the associated tabpanel"
+      },
+      {
+        "attribute": "aria-orientation",
+        "element": "tablist",
+        "description": "vertical or horizontal (default)",
+        "values": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      {
+        "attribute": "aria-haspopup",
+        "element": "tab",
+        "description": "menu or true if the tab has a popup"
+      }
     ]
   },
   "notes": [
     "Only one tab panel should be visible at a time",
-    "Consider automatic activation (focus = activate) for faster navigation",
-    "If tabpanel has no focusable elements, set tabindex='0' on the panel itself",
-    "Inactive tabs should have tabindex='-1'"
+    "Roving tabindex is mandatory in practice: tabindex='0' on the selected tab, '-1' on the rest. The tablist is ONE Tab stop; arrows move between tabs.",
+    "Automatic activation (selection follows focus) is fine when panels are cheap to render. Use manual activation (arrows move, Enter/Space selects) when switching is expensive or destructive.",
+    "Moving focus with arrows means calling .focus() yourself — aria-selected does not move focus.",
+    "If a panel contains no focusable element, give the panel tabindex='0' so keyboard users can reach and scroll its content.",
+    "Hide inactive panels with the `hidden` attribute — not opacity, z-index stacking, or off-screen positioning (RAWeb 10.8).",
+    "Style the focus ring separately from the selected state: they are different things and can be on different tabs during manual activation."
+  ],
+  "code_examples": "patterns/tabs.md",
+  "native_element": "none — tabs have no native HTML element; ARIA is mandatory here",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "tab/tablist/tabpanel roles and aria-selected must be exposed, since no native element conveys them."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrow keys must move between tabs and the widget must be fully operable by keyboard and pointer."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused tab must show a visible indicator, distinct from the selected tab's styling."
+    },
+    {
+      "id": "10.8",
+      "reason": "Inactive panels must be hidden from assistive technologies, not just visually stacked behind the active one."
+    },
+    {
+      "id": "12.8",
+      "reason": "Roving tabindex must keep the navigation sequence coherent: one Tab stop for the whole tablist, landing on the selected tab."
+    },
+    {
+      "id": "12.9",
+      "reason": "Roving tabindex is the classic keyboard-trap risk — Tab must always exit the tablist to the panel."
+    }
   ]
 }

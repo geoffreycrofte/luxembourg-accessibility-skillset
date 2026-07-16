@@ -5,17 +5,51 @@
   "keyboard_interactions": [],
   "aria": {
     "roles": [
-      { "role": "navigation", "element": "breadcrumb container", "description": "The breadcrumb trail is contained within a navigation landmark" }
+      {
+        "role": "navigation",
+        "element": "breadcrumb container",
+        "description": "The breadcrumb trail is contained within a navigation landmark"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-label", "element": "nav element", "description": "Provides accessible name (e.g., 'Breadcrumb')" },
-      { "attribute": "aria-current", "element": "link representing current page", "description": "Set to 'page' to identify the current page link" }
+      {
+        "attribute": "aria-label",
+        "element": "nav element",
+        "description": "Provides accessible name (e.g., 'Breadcrumb')"
+      },
+      {
+        "attribute": "aria-current",
+        "element": "link representing current page",
+        "description": "Set to 'page' to identify the current page link"
+      }
     ],
     "optional_attributes": []
   },
   "notes": [
-    "Use an ordered list (<ol>) inside <nav> for proper structure",
-    "Visual separators between links should be added via CSS, not DOM content",
-    "The current page may be rendered as plain text instead of a link"
+    "Use <nav aria-label='Breadcrumb'> wrapping an <ol>. The order is meaningful, so it is an ordered list, not a <ul>.",
+    "aria-current='page' goes on the LAST crumb — the current page.",
+    "The last crumb is usually not a link at all: it points at the page you are already on. Plain text, or an <a aria-current='page'> if your design needs the styling.",
+    "Separators (/ or >) must be CSS-generated or aria-hidden. A literal '/' between links is announced as 'slash' on every crumb.",
+    "Do not use aria-current='page' on more than one element per page."
+  ],
+  "code_examples": "patterns/breadcrumb.md",
+  "native_element": "<nav aria-label=\"Breadcrumb\"> + <ol> + <a>",
+  "raweb_criteria": [
+    {
+      "id": "9.3",
+      "reason": "A breadcrumb is an ordered list and must be marked up as one — <ol>, so the sequence and count are announced."
+    },
+    {
+      "id": "6.1",
+      "reason": "Each crumb link must be explicit about where it leads."
+    },
+    {
+      "id": "6.2",
+      "reason": "Each crumb link needs an accessible name."
+    },
+    {
+      "id": "7.1",
+      "reason": "aria-current='page' must be exposed on the final crumb."
+    }
   ]
 }

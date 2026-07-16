@@ -3,25 +3,90 @@
   "name": "Switch",
   "description": "An input control that toggles between two mutually exclusive states (on and off), distinct from checkboxes in supporting only binary input with no indeterminate state.",
   "keyboard_interactions": [
-    { "key": "Space", "action": "Toggles the switch state" },
-    { "key": "Enter", "action": "(Optional) Toggles the switch state" }
+    {
+      "key": "Space",
+      "action": "Toggles the switch state"
+    },
+    {
+      "key": "Enter",
+      "action": "(Optional) Toggles the switch state"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "switch", "element": "switch element", "description": "Identifies the element as a switch" }
+      {
+        "role": "switch",
+        "element": "switch element",
+        "description": "Identifies the element as a switch"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "switch element", "description": "Set to 'switch'" },
-      { "attribute": "aria-checked", "element": "switch element", "description": "true when ON; false when OFF" },
-      { "attribute": "accessible name", "element": "switch element", "description": "Via aria-labelledby, aria-label, or text content" }
+      {
+        "attribute": "role",
+        "element": "switch element",
+        "description": "Set to 'switch'. On <input type=checkbox role=switch> it overrides the checkbox role and the browser maps `checked` to aria-checked for you.",
+        "values": [
+          "switch"
+        ]
+      },
+      {
+        "attribute": "aria-checked",
+        "element": "switch element",
+        "description": "State. true when ON, false when OFF. Never 'mixed' — a switch is binary; that is what separates it from a checkbox.",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "accessible name",
+        "element": "switch element",
+        "description": "Via aria-labelledby, aria-label, or text content"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-describedby", "element": "switch element", "description": "References descriptive text" },
-      { "attribute": "role='group'", "element": "grouping container", "description": "Groups related switches with aria-labelledby" }
+      {
+        "attribute": "aria-describedby",
+        "element": "switch element",
+        "description": "References descriptive text"
+      },
+      {
+        "attribute": "role='group'",
+        "element": "grouping container",
+        "description": "Groups related switches with aria-labelledby"
+      }
     ]
   },
   "notes": [
     "Switches are for immediate effect (like toggling a setting); use checkboxes for form submissions",
-    "The visual state should clearly indicate on/off"
+    "Use <button role='switch' aria-checked> for a setting that applies instantly. Use <input type='checkbox' role='switch'> when the value must be submitted with a form — only a real input has a form value.",
+    "A switch is binary. aria-checked='mixed' is invalid here — if you need a third state, you want a checkbox.",
+    "The visual state must not be colour alone (RAWeb 3.1): the knob's POSITION already encodes state, which is why the classic sliding design passes. A track that only changes colour does not.",
+    "Do not add aria-pressed as well — that is the toggle-button pattern. role='switch' already carries the state via aria-checked. Using both announces the state twice.",
+    "Do not change the label between 'On' and 'Off'. The label names the setting ('Email notifications'); aria-checked carries the state."
+  ],
+  "code_examples": "patterns/switch.md",
+  "native_element": "<button role=\"switch\" aria-checked> — or <input type=\"checkbox\" role=\"switch\"> inside a form",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "The on/off state must be exposed via aria-checked. A styled div with a sliding knob conveys nothing to assistive technologies."
+    },
+    {
+      "id": "7.3",
+      "reason": "Must toggle with Space from the keyboard, and work with any pointing device."
+    },
+    {
+      "id": "3.1",
+      "reason": "State must not rest on colour alone. A grey-vs-green track is invisible to a user who cannot distinguish them — add position, a label, or an icon."
+    },
+    {
+      "id": "10.7",
+      "reason": "The switch must show a visible focus indicator, distinct from its checked styling."
+    },
+    {
+      "id": "11.1",
+      "reason": "Only when built on <input type=checkbox>: as a form field it then needs a real associated label."
+    }
   ]
 }

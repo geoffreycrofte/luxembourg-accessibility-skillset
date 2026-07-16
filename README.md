@@ -49,15 +49,32 @@ cp -r raweb-code raweb-audit raam-code raam-audit ~/.claude/skills/
 
 ## Usage
 
+> **A note on criterion numbers.** RAWeb numbering is not WCAG numbering, and the
+> two are easy to conflate — RAWeb 7.3 is keyboard operability; WCAG 2.1.1 is.
+> Every criterion number cited by these skills is checked against the official
+> data by `validate-references.sh`, because a wrong number in an audit report is
+> worse than no number: it reads as authoritative and nothing contradicts it.
+
 ### Web development • RAWeb
 
 The `raweb-code` skill activates automatically when you write front-end web code. It provides:
 - Inline accessible code patterns for all 17 RAWeb themes
-- Code examples for common components (forms, tables, navigation, modals, etc.)
+- Code references for **all 30 WAI-ARIA APG patterns**, with **dos and don'ts** in vanilla HTML/CSS/JS, React, Angular, and Web Components — each don't explains the concrete failure it causes for a real user
+- Decision tables for the patterns that are usually the *wrong* choice (`role="menu"` on site navigation, `role="grid"` on a read-only table, a treeview for a nav sidebar…)
+- ARIA attribute/state and keyboard-interaction tables, rendered from the reference data so they can't go stale
 - Pre-commit accessibility checklist
 - Lookup commands for specific RAWeb criteria and test methodologies
 
-Invoke explicitly with `/raweb-code`. Audit with `/raweb-audit`.
+Invoke explicitly with `/raweb-code`.
+
+The `raweb-audit` skill reviews existing code against RAWeb. It provides:
+- Theme-by-theme checklists for all 17 themes, every criterion number verified against the official data
+- **Per-component audit scope** — `show <slug>` states which RAWeb criteria a component must satisfy and why, with levels resolved live so they can't be stale
+- **A defect catalogue** — `code <slug>` gives real production failure modes with their user impact, plus a manual test procedure that states explicitly *what axe and Lighthouse will not catch* for that pattern
+- Structured report format with verdicts (C / NC / NA), severity classification, and WCAG cross-references
+- A methodology step for the failure no scanner catches: checking the *pattern itself* is right, not just its implementation
+
+Invoke explicitly with `/raweb-audit`.
 
 ### Mobile development • RAAM
 
@@ -89,8 +106,23 @@ Scripts live inside each skill folder. From the repo root (or from the installed
 # WAI-ARIA APG component patterns
 ./raweb-code/scripts/raweb-component-lookup.sh list               # List all 30 patterns
 ./raweb-code/scripts/raweb-component-lookup.sh find "modal"       # Find pattern by keyword
-./raweb-code/scripts/raweb-component-lookup.sh show dialog-modal  # Full pattern details
+./raweb-code/scripts/raweb-component-lookup.sh show dialog-modal  # Contract: criteria, keyboard, ARIA (markdown tables)
+./raweb-code/scripts/raweb-component-lookup.sh show dialog-modal --plain   # Same, as terminal bullets
+./raweb-code/scripts/raweb-component-lookup.sh code dialog-modal          # Code examples, all frameworks
+./raweb-code/scripts/raweb-component-lookup.sh code dialog-modal react    # Just the React section
 ./raweb-code/scripts/raweb-component-lookup.sh roles "dialog"     # Find patterns by ARIA role
+
+# Consistency check — fails if a skill cites a criterion or level that
+# contradicts the official RAWeb data, or if a "Do" code example does not parse.
+# Exit 1 on drift, so it can gate CI. Ships in every RAWeb skill.
+./raweb-code/scripts/validate-references.sh
+./raweb-audit/scripts/validate-references.sh
+
+# Keep the -code and -audit skills' shared files identical. Each skill ships its
+# own references/ and scripts/ so single-skill installs work; this is what stops
+# those copies drifting apart.
+./scripts/sync-skills.sh            # copy raweb-code → raweb-audit, raam-code → raam-audit
+./scripts/sync-skills.sh --check    # exit 1 if they have diverged (CI gate)
 
 # RAAM criteria (mobile) — script lives in raam-code/scripts/ and raam-audit/scripts/
 ./raam-code/scripts/raam-lookup.sh topics                         # List all 15 topics
@@ -122,33 +154,52 @@ Default conformance target: **Level AA**.
 
 Each skill folder is fully self-contained — its scripts and reference JSON ship inside, so installing a single skill (or copying one folder) gives you everything that skill needs.
 
+That means the `-code` and `-audit` skills of a pair hold **identical copies** of `references/` and `scripts/`. The duplication is deliberate; the danger is silent drift. The `-code` skill is the source of truth — **edit `raweb-code/`, then run `scripts/sync-skills.sh`**. Never hand-edit `raweb-audit/references/` or `raweb-audit/scripts/`; `sync-skills.sh --check` will fail CI if they diverge.
+
 ```
 luxembourg-accessibility-skillset/
 ├── raweb-code/                         # Web accessible code guidance
 │   ├── SKILL.md
 │   ├── scripts/
 │   │   ├── raweb-lookup.sh             # RAWeb criteria CLI lookup
-│   │   └── raweb-component-lookup.sh   # WAI-ARIA APG component pattern lookup
+│   │   ├── raweb-component-lookup.sh   # APG pattern contract + code example lookup
+│   │   └── validate-references.sh      # Fails on criterion/level drift (CI gate)
 │   └── references/
 │       ├── criteres.json               # RAWeb criteria + tests + WCAG mappings
 │       ├── glossaire.json              # RAWeb glossary
 │       ├── methodologies.json          # RAWeb test procedures
 │       ├── themes.json                 # RAWeb topic names
 │       ├── niveaux.json                # RAWeb WCAG levels per criterion
-│       └── components/                 # 30 WAI-ARIA APG component patterns
-│           ├── index.json              # Pattern index with keyword mappings
-│           └── *.json                  # accordion, alert, alertdialog, breadcrumb,
-│                                       # button, carousel, checkbox, combobox,
-│                                       # dialog-modal, disclosure, feed, grid,
-│                                       # landmarks, link, listbox, menu-button,
-│                                       # menubar, meter, radio, slider,
-│                                       # slider-multithumb, spinbutton, switch,
-│                                       # table, tabs, toolbar, tooltip, treeview,
-│                                       # treegrid, windowsplitter
+│       ├── components/                 # 30 WAI-ARIA APG component patterns
+│       │   ├── index.json              # Pattern index with keyword mappings
+│       │   └── *.json                  # SOURCE OF TRUTH: ARIA roles/attributes/
+│       │                               # values, keyboard interaction, and the
+│       │                               # RAWeb criteria each pattern must satisfy.
+│       │                               # accordion, alert, alertdialog, breadcrumb,
+│       │                               # button, carousel, checkbox, combobox,
+│       │                               # dialog-modal, disclosure, feed, grid,
+│       │                               # landmarks, link, listbox, menu-button,
+│       │                               # menubar, meter, radio, slider,
+│       │                               # slider-multithumb, spinbutton, switch,
+│       │                               # table, tabs, toolbar, tooltip, treeview,
+│       │                               # treegrid, windowsplitter
+│       └── patterns/                   # Code examples — all 30 patterns
+│           ├── _TEMPLATE.md            # Authoring contract for new patterns
+│           └── *.md                    # Dos AND don'ts. Prose + code only —
+│                                       # tables are rendered from components/*.json
+│                                       #
+│                                       # 25 interactive patterns → vanilla + React
+│                                       # + Angular + Web Component
+│                                       #
+│                                       # 5 static patterns → vanilla only (no JS
+│                                       # required, so no framework sections):
+│                                       # landmarks, link, breadcrumb, table, meter
 ├── raweb-audit/                        # Web accessibility audit skill
-│   ├── SKILL.md
-│   ├── scripts/                        # Same scripts as raweb-code/
-│   └── references/                     # Same JSON as raweb-code/
+│   ├── SKILL.md                        # Its own — never synced
+│   ├── scripts/                        # ⇜ synced from raweb-code/
+│   └── references/                     # ⇜ synced from raweb-code/ (incl. patterns/:
+│                                       #   the Don't blocks are a defect catalogue and
+│                                       #   the Verify sections are test procedures)
 ├── raam-code/                          # Mobile accessible code guidance
 │   ├── SKILL.md
 │   ├── scripts/
@@ -158,9 +209,12 @@ luxembourg-accessibility-skillset/
 │       ├── glossaire.json              # RAAM glossary
 │       └── methodologies.json          # RAAM test procedures (iOS & Android)
 ├── raam-audit/                         # Mobile accessibility audit skill
-│   ├── SKILL.md
-│   ├── scripts/                        # Same script as raam-code/
-│   └── references/                     # Same JSON as raam-code/
+│   ├── SKILL.md                        # Its own — never synced
+│   ├── scripts/                        # ⇜ synced from raam-code/
+│   └── references/                     # ⇜ synced from raam-code/
+├── scripts/
+│   └── sync-skills.sh                  # Keeps -code and -audit copies identical
+│                                       # (--check exits 1 on drift, for CI)
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md

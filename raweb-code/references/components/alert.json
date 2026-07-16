@@ -5,16 +5,96 @@
   "keyboard_interactions": [],
   "aria": {
     "roles": [
-      { "role": "alert", "element": "alert container", "description": "Identifies the element as an alert. Implicitly sets aria-live=assertive and aria-atomic=true" }
+      {
+        "role": "alert",
+        "element": "alert container",
+        "description": "Implicitly aria-live='assertive' + aria-atomic='true'. Interrupts the screen reader immediately — reserve it for genuinely urgent messages."
+      },
+      {
+        "role": "status",
+        "element": "status container",
+        "description": "Implicitly aria-live='polite' + aria-atomic='true'. Waits for a pause. This is the right default for most messages."
+      },
+      {
+        "role": "log",
+        "element": "log container",
+        "description": "Implicitly aria-live='polite'. For sequential additions where order matters — chat, activity feeds."
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "alert container", "description": "Set to 'alert'" }
+      {
+        "attribute": "role",
+        "element": "live region container",
+        "values": [
+          "alert",
+          "status",
+          "log"
+        ],
+        "description": "Prefer the role over raw aria-live: it carries the right live/atomic defaults and also gives the region a landmark-ish identity."
+      }
     ],
-    "optional_attributes": []
+    "optional_attributes": [
+      {
+        "attribute": "aria-live",
+        "element": "live region container",
+        "values": [
+          "polite",
+          "assertive",
+          "off"
+        ],
+        "description": "Only needed when no role fits. role='status' already implies polite; role='alert' already implies assertive. Never use assertive for anything non-urgent."
+      },
+      {
+        "attribute": "aria-atomic",
+        "element": "live region container",
+        "values": [
+          "true",
+          "false"
+        ],
+        "description": "true = re-announce the whole region on any change; false = announce only what changed. Implicitly true for alert/status."
+      },
+      {
+        "attribute": "aria-relevant",
+        "element": "live region container",
+        "values": [
+          "additions",
+          "removals",
+          "text",
+          "all"
+        ],
+        "description": "Which mutations trigger an announcement. Default 'additions text' is almost always right — changing it is a common way to break announcements."
+      }
+    ]
   },
   "notes": [
     "Alert is not interactive — no keyboard interaction needed",
-    "The alert element must be present in the DOM before injecting the message for screen readers to announce it",
-    "Use for time-sensitive, important messages; for less urgent info use role=status with aria-live=polite"
+    "THE critical rule: the live region container must ALREADY be in the DOM, empty, before you put text in it. Injecting a <div role='alert'>message</div> in one go frequently announces nothing — the screen reader never saw the region appear.",
+    "Use role='status' (polite) by default. role='alert' (assertive) interrupts whatever the user is currently hearing — reserve it for genuine urgency, like a session about to expire or a failed payment.",
+    "Never put role='alert' on a container that is always present and populated at page load — it announces on every page load, for nothing.",
+    "Announce only text. Interactive content in a live region cannot be reached: an 'Undo' button inside role='alert' is announced but nobody can Tab to it in time before the toast disappears.",
+    "For less urgent info use role=status with aria-live=polite",
+    "Toasts that auto-dismiss are a time limit (RAWeb 13.1). Either do not auto-dismiss, or make the timeout adjustable, and never put the only copy of important information in one.",
+    "Do not put role='alert' on an error summary you also want to move focus to — use focus OR the live region, not both, or it is announced twice.",
+    "Empty a live region before writing a new identical message, or the screen reader may not detect a change and stay silent."
+  ],
+  "code_examples": "patterns/alert.md",
+  "native_element": "none — output is close for calculated results, but role=alert / role=status is the mechanism",
+  "raweb_criteria": [
+    {
+      "id": "7.5",
+      "reason": "THE criterion for this pattern. Status messages must be rendered to assistive technologies without moving focus — that is exactly what a live region is."
+    },
+    {
+      "id": "7.1",
+      "reason": "The alert's role must be exposed so the message is announced at all."
+    },
+    {
+      "id": "3.1",
+      "reason": "An error styled only in red is invisible to a user who cannot distinguish it. Pair colour with an icon and text."
+    },
+    {
+      "id": "13.1",
+      "reason": "An alert that auto-dismisses on a timer is a time limit on reading it — the user must be able to control it, or it must not disappear."
+    }
   ]
 }

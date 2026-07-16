@@ -3,30 +3,111 @@
   "name": "Feed",
   "description": "A scrollable section that automatically loads new content as the user scrolls, presenting content as a series of article elements.",
   "keyboard_interactions": [
-    { "key": "Page Down", "action": "Move focus to the next article" },
-    { "key": "Page Up", "action": "Move focus to the previous article" },
-    { "key": "Control + End", "action": "Move focus to first focusable element after the feed" },
-    { "key": "Control + Home", "action": "Move focus to first focusable element before the feed" }
+    {
+      "key": "Page Down",
+      "action": "Move focus to the next article"
+    },
+    {
+      "key": "Page Up",
+      "action": "Move focus to the previous article"
+    },
+    {
+      "key": "Control + End",
+      "action": "Move focus to first focusable element after the feed"
+    },
+    {
+      "key": "Control + Home",
+      "action": "Move focus to first focusable element before the feed"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "feed", "element": "feed container", "description": "Identifies the container as a feed" },
-      { "role": "article", "element": "each content unit", "description": "Identifies each piece of content as an article" }
+      {
+        "role": "feed",
+        "element": "feed container",
+        "description": "Identifies the container as a feed"
+      },
+      {
+        "role": "article",
+        "element": "each content unit",
+        "description": "Identifies each piece of content as an article"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "feed container", "description": "Set to 'feed'" },
-      { "attribute": "aria-labelledby or aria-label", "element": "feed element", "description": "Provides accessible name for the feed" },
-      { "attribute": "aria-labelledby", "element": "article element", "description": "References elements providing a distinguishing label" }
+      {
+        "attribute": "role",
+        "element": "feed container",
+        "description": "Set to 'feed'"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "feed element",
+        "description": "Provides accessible name for the feed"
+      },
+      {
+        "attribute": "aria-labelledby",
+        "element": "article element",
+        "description": "References elements providing a distinguishing label"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-describedby", "element": "article element", "description": "References the primary content elements of the article" },
-      { "attribute": "aria-posinset", "element": "article element", "description": "Article's position number within the feed" },
-      { "attribute": "aria-setsize", "element": "article element", "description": "Total number of loaded articles, or -1 if undetermined" },
-      { "attribute": "aria-busy", "element": "feed element", "description": "true during loading; false when complete" }
+      {
+        "attribute": "aria-describedby",
+        "element": "article element",
+        "description": "References the primary content elements of the article"
+      },
+      {
+        "attribute": "aria-posinset",
+        "element": "article element",
+        "description": "Article's position number within the feed"
+      },
+      {
+        "attribute": "aria-setsize",
+        "element": "article element",
+        "description": "Total number of loaded articles, or -1 if undetermined"
+      },
+      {
+        "attribute": "aria-busy",
+        "element": "feed element",
+        "description": "true during loading; false when complete"
+      }
     ]
   },
   "notes": [
-    "Each article should be a tab stop or contain focusable elements",
-    "Loading indicators should use aria-busy on the feed container"
+    "Prefer a plain list of articles with an explicit 'Load more' button. It is simpler, keyboard-friendly, and does not trap anyone below the fold.",
+    "THE infinite-scroll problem (RAWeb 12.9): if content loads forever, the footer is unreachable by keyboard and by screen reader. A 'Load more' button fixes this; auto-loading on scroll does not.",
+    "aria-busy='true' on the feed while inserting items, back to 'false' when done — otherwise assistive technologies read a half-built DOM.",
+    "Each article needs role='article', a heading, aria-labelledby pointing at that heading, and aria-posinset/aria-setsize. Use aria-setsize='-1' when the total is unknown.",
+    "Announce loading in a separate polite live region (RAWeb 7.5), never with aria-live on the feed itself — that would announce every inserted article.",
+    "Auto-refreshing feeds must be pausable (RAWeb 13.8).",
+    "Do not move focus when new items load. The user is reading."
+  ],
+  "code_examples": "patterns/feed.md",
+  "native_element": "none — a plain <ul> of <article>s with a 'Load more' button is usually better",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "feed/article roles and aria-busy must be exposed."
+    },
+    {
+      "id": "7.5",
+      "reason": "Loading and 'N new items' are status messages and must be announced without moving focus."
+    },
+    {
+      "id": "9.1",
+      "reason": "Each article needs a heading — the feed is navigated by heading, and aria-labelledby should point at it."
+    },
+    {
+      "id": "7.3",
+      "reason": "Page Down/Up move between articles; the feed must be fully keyboard operable."
+    },
+    {
+      "id": "12.9",
+      "reason": "An infinite feed can trap keyboard users: content below (the footer) may never be reachable if new items load forever."
+    },
+    {
+      "id": "13.8",
+      "reason": "A feed that auto-updates with new content is moving content — the user must be able to stop it."
+    }
   ]
 }

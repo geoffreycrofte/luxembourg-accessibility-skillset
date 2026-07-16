@@ -3,30 +3,103 @@
   "name": "Radio Group",
   "description": "A set of checkable buttons where no more than one can be checked at a time, with keyboard navigation that moves focus and selection together.",
   "keyboard_interactions": [
-    { "key": "Tab", "action": "Moves focus into the group on checked button, or first button if none checked" },
-    { "key": "Space", "action": "Checks the focused radio button if not already checked" },
-    { "key": "Right Arrow", "action": "Moves focus and checks next button; wraps from last to first" },
-    { "key": "Down Arrow", "action": "Moves focus and checks next button; wraps from last to first" },
-    { "key": "Left Arrow", "action": "Moves focus and checks previous button; wraps from first to last" },
-    { "key": "Up Arrow", "action": "Moves focus and checks previous button; wraps from first to last" }
+    {
+      "key": "Tab",
+      "action": "Moves focus into the group on checked button, or first button if none checked"
+    },
+    {
+      "key": "Space",
+      "action": "Checks the focused radio button if not already checked"
+    },
+    {
+      "key": "Right Arrow",
+      "action": "Moves focus and checks next button; wraps from last to first"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Moves focus and checks next button; wraps from last to first"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "Moves focus and checks previous button; wraps from first to last"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves focus and checks previous button; wraps from first to last"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "radiogroup", "element": "container", "description": "Groups the radio buttons" },
-      { "role": "radio", "element": "each button", "description": "Individual radio button" }
+      {
+        "role": "radiogroup",
+        "element": "container",
+        "description": "Groups the radio buttons"
+      },
+      {
+        "role": "radio",
+        "element": "each button",
+        "description": "Individual radio button"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-checked", "element": "radio", "description": "true when checked; false when unchecked" },
-      { "attribute": "aria-labelledby or aria-label", "element": "radiogroup", "description": "Accessible name for the group" }
+      {
+        "attribute": "aria-checked",
+        "element": "radio",
+        "description": "true when checked; false when unchecked",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "radiogroup",
+        "description": "Accessible name for the group"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-labelledby or aria-label", "element": "radio", "description": "Accessible name for individual button" },
-      { "attribute": "aria-describedby", "element": "radiogroup or radio", "description": "References descriptive information" }
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "radio",
+        "description": "Accessible name for individual button"
+      },
+      {
+        "attribute": "aria-describedby",
+        "element": "radiogroup or radio",
+        "description": "References descriptive information"
+      }
     ]
   },
   "notes": [
-    "Prefer native <input type='radio'> with <fieldset>/<legend> grouping",
-    "Arrow keys both move focus AND change selection in a radio group",
-    "Only the checked radio (or first if none checked) should have tabindex='0'"
+    "Use native <input type='radio'> with a shared `name`. The browser gives you the roving tabindex, the arrow keys, the wrapping, and the mutual exclusion — all the hard parts.",
+    "A radio GROUP is one Tab stop. Tab enters on the checked option (or the first if none is checked); arrows move within. This is native behaviour you get free, and the first thing lost when you build it from divs.",
+    "fieldset + legend is mandatory (RAWeb 11.5). The legend is the question; the labels are the answers.",
+    "Radios cannot be unchecked by the user. If 'none' is a valid answer, provide an explicit 'None' option — or use checkboxes.",
+    "Never put a radio group in a fieldset with no legend: a fieldset alone gives a border, not a name.",
+    "role='radiogroup' + role='radio' is only for cases where a native input truly cannot work. You then owe the arrows, the roving tabindex, and the exclusion logic yourself."
+  ],
+  "code_examples": "patterns/radio.md",
+  "native_element": "<input type=\"radio\"> inside <fieldset><legend>",
+  "raweb_criteria": [
+    {
+      "id": "11.1",
+      "reason": "Each radio is a form field and needs its own label."
+    },
+    {
+      "id": "11.5",
+      "reason": "THE criterion for this pattern. A radio group without fieldset/legend announces the options but never the question they answer."
+    },
+    {
+      "id": "11.2",
+      "reason": "Each option's label must be meaningful on its own — announced out of context, 'Option 1' means nothing."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrow keys must move between options; the group must be one Tab stop."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focus ring must be visible, including on custom-styled radios."
+    }
   ]
 }

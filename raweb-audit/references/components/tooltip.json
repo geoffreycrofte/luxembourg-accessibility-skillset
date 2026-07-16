@@ -3,22 +3,80 @@
   "name": "Tooltip",
   "description": "A popup element that displays descriptive information when an element receives keyboard focus or mouse hover. The tooltip itself does not receive focus.",
   "keyboard_interactions": [
-    { "key": "Escape", "action": "Dismisses the tooltip" }
+    {
+      "key": "Tab",
+      "action": "Focusing the trigger shows the tooltip; moving focus away hides it"
+    },
+    {
+      "key": "Escape",
+      "action": "Dismisses the tooltip while the trigger keeps focus (WCAG 1.4.13 dismissible)"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "tooltip", "element": "tooltip container", "description": "Identifies the popup as a tooltip" }
+      {
+        "role": "tooltip",
+        "element": "tooltip container",
+        "description": "Identifies the popup as a tooltip"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "tooltip element", "description": "Set to 'tooltip'" },
-      { "attribute": "aria-describedby", "element": "trigger element", "description": "References the tooltip element" }
+      {
+        "attribute": "role",
+        "element": "tooltip element",
+        "description": "Set to 'tooltip'",
+        "values": [
+          "tooltip"
+        ]
+      },
+      {
+        "attribute": "aria-describedby",
+        "element": "trigger element",
+        "description": "On the TRIGGER, referencing the tooltip's id. This is what makes it announced. Use aria-labelledby instead only when the tooltip IS the trigger's name (e.g. an icon button with no visible text)."
+      }
     ],
-    "optional_attributes": []
+    "optional_attributes": [
+      {
+        "attribute": "id",
+        "element": "tooltip element",
+        "description": "Required in practice: aria-describedby needs a target. The tooltip must stay in the DOM for the reference to resolve."
+      }
+    ]
   },
   "notes": [
-    "Tooltips should appear on both focus and hover",
+    "The `title` attribute is not a tooltip: it never appears on keyboard focus, cannot be styled or dismissed, is announced inconsistently, and is invisible on touch. Never use it as your tooltip mechanism.",
+    "Tooltips must appear on FOCUS as well as hover (RAWeb 7.3, 12.11) — hover-only is keyboard-inaccessible.",
     "The tooltip must remain visible while the trigger has focus or is hovered",
+    "Escape must dismiss the tooltip without moving focus (WCAG 1.4.13 Content on Hover or Focus).",
+    "The tooltip must stay hoverable: a user zoomed to 200% may need to move the pointer onto the tooltip itself to read it. Do not hide it on the trigger's mouseleave if the pointer moved into the tooltip.",
     "Do not put interactive content inside tooltips",
-    "Keep tooltip text concise — for complex content use a dialog or disclosure"
+    "If it contains a link or a button, it is not a tooltip — it is a disclosure or a non-modal dialog. RAWeb 12.11 then requires that content be keyboard reachable, which a tooltip can never be.",
+    "Never put a tooltip on a non-focusable element: keyboard users cannot reach it at all.",
+    "Keep tooltip text concise — for complex content use a dialog or disclosure",
+    "Do not use aria-describedby AND put the same text as the button's visible label — it will be announced twice."
+  ],
+  "code_examples": "patterns/tooltip.md",
+  "native_element": "none — the `title` attribute is NOT a tooltip (keyboard-inaccessible, unstyleable, inconsistently announced)",
+  "raweb_criteria": [
+    {
+      "id": "12.11",
+      "reason": "THE criterion for this pattern. Content that appears on hover or focus must be reachable by keyboard when it contains anything interactive — and must appear on focus, not hover alone."
+    },
+    {
+      "id": "7.1",
+      "reason": "The tooltip must be associated with its trigger via aria-describedby, or it is never announced."
+    },
+    {
+      "id": "7.3",
+      "reason": "A tooltip that only appears on hover is unusable by keyboard. It must trigger on focus too."
+    },
+    {
+      "id": "10.7",
+      "reason": "The trigger must keep a visible focus indicator while the tooltip is shown."
+    },
+    {
+      "id": "3.2",
+      "reason": "Tooltip text must meet contrast against its own background — a pale tooltip on a dark overlay is a common miss."
+    }
   ]
 }

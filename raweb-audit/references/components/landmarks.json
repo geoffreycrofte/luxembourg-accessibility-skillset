@@ -5,23 +5,83 @@
   "keyboard_interactions": [],
   "aria": {
     "roles": [
-      { "role": "banner", "element": "page header", "description": "Site-wide header, typically containing logo and nav. Use <header> (not inside <article>/<section>)" },
-      { "role": "navigation", "element": "nav sections", "description": "Major navigation blocks. Use <nav>" },
-      { "role": "main", "element": "main content area", "description": "Primary content. Use <main>. Only one per page" },
-      { "role": "complementary", "element": "supporting content", "description": "Content related but separate from main. Use <aside>" },
-      { "role": "contentinfo", "element": "page footer", "description": "Site-wide footer info. Use <footer> (not inside <article>/<section>)" },
-      { "role": "form", "element": "form landmark", "description": "A form when it has an accessible name. Use <form> with aria-label/aria-labelledby" },
-      { "role": "region", "element": "generic landmark", "description": "A perceivable section with accessible name. Use <section> with aria-label/aria-labelledby" },
-      { "role": "search", "element": "search functionality", "description": "Search facility. Use <search> element or role='search'" }
+      {
+        "role": "banner",
+        "element": "page header",
+        "description": "Site-wide header, typically containing logo and nav. Use <header> (not inside <article>/<section>)"
+      },
+      {
+        "role": "navigation",
+        "element": "nav sections",
+        "description": "Major navigation blocks. Use <nav>"
+      },
+      {
+        "role": "main",
+        "element": "main content area",
+        "description": "Primary content. Use <main>. Only one per page"
+      },
+      {
+        "role": "complementary",
+        "element": "supporting content",
+        "description": "Content related but separate from main. Use <aside>"
+      },
+      {
+        "role": "contentinfo",
+        "element": "page footer",
+        "description": "Site-wide footer info. Use <footer> (not inside <article>/<section>)"
+      },
+      {
+        "role": "form",
+        "element": "form landmark",
+        "description": "A form when it has an accessible name. Use <form> with aria-label/aria-labelledby"
+      },
+      {
+        "role": "region",
+        "element": "generic landmark",
+        "description": "A perceivable section with accessible name. Use <section> with aria-label/aria-labelledby"
+      },
+      {
+        "role": "search",
+        "element": "search functionality",
+        "description": "Search facility. Use <search> element or role='search'"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-labelledby or aria-label", "element": "navigation, form, region, complementary (when multiple)", "description": "Unique accessible name to distinguish multiple landmarks of same type" }
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "navigation, form, region, complementary (when multiple)",
+        "description": "Unique accessible name to distinguish multiple landmarks of same type"
+      }
     ],
     "optional_attributes": []
   },
   "notes": [
-    "Prefer HTML5 semantic elements over ARIA roles: <header>, <nav>, <main>, <aside>, <footer>, <section>, <form>, <search>",
-    "When multiple landmarks of the same type exist, each must have a unique accessible name",
-    "All page content should be within a landmark"
+    "Use the native elements. <nav> IS role='navigation'; adding role='navigation' to it is redundant noise.",
+    "Exactly ONE <main> per page. It is the target of the skip link (RAWeb 12.7).",
+    "<header>/<footer> only map to banner/contentinfo when they are NOT nested inside <article>, <aside>, <main>, <nav> or <section>. A <header> inside an <article> is just a header.",
+    "Several landmarks of the same type must be told apart with aria-label: <nav aria-label='Main'> and <nav aria-label='Breadcrumb'>.",
+    "Do not put the landmark type in the label: <nav aria-label='Main navigation'> is announced 'Main navigation navigation'. Say 'Main'.",
+    "<section> is only a landmark (role='region') when it has an accessible name. An unnamed <section> is a generic div as far as AT is concerned.",
+    "Do not wrap the whole page in landmarks. If everything is a landmark, the landmark list is useless — it exists to let users skip TO things."
+  ],
+  "code_examples": "patterns/landmarks.md",
+  "native_element": "<header> <nav> <main> <aside> <footer> <form> <section>",
+  "raweb_criteria": [
+    {
+      "id": "9.2",
+      "reason": "THE criterion for this pattern. The document structure must be consistent — landmarks are how that structure is exposed to assistive technologies."
+    },
+    {
+      "id": "12.6",
+      "reason": "Content grouping blocks repeated across pages (header, nav, footer) must be reachable or bypassable — landmarks are the mechanism."
+    },
+    {
+      "id": "12.7",
+      "reason": "A skip link to the main content region is required. It needs a <main> to skip TO."
+    },
+    {
+      "id": "7.1",
+      "reason": "Where several landmarks of the same type exist, each needs a distinguishing accessible name."
+    }
   ]
 }

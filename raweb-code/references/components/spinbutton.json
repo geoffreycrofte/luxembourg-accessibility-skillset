@@ -3,30 +3,105 @@
   "name": "Spinbutton",
   "description": "An input widget that restricts its value to a set or range of discrete values, featuring a text field with increase/decrease functionality via arrow keys.",
   "keyboard_interactions": [
-    { "key": "Up Arrow", "action": "Increases the value" },
-    { "key": "Down Arrow", "action": "Decreases the value" },
-    { "key": "Home", "action": "Sets value to minimum (if applicable)" },
-    { "key": "End", "action": "Sets value to maximum (if applicable)" },
-    { "key": "Page Up", "action": "(Optional) Increases by a larger step" },
-    { "key": "Page Down", "action": "(Optional) Decreases by a larger step" }
+    {
+      "key": "Up Arrow",
+      "action": "Increases the value"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Decreases the value"
+    },
+    {
+      "key": "Home",
+      "action": "Sets value to minimum (if applicable)"
+    },
+    {
+      "key": "End",
+      "action": "Sets value to maximum (if applicable)"
+    },
+    {
+      "key": "Page Up",
+      "action": "(Optional) Increases by a larger step"
+    },
+    {
+      "key": "Page Down",
+      "action": "(Optional) Decreases by a larger step"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "spinbutton", "element": "input element", "description": "The numeric input widget" }
+      {
+        "role": "spinbutton",
+        "element": "input element",
+        "description": "The numeric input widget"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-valuenow", "element": "spinbutton", "description": "Current value" },
-      { "attribute": "aria-labelledby or aria-label", "element": "spinbutton", "description": "Accessible name" }
+      {
+        "attribute": "aria-valuenow",
+        "element": "spinbutton",
+        "description": "Current value"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "spinbutton",
+        "description": "Accessible name"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-valuemin", "element": "spinbutton", "description": "Minimum allowed value" },
-      { "attribute": "aria-valuemax", "element": "spinbutton", "description": "Maximum allowed value" },
-      { "attribute": "aria-valuetext", "element": "spinbutton", "description": "Human-readable value when numeric is not user-friendly" },
-      { "attribute": "aria-invalid", "element": "spinbutton", "description": "true when value is outside allowed range" }
+      {
+        "attribute": "aria-valuemin",
+        "element": "spinbutton",
+        "description": "Minimum allowed value"
+      },
+      {
+        "attribute": "aria-valuemax",
+        "element": "spinbutton",
+        "description": "Maximum allowed value"
+      },
+      {
+        "attribute": "aria-valuetext",
+        "element": "spinbutton",
+        "description": "Human-readable value when numeric is not user-friendly"
+      },
+      {
+        "attribute": "aria-invalid",
+        "element": "spinbutton",
+        "description": "true when value is outside allowed range"
+      }
     ]
   },
   "notes": [
-    "Prefer native <input type='number'> when possible",
-    "The text field should accept direct typed input in addition to arrow key control"
+    "<input type='number'> is for QUANTITIES you would do arithmetic on. It is the wrong element for phone numbers, credit cards, postcodes, PINs or IDs — those are digit STRINGS. Use <input type='text' inputmode='numeric' pattern='[0-9]*'>.",
+    "Real problems with type='number': the scroll wheel silently changes the value when the page is scrolled with the field focused; non-numeric typed input is discarded with no feedback in some browsers; leading zeros are lost; and the spinner arrows are far below any reasonable target size.",
+    "Consider disabling the wheel: input.addEventListener('wheel', e => e.target === document.activeElement && e.preventDefault(), { passive: false }). An accidental scroll silently changing a quantity is a real data-integrity bug.",
+    "If you build custom +/- buttons, they need accessible names ('Increase quantity'), and the value must remain typeable in the input.",
+    "Custom +/- buttons should be tabindex='-1' when the input itself is focusable and arrows work — otherwise a 3-field form becomes 9 Tab stops. Keep them pointer targets.",
+    "Announce clamping (RAWeb 11.10): if the user types 999 and the max is 10, silently rewriting it to 10 is baffling. Say so.",
+    "role='spinbutton' on a div means you owe aria-valuenow/min/max, arrows, and typing. <input type='number'> already has all of it."
+  ],
+  "code_examples": "patterns/spinbutton.md",
+  "native_element": "<input type=\"number\"> — but read the notes; it is the wrong choice more often than people think",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "The current value must be exposed; on a custom spinbutton, aria-valuenow/min/max are mandatory."
+    },
+    {
+      "id": "7.3",
+      "reason": "Up/Down arrows must change the value; the increment buttons must be keyboard reachable or explicitly excluded from the tab order in favour of the input."
+    },
+    {
+      "id": "11.1",
+      "reason": "It is a form field and needs a real label."
+    },
+    {
+      "id": "10.7",
+      "reason": "Visible focus indicator on the input."
+    },
+    {
+      "id": "11.10",
+      "reason": "Silently clamping or rejecting an out-of-range value is not error management — say what went wrong."
+    }
   ]
 }

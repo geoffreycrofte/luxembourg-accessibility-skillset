@@ -3,40 +3,150 @@
   "name": "Treegrid",
   "description": "A hierarchical data grid where rows can be expanded/collapsed and both rows and individual cells are focusable and interactive.",
   "keyboard_interactions": [
-    { "key": "Enter", "action": "Expands/collapses child rows or performs default cell action" },
-    { "key": "Right Arrow", "action": "Expands collapsed row; moves to first cell; or moves one cell right" },
-    { "key": "Left Arrow", "action": "Collapses expanded row; moves to row header; or moves one cell left" },
-    { "key": "Down Arrow", "action": "Moves one row or cell down" },
-    { "key": "Up Arrow", "action": "Moves one row or cell up" },
-    { "key": "Home", "action": "Moves to first row or first cell in current row" },
-    { "key": "End", "action": "Moves to last row or last cell in current row" },
-    { "key": "Control + Home", "action": "Moves to first row or top cell in column" },
-    { "key": "Control + End", "action": "Moves to last row or bottom cell in column" }
+    {
+      "key": "Enter",
+      "action": "Expands/collapses child rows or performs default cell action"
+    },
+    {
+      "key": "Right Arrow",
+      "action": "Expands collapsed row; moves to first cell; or moves one cell right"
+    },
+    {
+      "key": "Left Arrow",
+      "action": "Collapses expanded row; moves to row header; or moves one cell left"
+    },
+    {
+      "key": "Down Arrow",
+      "action": "Moves one row or cell down"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves one row or cell up"
+    },
+    {
+      "key": "Home",
+      "action": "Moves to first row or first cell in current row"
+    },
+    {
+      "key": "End",
+      "action": "Moves to last row or last cell in current row"
+    },
+    {
+      "key": "Control + Home",
+      "action": "Moves to first row or top cell in column"
+    },
+    {
+      "key": "Control + End",
+      "action": "Moves to last row or bottom cell in column"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "treegrid", "element": "container", "description": "The hierarchical grid container" },
-      { "role": "row", "element": "each row", "description": "Row container" },
-      { "role": "gridcell", "element": "data cells", "description": "Interactive data cells" },
-      { "role": "columnheader", "element": "column headers", "description": "Column header cells" },
-      { "role": "rowheader", "element": "row headers", "description": "Row header cells" }
+      {
+        "role": "treegrid",
+        "element": "container",
+        "description": "The hierarchical grid container"
+      },
+      {
+        "role": "row",
+        "element": "each row",
+        "description": "Row container"
+      },
+      {
+        "role": "gridcell",
+        "element": "data cells",
+        "description": "Interactive data cells"
+      },
+      {
+        "role": "columnheader",
+        "element": "column headers",
+        "description": "Column header cells"
+      },
+      {
+        "role": "rowheader",
+        "element": "row headers",
+        "description": "Row header cells"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-expanded", "element": "parent rows", "description": "true when open; false when closed" },
-      { "attribute": "aria-labelledby or aria-label", "element": "treegrid", "description": "Accessible name" }
+      {
+        "attribute": "aria-expanded",
+        "element": "parent rows",
+        "description": "true when open; false when closed"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "treegrid",
+        "description": "Accessible name"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-multiselectable", "element": "treegrid", "description": "true for multi-select" },
-      { "attribute": "aria-selected", "element": "row/cell", "description": "Selection state" },
-      { "attribute": "aria-readonly", "element": "non-editable cells", "description": "true on read-only cells" },
-      { "attribute": "aria-level", "element": "row", "description": "Nesting depth (when not inferable from DOM)" },
-      { "attribute": "aria-colcount", "element": "treegrid", "description": "Total columns" },
-      { "attribute": "aria-rowcount", "element": "treegrid", "description": "Total rows" }
+      {
+        "attribute": "aria-multiselectable",
+        "element": "treegrid",
+        "description": "true for multi-select"
+      },
+      {
+        "attribute": "aria-selected",
+        "element": "row/cell",
+        "description": "Selection state"
+      },
+      {
+        "attribute": "aria-readonly",
+        "element": "non-editable cells",
+        "description": "true on read-only cells"
+      },
+      {
+        "attribute": "aria-level",
+        "element": "row",
+        "description": "Nesting depth (when not inferable from DOM)"
+      },
+      {
+        "attribute": "aria-colcount",
+        "element": "treegrid",
+        "description": "Total columns"
+      },
+      {
+        "attribute": "aria-rowcount",
+        "element": "treegrid",
+        "description": "Total rows"
+      }
     ]
   },
   "notes": [
-    "Combines the tree and grid patterns — one of the most complex ARIA widgets",
-    "Test thoroughly with screen readers before deploying",
-    "Consider if a simpler pattern (tree or grid alone) would serve the use case"
+    "A treegrid is a grid whose rows are hierarchical — read patterns/grid.md and patterns/treeview.md first; this is their intersection and adds no new ideas, only more surface.",
+    "This is the most complex pattern in the APG. If a treeview or a plain grid will do, use that instead. Almost every 'treegrid' in the wild would have been better as an expandable table.",
+    "aria-expanded goes on the ROW (role='row'), not on a cell.",
+    "aria-level, aria-posinset and aria-setsize go on the row and are mandatory: unlike a treeview, the DOM is flat, so nothing else conveys the hierarchy.",
+    "Two navigation modes: row-focus (arrows move between rows) and cell-focus (arrows move between cells). Enter switches into a row; Escape returns to row-focus. Pick one model and be consistent.",
+    "Collapsed child rows must be removed or `hidden` — not merely visually collapsed (RAWeb 10.8)."
+  ],
+  "code_examples": "patterns/treegrid.md",
+  "native_element": "none",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "treegrid/row/gridcell roles plus aria-expanded and aria-level must be exposed."
+    },
+    {
+      "id": "7.3",
+      "reason": "Two-dimensional arrow navigation plus expand/collapse, all from the keyboard."
+    },
+    {
+      "id": "10.7",
+      "reason": "The focused cell or row must be visibly indicated."
+    },
+    {
+      "id": "10.8",
+      "reason": "Collapsed rows must be hidden from assistive technologies."
+    },
+    {
+      "id": "12.9",
+      "reason": "Tab must escape; arrows navigate inside."
+    },
+    {
+      "id": "5.6",
+      "reason": "If it renders as a table with headers, those headers must still be properly declared."
+    }
   ]
 }

@@ -9,7 +9,7 @@ description: >
   Default conformance target: Level AA.
 metadata:
   author: luxembourg-accessibility-skillset
-  version: 1.2.0
+  version: 1.3.0
   raweb-version: "1.1"
   wcag-version: "2.1"
   license: CC-BY-3.0-LU
@@ -67,9 +67,10 @@ run `search "form"` and `topic 11`.
 - Every decorative `<img>` MUST have `alt=""` and no `title`, `aria-label`, or `aria-labelledby` (1.2)
 - Every `<svg>` conveying information MUST have `role="img"` + text alternative via `aria-label` or `aria-labelledby` (1.1)
 - Decorative `<svg>` MUST have `aria-hidden="true"` (1.2)
-- Text alternatives must be short and concise — 80 characters max recommended (1.3)
+- Every text alternative MUST be **relevant** — it must convey what the image conveys (1.3). Keeping it short (~80 characters) is good practice, not the criterion itself
 - Complex images (charts, infographics) need a detailed description accessible via adjacent link or `aria-describedby` (1.6)
-- Avoid images of text unless the visual effect cannot be achieved with CSS (1.8, 1.9 — Level AA)
+- Avoid images of text unless the visual effect cannot be achieved with CSS (1.8 — Level AA)
+- Where an image has a visible caption, that caption MUST be correctly linked to the image — `<figure>`/`<figcaption>` (1.9)
 
 **NEVER:**
 - Leave `alt` undefined on an informative image
@@ -116,7 +117,7 @@ run `search "form"` and `topic 11`.
 
 - Information must NEVER be conveyed by colour alone (3.1)
 - Text contrast ratio: at least **4.5:1** (normal text) or **3:1** (large text ≥18pt / bold ≥14pt) (3.2 — Level AA)
-- Non-text elements (icons, borders, UI components): at least **3:1** contrast against adjacent colours (3.3 — Level AA)
+- Non-text elements (icons, borders, UI components): at least **3:1** contrast against adjacent colours (3.3)
 
 ```html
 <!-- BAD: colour alone conveys meaning -->
@@ -135,8 +136,9 @@ run `search "form"` and `topic 11`.
 - Pre-recorded video with audio MUST have captions (4.1, 4.3)
 - Pre-recorded audio MUST have a text transcript (4.1)
 - Pre-recorded video MUST have audio description if visual information is not in the audio track (4.5, 4.6 — Level AA)
-- Auto-playing media MUST be controllable: pause, stop, or mute within 3 seconds (4.10)
-- No auto-playing audio longer than 3 seconds without a control mechanism (4.11)
+- Every automatically triggered sound MUST be controllable by the user — pause, stop, or mute (4.10)
+- Media viewing controls (play, pause, volume, captions) MUST be operable by keyboard AND any pointing device (4.11)
+- Time-based media MUST be compatible with assistive technologies (4.13)
 
 ```html
 <video controls>
@@ -148,11 +150,16 @@ run `search "form"` and `topic 11`.
 
 ### 5. Tables (Topic 5)
 
-- Data tables MUST use `<th>` elements for headers with appropriate `scope` attribute (5.6, 5.7)
-- Complex tables MUST use `id`/`headers` associations (5.7)
-- Every data table MUST have a caption or title via `<caption>`, `aria-label`, or `aria-labelledby` (5.4)
+- Every **complex** data table MUST have a summary (5.1), and that summary must be relevant (5.2)
+- For each **layout** table, the linearised content must remain comprehensible (5.3)
+- Where a data table has a title, it MUST be correctly associated — `<caption>`, `aria-label`, or `aria-labelledby` (5.4) — and the title must be relevant (5.5)
+- Data tables MUST declare every column and row header with `<th>` (5.6)
+- Each cell MUST be associated with its headers: `scope` for simple tables, `headers`/`id` for complex ones (5.7)
 - Layout tables MUST NOT use `<th>`, `<caption>`, `scope`, or `headers` (5.8)
-- Every data table MUST have a summary to help understand its structure when the table is complex (5.5)
+
+Note: 5.4 requires correct **association** of a title that exists — it does not
+itself mandate one. In practice always give a data table a `<caption>`; just
+don't cite 5.4 as the reason.
 
 ```html
 <!-- GOOD: simple data table -->
@@ -199,11 +206,16 @@ run `search "form"` and `topic 11`.
 
 ### 7. Scripts (Topic 7)
 
-- Every script MUST be operable by keyboard AND any pointing device (7.1)
-- All script-driven UI must be compatible with assistive technologies (7.1)
-- Status messages must be communicated without focus change using `role="status"`, `role="alert"`, `role="log"`, `aria-live`, or `aria-relevant` (7.4)
-- Script-inserted content must be accessible (7.2)
-- Moving, blinking, or auto-updating content must be controllable: pause, stop, hide (7.5 — Level AA)
+- Every script-driven UI MUST be compatible with assistive technologies — correct role, name, and value (7.1)
+- Where a script has an alternative, that alternative MUST be relevant (7.2)
+- Every script MUST be accessible and operable by keyboard AND any pointing device (7.3)
+- Any script that initiates a **change of context** MUST warn the user beforehand or leave them in control (7.4)
+- Status messages MUST be communicated without moving focus, using `role="status"`, `role="alert"`, `role="log"`, `aria-live`, or `aria-relevant` (7.5 — Level AA)
+
+Related criteria that live in other topics — do not cite them as Topic 7:
+- Moving or blinking content must be controllable (pause, stop, hide) → **13.8**
+- Sudden changes in brightness / flashing → **13.7**
+- Keyboard traps → **12.9**
 
 ```html
 <!-- GOOD: live region for status updates -->
@@ -356,8 +368,11 @@ button.addEventListener('keydown', (e) => {
 - Skip links must be visible on focus (12.7)
 - Tab order must be logical and consistent with visual reading order (12.8)
 - Never use positive `tabindex` values (12.8)
+- Navigation MUST NOT contain keyboard traps (12.9) — a modal's Tab loop is legal *only* because Escape and a close button let the user out
+- Single-key shortcuts must be remappable or disableable (12.10)
+- Content appearing on hover or focus (tooltips, popovers) must be keyboard accessible (12.11 — Level AA)
 - Navigation landmarks must be consistent across pages (12.2 — Level AA)
-- The active page must be indicated in navigation menus (12.2)
+- The active page must be indicated in navigation menus (12.2 — Level AA)
 
 ```html
 <body>
@@ -395,13 +410,17 @@ button.addEventListener('keydown', (e) => {
 
 ### 13. Consultation (Topic 13)
 
-- Links to downloadable files must indicate format and size (13.3)
-- Refreshes and redirects must not be automatic unless controllable by user (13.1)
-- Time limits must be adjustable, extendable, or removable (13.1)
-- Opening a new window must be indicated to the user (13.2)
-- No unexpected context change on focus or input without prior warning (13.1)
-- Moving or flashing content must be controllable (13.8)
-- No more than 3 flashes per second (13.8)
+- The user must have control over every time limit that modifies content — adjustable, extendable, or removable (13.1)
+- A new window MUST NOT open without a user action (13.2)
+- Every downloadable office document must have an accessible version (13.3), and that version must offer the same information (13.4)
+- Sudden changes in brightness or flashing must be used correctly — no more than 3 flashes per second (13.7)
+- Moving or blinking content must be controllable by the user: pause, stop, hide (13.8)
+- Content must be viewable in any screen orientation (13.9 — Level AA)
+- Any feature using a complex gesture must also be usable with a simple gesture (13.10)
+
+Note: indicating a link's file format and size is **good practice, not a RAWeb
+criterion** — do it, but do not cite 13.3 for it. Warning the user before a
+context change is **7.4**, not 13.1.
 
 ```html
 <!-- GOOD: file download with format and size -->
@@ -432,8 +451,12 @@ with keyboard interactions, required/optional ARIA attributes, and implementatio
 # Find the right pattern by keyword (e.g., "modal", "dropdown", "toggle")
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh find "<keyword>"
 
-# Show full pattern details (keyboard, ARIA roles, attributes, notes)
+# Show the pattern contract as markdown tables:
+# RAWeb criteria + keyboard interaction + ARIA roles/attributes/states
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh show <slug>
+
+# Show working code examples (do + don't) for one framework
+bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh code <slug> [vanilla|react|angular|web-component]
 
 # List all 30 available patterns
 bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh list
@@ -446,22 +469,29 @@ bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh roles "<role>"
 
 1. **Identify** the component the developer is building (dialog, tabs, slider, etc.)
 2. **Search** using `find` with the most natural keyword the developer used
-3. **Load** the full pattern with `show <slug>` to get keyboard interactions and ARIA requirements
-4. **Cross-reference** with RAWeb criteria — especially Topics 7 (Scripts), 11 (Forms), and 12 (Navigation)
-5. **Apply** the pattern, preferring native HTML elements over ARIA roles when possible
+3. **Load the contract** with `show <slug>` — the RAWeb criteria that apply, the
+   keyboard interaction, and every ARIA attribute with its allowed values/states
+4. **Load the code** with `code <slug>` — read the whole pattern file the first
+   time; use `code <slug> <framework>` when you already know the universal rules
+5. **Apply** the pattern, preferring native HTML elements over ARIA roles
+6. **Cross-reference** anything the pattern doesn't cover against the criteria —
+   especially Topics 7 (Scripts), 11 (Forms), and 12 (Navigation)
 
-### Available patterns
+If a pattern has no code examples yet, `code` tells you so and lists what does.
+Fall back to `show <slug>` — the contract is complete for all 30 patterns.
 
-The individual pattern files are located at:
-`${CLAUDE_SKILL_DIR}/references/components/<slug>.json`
+### Where the data lives
 
-Each file contains:
-- `description` — What the component is
-- `keyboard_interactions` — All required and optional keyboard behaviours
-- `aria.roles` — Which ARIA roles to use and where
-- `aria.required_attributes` — Attributes that MUST be present
-- `aria.optional_attributes` — Attributes to add when applicable
-- `notes` — Implementation tips and common pitfalls
+| Path | Holds | Status |
+|---|---|---|
+| `references/components/<slug>.json` | **Source of truth**: ARIA roles/attributes/values, keyboard interaction, RAWeb criteria mapping | All 30 patterns |
+| `references/patterns/<slug>.md` | Code examples: vanilla, React, Angular, Web Component, each with dos **and** don'ts | Growing — see `code` output |
+| `references/patterns/_TEMPLATE.md` | Authoring contract for adding a new pattern file | — |
+
+Criterion **levels and official titles are resolved at render time** from
+`niveaux.json` and `criteres.json`, so a pattern can never quote a stale level.
+Never retype an ARIA table into a `.md` — add it to the JSON and let `show`
+render it.
 
 ### Quick mapping: common requests → pattern slugs
 
@@ -540,8 +570,11 @@ Before considering any code complete, verify:
 
 1. **Look up the RAWeb criterion**: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh criterion <topic.criterion>`
 2. **Check the test methodology**: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh methodology <topic.criterion.test>`
-3. **Look up the ARIA pattern** for a component: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh find "<keyword>"` then `show <slug>`
+3. **Look up the ARIA pattern** for a component: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-component-lookup.sh find "<keyword>"`, then `show <slug>` for the contract and `code <slug>` for worked examples
 4. **Consult the glossary** for precise definitions: `bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh glossary "<term>"`
 5. Default to the most accessible approach — when two implementations are possible, choose the one with better assistive technology support
 6. Prefer native HTML semantics over ARIA: a `<button>` is better than `<div role="button">`
 7. When building an interactive widget, ALWAYS load the APG pattern first — do not guess ARIA attributes from memory
+8. **Never cite a criterion number from memory.** RAWeb numbering is not WCAG
+   numbering: RAWeb 7.3 is keyboard operability, WCAG 2.1.1 is. Verify with
+   `criterion <x.y>` before writing a number into code, a comment, or a report

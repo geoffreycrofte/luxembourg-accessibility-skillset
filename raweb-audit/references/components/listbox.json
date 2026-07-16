@@ -3,35 +3,142 @@
   "name": "Listbox",
   "description": "A widget that presents a list of options allowing users to select one or more, communicating option names, states, and positions to assistive technologies.",
   "keyboard_interactions": [
-    { "key": "Down Arrow", "action": "Moves focus to next option" },
-    { "key": "Up Arrow", "action": "Moves focus to previous option" },
-    { "key": "Home", "action": "(Optional) Moves focus to first option" },
-    { "key": "End", "action": "(Optional) Moves focus to last option" },
-    { "key": "Type-ahead", "action": "Moves focus to next option matching typed character(s)" },
-    { "key": "Space (multi-select)", "action": "Toggles selection of focused option" },
-    { "key": "Shift + Down Arrow (multi-select)", "action": "Moves focus and toggles selection of next option" },
-    { "key": "Shift + Up Arrow (multi-select)", "action": "Moves focus and toggles selection of previous option" },
-    { "key": "Control + A (multi-select)", "action": "Toggles selection of all options" }
+    {
+      "key": "Down Arrow",
+      "action": "Moves focus to next option"
+    },
+    {
+      "key": "Up Arrow",
+      "action": "Moves focus to previous option"
+    },
+    {
+      "key": "Home",
+      "action": "(Optional) Moves focus to first option"
+    },
+    {
+      "key": "End",
+      "action": "(Optional) Moves focus to last option"
+    },
+    {
+      "key": "Type-ahead",
+      "action": "Moves focus to next option matching typed character(s)"
+    },
+    {
+      "key": "Space (multi-select)",
+      "action": "Toggles selection of focused option"
+    },
+    {
+      "key": "Shift + Down Arrow (multi-select)",
+      "action": "Moves focus and toggles selection of next option"
+    },
+    {
+      "key": "Shift + Up Arrow (multi-select)",
+      "action": "Moves focus and toggles selection of previous option"
+    },
+    {
+      "key": "Control + A (multi-select)",
+      "action": "Toggles selection of all options"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "listbox", "element": "container", "description": "The list container" },
-      { "role": "option", "element": "each option", "description": "Individual selectable items" },
-      { "role": "group", "element": "option group container", "description": "Groups related options" }
+      {
+        "role": "listbox",
+        "element": "container",
+        "description": "The list container"
+      },
+      {
+        "role": "option",
+        "element": "each option",
+        "description": "Individual selectable items"
+      },
+      {
+        "role": "group",
+        "element": "option group container",
+        "description": "Groups related options"
+      }
     ],
     "required_attributes": [
-      { "attribute": "aria-labelledby or aria-label", "element": "listbox", "description": "Accessible name for the listbox" }
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "listbox",
+        "description": "Accessible name for the listbox"
+      }
     ],
     "optional_attributes": [
-      { "attribute": "aria-multiselectable", "element": "listbox", "description": "true for multi-select; omit for single-select" },
-      { "attribute": "aria-selected", "element": "option", "description": "true for selected; false for unselectable" },
-      { "attribute": "aria-orientation", "element": "listbox", "description": "horizontal for horizontal arrangement; default is vertical" },
-      { "attribute": "aria-setsize", "element": "option", "description": "Total options when not all in DOM" },
-      { "attribute": "aria-posinset", "element": "option", "description": "Position within complete set" }
+      {
+        "attribute": "aria-multiselectable",
+        "element": "listbox",
+        "description": "true for multi-select; omit for single-select",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-selected",
+        "element": "option",
+        "description": "true for selected; false for unselectable",
+        "values": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "attribute": "aria-orientation",
+        "element": "listbox",
+        "description": "horizontal for horizontal arrangement; default is vertical",
+        "values": [
+          "vertical",
+          "horizontal"
+        ]
+      },
+      {
+        "attribute": "aria-setsize",
+        "element": "option",
+        "description": "Total options when not all in DOM"
+      },
+      {
+        "attribute": "aria-posinset",
+        "element": "option",
+        "description": "Position within complete set"
+      }
     ]
   },
   "notes": [
-    "Prefer native <select> for simple single-select use cases",
-    "Two multi-select keyboard models exist: with and without modifier keys"
+    "Use <select>. It is complete, and on mobile it gets the native picker. Build the ARIA listbox only for rich option markup or multi-select UX a <select multiple> cannot express.",
+    "Two focus models are valid: roving tabindex (real focus moves to the option) or aria-activedescendant (focus stays on the listbox container). Pick ONE. Mixing them is the defining bug.",
+    "With aria-activedescendant you must scrollIntoView the active option yourself — there is no real focus to scroll to.",
+    "aria-setsize/aria-posinset are only needed when the DOM does not contain every option (virtualised lists). Otherwise the browser counts them for you.",
+    "Type-ahead (jump to the option starting with the typed letter) is expected behaviour and free with <select>.",
+    "For a listbox inside a combobox, see patterns/combobox.md — the wiring differs."
+  ],
+  "code_examples": "patterns/listbox.md",
+  "native_element": "<select> (single) or <select multiple> — strongly preferred",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "listbox/option roles and aria-selected must be exposed; no native semantics apply to a div-built listbox."
+    },
+    {
+      "id": "7.3",
+      "reason": "Arrow keys must traverse options; the widget must be operable by keyboard and pointer alike."
+    },
+    {
+      "id": "11.1",
+      "reason": "It sets a form value, so it needs a label — aria-labelledby pointing at a visible one."
+    },
+    {
+      "id": "10.7",
+      "reason": "With aria-activedescendant the option has no real focus, so :focus-visible never fires — you must style [aria-selected] yourself."
+    },
+    {
+      "id": "12.8",
+      "reason": "Roving tabindex or aria-activedescendant must keep the listbox a single, coherent Tab stop."
+    },
+    {
+      "id": "12.9",
+      "reason": "Tab must always leave the listbox."
+    }
   ]
 }

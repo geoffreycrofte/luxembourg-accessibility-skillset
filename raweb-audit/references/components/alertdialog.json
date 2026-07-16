@@ -3,25 +3,89 @@
   "name": "Alert Dialog",
   "description": "A modal dialog that interrupts the user's workflow to communicate an important message and acquire a response, such as action confirmation prompts or error acknowledgments.",
   "keyboard_interactions": [
-    { "key": "Tab", "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first" },
-    { "key": "Shift + Tab", "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last" },
-    { "key": "Escape", "action": "Closes the dialog" }
+    {
+      "key": "Tab",
+      "action": "Moves focus to next tabbable element inside the dialog; wraps from last to first"
+    },
+    {
+      "key": "Shift + Tab",
+      "action": "Moves focus to previous tabbable element inside the dialog; wraps from first to last"
+    },
+    {
+      "key": "Escape",
+      "action": "Closes the dialog"
+    }
   ],
   "aria": {
     "roles": [
-      { "role": "alertdialog", "element": "dialog container", "description": "Identifies the element as an alert dialog, enabling assistive technologies to give it special treatment" }
+      {
+        "role": "alertdialog",
+        "element": "dialog container",
+        "description": "Identifies the element as an alert dialog, enabling assistive technologies to give it special treatment"
+      }
     ],
     "required_attributes": [
-      { "attribute": "role", "element": "dialog container", "description": "Set to 'alertdialog'" },
-      { "attribute": "aria-labelledby or aria-label", "element": "alertdialog element", "description": "Provides accessible name, preferably referencing visible title" },
-      { "attribute": "aria-describedby", "element": "alertdialog element", "description": "References the element containing the alert message text" },
-      { "attribute": "aria-modal", "element": "alertdialog element", "description": "Set to true" }
+      {
+        "attribute": "role",
+        "element": "dialog container",
+        "description": "Set to 'alertdialog'"
+      },
+      {
+        "attribute": "aria-labelledby or aria-label",
+        "element": "alertdialog element",
+        "description": "Provides accessible name, preferably referencing visible title"
+      },
+      {
+        "attribute": "aria-describedby",
+        "element": "alertdialog element",
+        "description": "References the element containing the alert message text"
+      },
+      {
+        "attribute": "aria-modal",
+        "element": "alertdialog element",
+        "description": "Set to true"
+      }
     ],
     "optional_attributes": []
   },
   "notes": [
-    "Follows same focus trap pattern as dialog-modal",
-    "Focus should be set to the least destructive action button on open",
-    "When closed, focus returns to the element that invoked the dialog"
+    "An alertdialog is a dialog-modal (see patterns/dialog-modal.md) with exactly two differences: role='alertdialog', and aria-describedby is REQUIRED rather than optional.",
+    "Use it only for an urgent interruption requiring a response — confirming a destructive action, or a failed operation. A normal form in a modal is a plain dialog.",
+    "aria-describedby is required: it points at the message text, which is announced immediately on open. Without it the user hears the title and nothing about what they are confirming.",
+    "Focus the LEAST destructive action: Cancel, not Delete. An Enter keypress in flight from the previous screen must not delete the account.",
+    "Do not use role='alertdialog' for a message with no decision — that is a live region (patterns/alert.md), which does not steal focus.",
+    "Everything from dialog-modal still applies: never open with the `open` attribute, always .showModal()."
+  ],
+  "code_examples": "patterns/alertdialog.md",
+  "native_element": "<dialog> + .showModal() — identical to dialog-modal, with role=\"alertdialog\"",
+  "raweb_criteria": [
+    {
+      "id": "7.1",
+      "reason": "role='alertdialog' plus an accessible name and description must be exposed."
+    },
+    {
+      "id": "7.3",
+      "reason": "Fully keyboard operable, exactly like a modal dialog."
+    },
+    {
+      "id": "7.4",
+      "reason": "It interrupts the user — it must follow a user action, never appear unprompted."
+    },
+    {
+      "id": "7.5",
+      "reason": "role='alertdialog' is announced like an alert on open: its description is read immediately, without waiting."
+    },
+    {
+      "id": "10.7",
+      "reason": "Focus must be visible on every control, including against the backdrop."
+    },
+    {
+      "id": "12.8",
+      "reason": "Focus enters on open and returns to the invoking element on close."
+    },
+    {
+      "id": "12.9",
+      "reason": "Escape and a visible cancel path keep the Tab loop legal."
+    }
   ]
 }
