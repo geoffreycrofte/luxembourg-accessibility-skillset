@@ -231,6 +231,8 @@ Right now, every audit tool, every consultancy, every automated checker produces
 
 If you know of an existing initiative or format working toward this goal (EARL, ACT Rules, something newer?), I'd love to hear about it. And if you have ideas on what such a format should look like, feel free to open an issue or a discussion. This feels like something worth collaborating on.
 
+By the way, I'm building [CheckFox, an accessibility audit manager](https://checkfox.eu/link/github-md) that brings together multiple standards (RAWeb, RGAA, RAAM, RAPDF, WCAG) in a single tool. No more juggling XLS files or manually updating report and statement templates. Everything lives in one place, and generating a polished report or statement takes just one click. Among many others benefits and features like live-collaboration, optional AI helpers, etc.
+
 ---
 
 ## Contributing
@@ -251,7 +253,7 @@ Please keep the skills focused, accurate, and grounded in the official reference
 
 | Name | Role | Links |
 |------|------|-------|
-| [Geoffrey Crofte](https://github.com/geoffreycrofte) | Author of the skillset • UX Lead Designer & Accessibility Officer | [geoffreycrofte.com](https://geoffreycrofte.com) • [LinkedIn](https://linkedin.com/in/geoffreycrofte) |
+| [Geoffrey Crofte](https://github.com/geoffreycrofte) | Author of the skillset • UX Lead Designer & Accessibility Officer • Creator of the [Accessibility Audit Tool CheckFox](https://checkfox.eu/link/github-md) | [geoffreycrofte.com](https://geoffreycrofte.com) • [LinkedIn](https://linkedin.com/in/geoffreycrofte) |
 | [Alain Vagner](https://github.com/alainvagner) | Publisher of RAWeb & RAAM • [@accessibility-luxembourg](https://github.com/accessibility-luxembourg) | [accessibilite.public.lu](https://accessibilite.public.lu) • [LinkedIn](https://linkedin.com/in/avagner) |
 
 ---
