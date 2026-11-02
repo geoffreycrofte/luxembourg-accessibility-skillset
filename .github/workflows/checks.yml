@@ -1,0 +1,23 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: -code and -audit copies are in sync
+        run: bash scripts/sync-skills.sh --check
+      - name: raweb-code cites the right criteria and levels
+        run: bash raweb-code/scripts/validate-references.sh
+      - name: raweb-audit cites the right criteria and levels
+        run: bash raweb-audit/scripts/validate-references.sh

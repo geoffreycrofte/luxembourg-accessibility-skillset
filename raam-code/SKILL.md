@@ -6,13 +6,13 @@ description: >
   / WCAG 2.1). Use when building native mobile apps, React Native, Flutter, or any
   mobile UI that must meet Luxembourg accessibility law. Covers all 15 RAAM themes
   with platform-specific code guidance. Default conformance target: Level AA.
+license: CC-BY-4.0
 metadata:
   author: Geoffrey Crofte
-  version: 1.5.0
+  version: "1.6.0"
   raam-version: "1.1"
   wcag-version: "2.1"
   en301549-version: "3.2.1"
-  license: CC-BY-4.0
   repository: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset
   reference: https://github.com/accessibility-luxembourg/ReferentielAccessibiliteMobile
   reference-license: CC-BY-3.0-LU

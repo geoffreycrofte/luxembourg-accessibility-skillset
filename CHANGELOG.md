@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.6.0] - 2026-11-02
+
+Packaging and tooling release: no change to the guidance in the skills.
+
+### Added
+
+- **Claude Code plugin** (`.claude-plugin/plugin.json`, `marketplace.json`) • The four skills install in one step with `/plugin install luxembourg-accessibility --marketplace geoffreycrofte/luxembourg-accessibility-skillset`. `npx skills add` and manual copies keep working unchanged.
+- **Plugin icon** (`.claude-plugin/icon.png`, source in `icon.svg`).
+- **Eval suite** (`evals/`) for `claude plugin eval` • One case per skill (form error handling, navigation and status-message audit, SwiftUI icon button, Compose screen audit) with rubrics grounded in the official tests — 11.10 vs 11.11, 7.5.1's `aria-atomic` requirement, `role="menu"` on navigation — plus one unrelated request that must not trigger any skill.
+- **CI** (`.github/workflows/checks.yml`) • Runs `sync-skills.sh --check` and both `validate-references.sh` on every pull request and push to `main`. The README already described these as CI gates; nothing ran them.
+- **README** • Plugin and claude.ai installation, a *Development* section (checks, evals, releasing).
+- `.gitignore` (eval results, personal `.claude/settings.local.json`) and `.gitattributes` (keeps development files out of `git archive`).
+
+### Changed
+
+- **`license` moved to the top level of each `SKILL.md` frontmatter**, where the [Agent Skills specification](https://agentskills.io/specification) defines it; it was nested under `metadata`. `metadata.reference-license` is unchanged.
+- `metadata.version` → `"1.6.0"` in the four skills, quoted so it parses as a string, as the specification requires for `metadata` values.
+
 ## [1.5.0] - 2026-07-16
 
 Version 1.4.0 verified every criterion **number** in both RAWeb skills against the
@@ -315,6 +333,7 @@ authoritative and the reader has no way to tell.
 - **README** with installation instructions (npx + manual), usage guide, and reference data documentation.
 - **LICENSE** file.
 
+[1.6.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.6.0
 [1.5.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.5.0
 [1.4.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.4.0
 [1.3.0]: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset/tree/v1.3.0
