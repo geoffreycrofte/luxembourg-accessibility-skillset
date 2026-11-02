@@ -1,4 +1,4 @@
-# Accessibility Skillset <small><small>• [v1.5.0](./CHANGELOG.md)</small></small>
+# Accessibility Skillset <small><small>• [v1.6.0](./CHANGELOG.md)</small></small>
 
 Agent skills for [RAWeb](https://accessibilite.public.lu/en/raweb1.1/index.html), [RAAM](https://accessibilite.public.lu/en/raam1.1/index.html), and RAPDF, Luxembourg's official accessibility frameworks based on EN 301 549 and WCAG 2.1.
 
@@ -22,7 +22,22 @@ Compatible with [skills.sh](https://skills.sh) and the [Agent Skills open standa
 ---
 ## Installation
 
-### Via npx (recommended)
+### Claude Code plugin
+
+```text
+/plugin install luxembourg-accessibility --marketplace geoffreycrofte/luxembourg-accessibility-skillset
+```
+
+On Claude Code versions older than 2.1.275, add the marketplace first:
+
+```text
+/plugin marketplace add geoffreycrofte/luxembourg-accessibility-skillset
+/plugin install luxembourg-accessibility@luxembourg-accessibility-skillset
+```
+
+The plugin installs all four skills. Updates arrive with `/plugin marketplace update luxembourg-accessibility-skillset`.
+
+### Via npx (any compatible agent)
 
 ```bash
 # Install the full skillset
@@ -45,6 +60,14 @@ cp -r raweb-code raweb-audit raam-code raam-audit .claude/skills/
 
 # User-level (all projects)
 cp -r raweb-code raweb-audit raam-code raam-audit ~/.claude/skills/
+```
+
+### Claude.ai and the Claude desktop app
+
+Zip the skill folder you need (one zip per skill), then upload it in **Settings → Capabilities → Skills**:
+
+```bash
+git archive --format=zip --prefix=raweb-code/ -o raweb-code.zip HEAD:raweb-code
 ```
 
 ## Usage
@@ -113,6 +136,10 @@ Scripts live inside each skill folder. From the repo root (or from the installed
 ./raweb-code/scripts/raweb-component-lookup.sh code dialog-modal react    # Just the React section
 ./raweb-code/scripts/raweb-component-lookup.sh roles "dialog"     # Find patterns by ARIA role
 
+# First-pass scan of source files for common defects (raweb-audit only).
+# Every hit is a lead to confirm against the criterion's tests, not a verdict.
+./raweb-audit/scripts/raweb-scan.sh src/
+
 # Consistency check — fails if a skill cites a criterion or level that
 # contradicts the official RAWeb data, or if a "Do" code example does not parse.
 # Exit 1 on drift, so it can gate CI. Ships in every RAWeb skill.
@@ -166,6 +193,7 @@ luxembourg-accessibility-skillset/
 │   │   ├── raweb-component-lookup.sh   # APG pattern contract + code example lookup
 │   │   └── validate-references.sh      # Fails on criterion/level drift (CI gate)
 │   └── references/
+│       ├── examples.md                 # Code examples for each Core rules topic
 │       ├── criteres.json               # RAWeb criteria + tests + WCAG mappings
 │       ├── glossaire.json              # RAWeb glossary
 │       ├── methodologies.json          # RAWeb test procedures
@@ -197,7 +225,9 @@ luxembourg-accessibility-skillset/
 │                                       # landmarks, link, breadcrumb, table, meter
 ├── raweb-audit/                        # Web accessibility audit skill
 │   ├── SKILL.md                        # Its own — never synced
-│   ├── scripts/                        # ⇜ synced from raweb-code/
+│   ├── assets/report-template.md       # Its own — audit report template
+│   ├── scripts/                        # ⇜ synced from raweb-code/, plus its own
+│   │   └── raweb-scan.sh               #   first-pass scan for common defects
 │   └── references/                     # ⇜ synced from raweb-code/ (incl. patterns/:
 │                                       #   the Don't blocks are a defect catalogue and
 │                                       #   the Verify sections are test procedures)
@@ -206,20 +236,55 @@ luxembourg-accessibility-skillset/
 │   ├── scripts/
 │   │   └── raam-lookup.sh              # RAAM criteria CLI lookup
 │   └── references/
+│       ├── examples/                   # Code examples per platform: ios.md,
+│       │                               # android.md, react-native.md, flutter.md
 │       ├── criteres.json               # RAAM criteria + tests + EN 301 549 mappings
 │       ├── glossaire.json              # RAAM glossary
 │       └── methodologies.json          # RAAM test procedures (iOS & Android)
 ├── raam-audit/                         # Mobile accessibility audit skill
 │   ├── SKILL.md                        # Its own — never synced
+│   ├── assets/report-template.md       # Its own — audit report template
 │   ├── scripts/                        # ⇜ synced from raam-code/
 │   └── references/                     # ⇜ synced from raam-code/
 ├── scripts/
 │   └── sync-skills.sh                  # Keeps -code and -audit copies identical
 │                                       # (--check exits 1 on drift, for CI)
+├── evals/                              # Test cases for `claude plugin eval`
+├── .claude-plugin/                     # Claude Code plugin + marketplace manifests, icon
+├── .github/workflows/checks.yml        # CI: sync check + reference validation
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
 ```
+
+---
+
+## Development
+
+### Checks
+
+These run in CI on every pull request (`.github/workflows/checks.yml`) and should pass locally before you open one:
+
+```bash
+./scripts/sync-skills.sh --check                 # -code and -audit copies identical
+./raweb-code/scripts/validate-references.sh      # criteria and levels match the official data
+./raweb-audit/scripts/validate-references.sh
+claude plugin validate .                         # plugin and marketplace manifests
+```
+
+### Evals
+
+`evals/` holds test cases for [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals): one realistic request per skill, with a rubric grounded in the official tests, plus one unrelated request that must not trigger any skill. Each run calls the model on your account.
+
+```bash
+claude plugin eval . --ablation none     # quick run, with the skills only
+claude plugin eval .                     # with and without the skills, to measure what they add
+claude plugin eval . --tag raweb-audit   # one skill
+```
+
+### Releasing
+
+Bump `metadata.version` in the four `SKILL.md` files and `version` in `.claude-plugin/plugin.json` together, add a CHANGELOG entry, then tag the release (`vX.Y.Z`).
 
 ---
 
@@ -242,7 +307,7 @@ Contributions are welcome! Whether it's improving existing skill instructions, a
 **How to contribute:**
 1. Fork the repository
 2. Create a branch: `git checkout -b feat/your-improvement`
-3. Make your changes and test the lookup scripts
+3. Make your changes, then run the [checks](#checks) (and the [evals](#evals) if you changed a `SKILL.md`)
 4. Open a Pull Request with a clear description
 
 Please keep the skills focused, accurate, and grounded in the official reference JSON data. When in doubt, the source of truth is the official Luxembourg accessibility repositories.

@@ -6,12 +6,12 @@ description: >
   generating audit reports, checking conformance levels, or preparing for
   Luxembourg accessibility certification. Covers all 17 themes with systematic
   test procedures. Default target: Level AA.
+license: CC-BY-4.0
 metadata:
   author: Geoffrey Crofte
-  version: 1.5.0
+  version: "1.6.0"
   raweb-version: "1.1"
   wcag-version: "2.1"
-  license: CC-BY-4.0
   repository: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset
   reference: https://github.com/accessibility-luxembourg/ReferentielAccessibiliteWeb
   reference-license: CC-BY-3.0-LU
@@ -481,85 +481,27 @@ bash ${CLAUDE_SKILL_DIR}/scripts/raweb-lookup.sh topic 17  # Real-time communica
 
 ## Report format
 
-When presenting audit results, use this structured format:
-
-```markdown
-# RAWeb 1.1 Accessibility Audit Report
-
-**Page/Component**: [name or URL]
-**Date**: [date]
-**Target level**: AA
-**Scope**: [full page / component / sample description]
-
-## Summary
-
-| Metric | Count |
-|--------|-------|
-| Criteria evaluated | XX |
-| Conforming (C) | XX |
-| Non-conforming (NC) | XX |
-| Not applicable (NA) | XX |
-| **Conformance rate** | **XX%** |
-
-## Critical issues (must fix)
-
-### Issue 1: [Short title]
-- **Criterion**: RAWeb X.X (Level A/AA) — [criterion title]
-- **WCAG**: X.X.X [SC name]
-- **Location**: [file:line or selector]
-- **Problem**: [description of the violation]
-- **Impact**: [which users are affected and how]
-- **Remediation**: [specific fix with code example]
-- **Priority**: Critical / Major / Minor
-
-## Detailed results by theme
-
-### Theme X: [Name]
-
-| Criterion | Level | Verdict | Notes |
-|-----------|-------|---------|-------|
-| X.1 | A | C / NC / NA | [detail] |
-| X.2 | AA | C / NC / NA | [detail] |
-
-## Recommendations
-
-[Prioritised list of improvements beyond strict compliance]
-```
+Write the report from the template in `${CLAUDE_SKILL_DIR}/assets/report-template.md`:
+read it before writing the report and keep its sections and order — summary with the
+conformance rate, critical issues (criterion with level, location, problem, user
+impact, remediation, priority), then detailed results by theme with a C / NC / NA
+verdict per criterion, and recommendations.
 
 ---
 
 ## Code scanning patterns
 
-When auditing code files, use these search patterns to identify potential issues:
+For a first pass over source files, run the scan script. It reports leads per theme
+(images without `alt`, empty links, positive `tabindex`, `onclick` on non-interactive
+elements, unlabelled fields, `autoplay`, untitled iframes, missing `lang`, colour-only
+styles):
 
 ```bash
-# Images without alt
-grep -rn '<img ' --include="*.html" --include="*.jsx" --include="*.tsx" --include="*.vue" | grep -v 'alt='
-
-# Empty links
-grep -rn '<a[^>]*>[[:space:]]*</a>' --include="*.html" --include="*.jsx" --include="*.tsx"
-
-# Positive tabindex
-grep -rn 'tabindex="[1-9]' --include="*.html" --include="*.jsx" --include="*.tsx"
-
-# onclick without keyboard equivalent
-grep -rn 'onclick' --include="*.html" | grep -v '<button\|<a '
-
-# Missing form labels
-grep -rn '<input\|<select\|<textarea' --include="*.html" --include="*.jsx" --include="*.tsx" | grep -v 'aria-label\|aria-labelledby\|id='
-
-# Autoplaying media
-grep -rn 'autoplay' --include="*.html" --include="*.jsx" --include="*.tsx"
-
-# Iframes without title
-grep -rn '<iframe' --include="*.html" --include="*.jsx" --include="*.tsx" | grep -v 'title='
-
-# Missing lang attribute
-grep -rn '<html' --include="*.html" | grep -v 'lang='
-
-# Colour-only indicators (potential — needs manual review)
-grep -rn 'color:.*red\|color:.*green\|text-red\|text-green\|text-danger\|text-success' --include="*.css" --include="*.scss"
+bash ${CLAUDE_SKILL_DIR}/scripts/raweb-scan.sh <path>
 ```
+
+Every hit is a lead, not a verdict: confirm it against the criterion's tests before
+reporting it. No hits proves nothing, since most criteria cannot be found by `grep`.
 
 ---
 

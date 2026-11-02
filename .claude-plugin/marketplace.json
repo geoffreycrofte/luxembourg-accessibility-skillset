@@ -1,0 +1,17 @@
+{
+  "name": "luxembourg-accessibility-skillset",
+  "description": "Agent skills for RAWeb and RAAM, Luxembourg's official accessibility frameworks.",
+  "owner": {
+    "name": "Geoffrey Crofte",
+    "url": "https://github.com/geoffreycrofte"
+  },
+  "plugins": [
+    {
+      "name": "luxembourg-accessibility",
+      "source": "./",
+      "description": "Write and audit accessible web and mobile code against RAWeb 1.1 and RAAM 1.1 (EN 301 549 / WCAG 2.1).",
+      "category": "accessibility",
+      "tags": ["accessibility", "raweb", "raam", "wcag"]
+    }
+  ]
+}

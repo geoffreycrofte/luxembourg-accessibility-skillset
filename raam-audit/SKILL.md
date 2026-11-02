@@ -6,13 +6,13 @@ description: >
   for accessibility compliance, generating audit reports, checking conformance
   levels, or preparing for Luxembourg accessibility certification. Covers all 15
   themes with platform-specific test procedures. Default target: Level AA.
+license: CC-BY-4.0
 metadata:
   author: Geoffrey Crofte
-  version: 1.5.0
+  version: "1.6.0"
   raam-version: "1.1"
   wcag-version: "2.1"
   en301549-version: "3.2.1"
-  license: CC-BY-4.0
   repository: https://github.com/geoffreycrofte/luxembourg-accessibility-skillset
   reference: https://github.com/accessibility-luxembourg/ReferentielAccessibiliteMobile
   reference-license: CC-BY-3.0-LU
@@ -321,61 +321,11 @@ bash ${CLAUDE_SKILL_DIR}/scripts/raam-lookup.sh topic 15  # Real-time communicat
 
 ## Report format
 
-```markdown
-# RAAM 1.1 Mobile Accessibility Audit Report
-
-**Application**: [name]
-**Platform**: iOS / Android / Both
-**Version audited**: [version]
-**Date**: [date]
-**Target level**: AA
-**Scope**: [full app / specific screens / component]
-
-## Summary
-
-| Metric | Count |
-|--------|-------|
-| Criteria evaluated | XX |
-| Conforming (C) | XX |
-| Non-conforming (NC) | XX |
-| Not applicable (NA) | XX |
-| **Conformance rate** | **XX%** |
-
-## Testing environment
-
-| | iOS | Android |
-|---|---|---|
-| Device | [model] | [model] |
-| OS version | [version] | [version] |
-| Screen reader | VoiceOver | TalkBack |
-| Other AT | Switch Control, Voice Control | Switch Access, Voice Access |
-
-## Critical issues (must fix)
-
-### Issue 1: [Short title]
-- **Criterion**: RAAM X.X (Level A/AA) — [criterion title]
-- **EN 301 549**: [norm reference]
-- **Platform**: iOS / Android / Both
-- **Screen**: [screen name]
-- **Location**: [file:line or component]
-- **Problem**: [description of the violation]
-- **Impact**: [which users are affected and how]
-- **Remediation**: [specific fix with code example for affected platform(s)]
-- **Priority**: Critical / Major / Minor
-
-## Detailed results by theme
-
-### Theme X: [Name]
-
-| Criterion | Level | iOS | Android | Notes |
-|-----------|-------|-----|---------|-------|
-| X.1 | A | C/NC/NA | C/NC/NA | [detail] |
-| X.2 | AA | C/NC/NA | C/NC/NA | [detail] |
-
-## Recommendations
-
-[Prioritised list of improvements beyond strict compliance]
-```
+Write the report from the template in `${CLAUDE_SKILL_DIR}/assets/report-template.md`:
+read it before writing the report and keep its sections and order — summary with the
+conformance rate, the testing environment (devices, OS versions, assistive technologies), critical issues (criterion with level, location, problem, user
+impact, remediation, priority), then detailed results by theme with a C / NC / NA
+verdict per criterion, and recommendations.
 
 ---
 

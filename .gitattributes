@@ -1,0 +1,7 @@
+# Keep development files out of `git archive` (the zip uploaded to claude.ai).
+evals/ export-ignore
+.claude/ export-ignore
+.claude-plugin/ export-ignore
+.github/ export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore

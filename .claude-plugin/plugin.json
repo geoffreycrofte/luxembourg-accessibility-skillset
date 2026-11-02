@@ -1,0 +1,26 @@
+{
+  "name": "luxembourg-accessibility",
+  "displayName": "Luxembourg Accessibility (RAWeb & RAAM)",
+  "version": "1.6.0",
+  "description": "Write and audit accessible web and mobile code against RAWeb 1.1 and RAAM 1.1, Luxembourg's accessibility frameworks based on EN 301 549 and WCAG 2.1.",
+  "author": {
+    "name": "Geoffrey Crofte",
+    "url": "https://github.com/geoffreycrofte"
+  },
+  "homepage": "https://github.com/geoffreycrofte/luxembourg-accessibility-skillset",
+  "repository": "https://github.com/geoffreycrofte/luxembourg-accessibility-skillset",
+  "license": "CC-BY-4.0",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "raweb",
+    "raam",
+    "wcag",
+    "en-301-549",
+    "luxembourg",
+    "audit",
+    "wai-aria"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "skills": "./"
+}
