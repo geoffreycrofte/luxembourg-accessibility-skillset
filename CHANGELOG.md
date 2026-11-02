@@ -6,7 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [1.6.0] - 2026-11-02
 
-Packaging and tooling release: no change to the guidance in the skills.
+Packaging, tooling and progressive disclosure. No rule, criterion number or code
+example was changed: examples and templates moved to files that Claude reads only when
+the task needs them.
+
+### Changed
+
+- **Lighter `SKILL.md` files** • Claude reads the whole `SKILL.md` each time a skill
+  activates, so its length is paid on every use. Code examples and report templates now
+  sit beside it and are opened on demand. Every rule and every criterion citation stays
+  in `SKILL.md`, so `validate-references.sh` still checks all of them.
+
+  | Skill | Lines before | Lines after | Tokens per activation (approx.) |
+  |-------|-------------:|------------:|--------------------------------:|
+  | `raweb-code` | 707 | 475 | 13.6k → 11.3k |
+  | `raweb-audit` | 602 | 544 | 11.8k → 11.1k |
+  | `raam-code` | 675 | 256 | 9.2k → 5.2k |
+  | `raam-audit` | 402 | 352 | 5.9k → 5.4k |
+
+  - `raweb-code/references/examples.md` • the HTML/CSS/JS examples of the Core rules,
+    under the same topic headings.
+  - `raam-code/references/examples/{ios,android,react-native,flutter}.md` • one file per
+    platform, so a SwiftUI task no longer loads Kotlin, JSX and Dart. The touch-target
+    block stays inline (it carries a criterion number).
+  - `raweb-audit/assets/report-template.md`, `raam-audit/assets/report-template.md` •
+    the audit report templates. Kept in `assets/`, which `sync-skills.sh` does not touch.
+  - `raweb-audit/scripts/raweb-scan.sh` replaces the nine `grep` commands of *Code
+    scanning patterns*. It matches each tag rather than each line (two `<img>` on one
+    line are judged separately), skips `alt=""`, hidden and button inputs, and handles
+    paths with spaces. Audit-only: the sync never overwrites it.
+- **`.claude/settings.local.json` removed from the repository** • Personal Claude Code
+  permissions (with a local path) that were committed by accident; now in `.gitignore`.
 
 ### Added
 
@@ -17,7 +47,7 @@ Packaging and tooling release: no change to the guidance in the skills.
 - **README** • Plugin and claude.ai installation, a *Development* section (checks, evals, releasing).
 - `.gitignore` (eval results, personal `.claude/settings.local.json`) and `.gitattributes` (keeps development files out of `git archive`).
 
-### Changed
+### Fixed
 
 - **`license` moved to the top level of each `SKILL.md` frontmatter**, where the [Agent Skills specification](https://agentskills.io/specification) defines it; it was nested under `metadata`. `metadata.reference-license` is unchanged.
 - `metadata.version` → `"1.6.0"` in the four skills, quoted so it parses as a string, as the specification requires for `metadata` values.

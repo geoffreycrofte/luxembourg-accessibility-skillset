@@ -136,6 +136,10 @@ Scripts live inside each skill folder. From the repo root (or from the installed
 ./raweb-code/scripts/raweb-component-lookup.sh code dialog-modal react    # Just the React section
 ./raweb-code/scripts/raweb-component-lookup.sh roles "dialog"     # Find patterns by ARIA role
 
+# First-pass scan of source files for common defects (raweb-audit only).
+# Every hit is a lead to confirm against the criterion's tests, not a verdict.
+./raweb-audit/scripts/raweb-scan.sh src/
+
 # Consistency check — fails if a skill cites a criterion or level that
 # contradicts the official RAWeb data, or if a "Do" code example does not parse.
 # Exit 1 on drift, so it can gate CI. Ships in every RAWeb skill.
@@ -189,6 +193,7 @@ luxembourg-accessibility-skillset/
 │   │   ├── raweb-component-lookup.sh   # APG pattern contract + code example lookup
 │   │   └── validate-references.sh      # Fails on criterion/level drift (CI gate)
 │   └── references/
+│       ├── examples.md                 # Code examples for each Core rules topic
 │       ├── criteres.json               # RAWeb criteria + tests + WCAG mappings
 │       ├── glossaire.json              # RAWeb glossary
 │       ├── methodologies.json          # RAWeb test procedures
@@ -220,7 +225,9 @@ luxembourg-accessibility-skillset/
 │                                       # landmarks, link, breadcrumb, table, meter
 ├── raweb-audit/                        # Web accessibility audit skill
 │   ├── SKILL.md                        # Its own — never synced
-│   ├── scripts/                        # ⇜ synced from raweb-code/
+│   ├── assets/report-template.md       # Its own — audit report template
+│   ├── scripts/                        # ⇜ synced from raweb-code/, plus its own
+│   │   └── raweb-scan.sh               #   first-pass scan for common defects
 │   └── references/                     # ⇜ synced from raweb-code/ (incl. patterns/:
 │                                       #   the Don't blocks are a defect catalogue and
 │                                       #   the Verify sections are test procedures)
@@ -229,11 +236,14 @@ luxembourg-accessibility-skillset/
 │   ├── scripts/
 │   │   └── raam-lookup.sh              # RAAM criteria CLI lookup
 │   └── references/
+│       ├── examples/                   # Code examples per platform: ios.md,
+│       │                               # android.md, react-native.md, flutter.md
 │       ├── criteres.json               # RAAM criteria + tests + EN 301 549 mappings
 │       ├── glossaire.json              # RAAM glossary
 │       └── methodologies.json          # RAAM test procedures (iOS & Android)
 ├── raam-audit/                         # Mobile accessibility audit skill
 │   ├── SKILL.md                        # Its own — never synced
+│   ├── assets/report-template.md       # Its own — audit report template
 │   ├── scripts/                        # ⇜ synced from raam-code/
 │   └── references/                     # ⇜ synced from raam-code/
 ├── scripts/

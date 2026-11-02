@@ -60,6 +60,19 @@ criteria first. For example, before writing a form, run `search "form"` and `top
 
 ## Core rules (apply to ALL mobile code you write)
 
+**Code examples** for each topic below are in one file per platform, under the same
+topic heading. Read the file for the platform you are writing before you write code:
+
+| Platform | File |
+|----------|------|
+| iOS (SwiftUI, UIKit) | `${CLAUDE_SKILL_DIR}/references/examples/ios.md` |
+| Android (Compose, XML Views) | `${CLAUDE_SKILL_DIR}/references/examples/android.md` |
+| React Native | `${CLAUDE_SKILL_DIR}/references/examples/react-native.md` |
+| Flutter | `${CLAUDE_SKILL_DIR}/references/examples/flutter.md` |
+
+Not every topic has an example for every platform: when one is missing, apply the rule
+with the platform's equivalent API (see the quick reference below).
+
 ### 1. Graphic Elements (Topic 1)
 
 **ALWAYS:**
@@ -70,134 +83,12 @@ criteria first. For example, before writing a form, run `search "form"` and `top
 - Complex graphics (charts, maps) need a detailed description (1.6, 1.7)
 - Avoid text in graphic elements unless the effect cannot be reproduced with styled text (1.8 — Level AA)
 
-**iOS (SwiftUI):**
-```swift
-// GOOD: informative image
-Image("chart-sales")
-    .accessibilityLabel("Sales increased 40% in Q3 2024")
-
-// GOOD: decorative image — hidden from VoiceOver
-Image("decorative-wave")
-    .accessibilityHidden(true)
-
-// GOOD: icon button with accessibility
-Button(action: { /* ... */ }) {
-    Image(systemName: "magnifyingglass")
-}
-.accessibilityLabel("Search")
-```
-
-**iOS (UIKit):**
-```swift
-// Informative image
-imageView.isAccessibilityElement = true
-imageView.accessibilityLabel = "Sales increased 40% in Q3 2024"
-
-// Decorative image
-decorativeImageView.isAccessibilityElement = false
-decorativeImageView.accessibilityElementsHidden = true
-```
-
-**Android (Jetpack Compose):**
-```kotlin
-// GOOD: informative image
-Image(
-    painter = painterResource(R.drawable.chart_sales),
-    contentDescription = "Sales increased 40% in Q3 2024"
-)
-
-// GOOD: decorative image
-Image(
-    painter = painterResource(R.drawable.decorative_wave),
-    contentDescription = null // null = decorative in Compose
-)
-
-// GOOD: icon button
-IconButton(onClick = { /* ... */ }) {
-    Icon(
-        Icons.Default.Search,
-        contentDescription = "Search"
-    )
-}
-```
-
-**Android (XML Views):**
-```xml
-<!-- Informative image -->
-<ImageView
-    android:contentDescription="Sales increased 40% in Q3 2024"
-    android:importantForAccessibility="yes" />
-
-<!-- Decorative image -->
-<ImageView
-    android:contentDescription="@null"
-    android:importantForAccessibility="no" />
-```
-
-**React Native:**
-```jsx
-// Informative image
-<Image
-  source={require('./chart.png')}
-  accessible={true}
-  accessibilityLabel="Sales increased 40% in Q3 2024"
-/>
-
-// Decorative image
-<Image
-  source={require('./decoration.png')}
-  accessible={false}
-  accessibilityElementsHidden={true}
-  importantForAccessibility="no"
-/>
-```
-
-**Flutter:**
-```dart
-// Informative image
-Image.asset(
-  'assets/chart.png',
-  semanticsLabel: 'Sales increased 40% in Q3 2024',
-)
-
-// Decorative image
-Semantics(
-  excludeSemantics: true,
-  child: Image.asset('assets/decoration.png'),
-)
-```
-
 ### 2. Colours (Topic 2)
 
 - Information MUST NOT be conveyed by colour alone — always add shape, text, or icon (2.1)
 - Text contrast: at least **4.5:1** (normal text) or **3:1** (large text ≥24px / bold ≥18.5px) (2.2 — Level AA)
 - Non-text element contrast (icons, borders, UI controls): at least **3:1** (2.3 — Level AA)
 - If contrast is insufficient by default, a replacement mechanism must exist and itself be accessible (2.4 — Level AA)
-
-**iOS:**
-```swift
-// GOOD: support system contrast settings
-// Use semantic colours that adapt to Increase Contrast mode
-Text("Important")
-    .foregroundColor(.primary) // adapts to accessibility settings
-
-// Support Differentiate Without Colour
-HStack {
-    Image(systemName: "checkmark.circle.fill")
-        .foregroundColor(.green)
-    Text("Validated") // text reinforces the green colour meaning
-}
-```
-
-**Android:**
-```kotlin
-// Support high contrast text mode
-// Use theme colours that respond to system accessibility settings
-Text(
-    text = "Important",
-    color = MaterialTheme.colorScheme.onSurface // adapts to theme
-)
-```
 
 ### 3. Multimedia (Topic 3)
 
@@ -215,33 +106,6 @@ Text(
 - Data tables MUST have headers correctly associated with data cells (4.1, 4.2, 4.3)
 - Complex tables MUST have a title and summary to explain structure (4.4, 4.5)
 
-**iOS (SwiftUI):**
-```swift
-// GOOD: accessible table with header
-List {
-    Section(header: Text("Q3 Revenue by Region")) {
-        ForEach(regions) { region in
-            HStack {
-                Text(region.name)
-                Spacer()
-                Text(region.revenue)
-                    .accessibilityLabel("\(region.name): \(region.revenue)")
-            }
-        }
-    }
-}
-```
-
-**Android (Compose):**
-```kotlin
-// GOOD: announce table structure to TalkBack
-Column(modifier = Modifier.semantics {
-    contentDescription = "Revenue table, 3 regions, 2 columns: region and revenue"
-}) {
-    // Table content
-}
-```
-
 ### 5. Interactive Components (Topic 5)
 
 **This is critical for mobile. Always look up: `bash ${CLAUDE_SKILL_DIR}/scripts/raam-lookup.sh topic 5`**
@@ -252,141 +116,15 @@ Column(modifier = Modifier.semantics {
 - Screen reader users must receive context changes (5.4 — Level AA)
 - Interactive component states (selected, expanded, disabled) MUST be rendered by assistive technologies (5.5)
 
-**iOS (SwiftUI):**
-```swift
-// GOOD: button with state
-Toggle(isOn: $isEnabled) {
-    Text("Notifications")
-}
-// SwiftUI handles accessibility state automatically
-
-// GOOD: custom component with traits and state
-Button(action: toggleExpansion) {
-    HStack {
-        Text("Details")
-        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-    }
-}
-.accessibilityAddTraits(.isButton)
-.accessibilityValue(isExpanded ? "expanded" : "collapsed")
-
-// GOOD: custom slider
-Slider(value: $volume, in: 0...100)
-    .accessibilityLabel("Volume")
-    .accessibilityValue("\(Int(volume)) percent")
-```
-
-**Android (Compose):**
-```kotlin
-// GOOD: expandable section with state
-Row(
-    modifier = Modifier
-        .clickable { toggleExpansion() }
-        .semantics {
-            role = Role.Button
-            stateDescription = if (isExpanded) "expanded" else "collapsed"
-        }
-) {
-    Text("Details")
-    Icon(
-        if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-        contentDescription = null // described by parent semantics
-    )
-}
-
-// GOOD: disabled button announces state
-Button(
-    onClick = { /* ... */ },
-    enabled = false // Compose announces "disabled" to TalkBack
-) {
-    Text("Submit")
-}
-```
-
-**React Native:**
-```jsx
-// GOOD: interactive component with state
-<TouchableOpacity
-  accessible={true}
-  accessibilityRole="button"
-  accessibilityLabel="Details"
-  accessibilityState={{ expanded: isExpanded }}
-  onPress={toggleExpansion}
->
-  <Text>Details</Text>
-</TouchableOpacity>
-```
-
 ### 6. Mandatory Elements (Topic 6)
 
 - Every screen MUST have a title announced by assistive technologies (6.1)
 - Default human language of the app MUST be identifiable by assistive technologies (6.2)
 
-**iOS:**
-```swift
-// SwiftUI: screen title
-NavigationView {
-    ContentView()
-        .navigationTitle("Settings")
-}
-
-// UIKit: screen title
-override func viewDidLoad() {
-    super.viewDidLoad()
-    title = "Settings"
-}
-
-// App language: set in Info.plist CFBundleDevelopmentRegion
-// and Localizable.strings
-```
-
-**Android:**
-```kotlin
-// Compose: screen title for TalkBack
-Scaffold(
-    topBar = {
-        TopAppBar(title = { Text("Settings") })
-    }
-) { /* ... */ }
-
-// Activity: label in AndroidManifest.xml
-// <activity android:label="@string/settings_title" />
-
-// Language: set in AndroidManifest.xml
-// <application android:localeConfig="@xml/locales_config">
-```
-
 ### 7. Information Structure (Topic 7)
 
 - Content must use semantic headings exposed to assistive technologies (7.1)
 - Significant elements must use appropriate semantics (lists, headings, etc.) (7.2)
-
-**iOS (SwiftUI):**
-```swift
-// GOOD: heading semantics
-Text("Account Settings")
-    .font(.title)
-    .accessibilityAddTraits(.isHeader)
-
-Text("Privacy")
-    .font(.headline)
-    .accessibilityAddTraits(.isHeader)
-```
-
-**Android (Compose):**
-```kotlin
-// GOOD: heading semantics
-Text(
-    text = "Account Settings",
-    style = MaterialTheme.typography.headlineMedium,
-    modifier = Modifier.semantics { heading() }
-)
-```
-
-**React Native:**
-```jsx
-<Text accessibilityRole="header">Account Settings</Text>
-```
 
 ### 8. Presentation of Information (Topic 8)
 
@@ -398,29 +136,6 @@ Text(
 - Content revealed on hover/focus must be dismissable, hoverable, and persistent (8.5)
 - Content hidden from screen but exposed to AT must still be accessible (8.6)
 - Content that appears on focus/hover must not obstruct other content without a dismiss mechanism (8.7 — Level AA)
-
-**iOS:**
-```swift
-// GOOD: support Dynamic Type
-Text("Welcome back")
-    .font(.body) // respects system text size
-    // Never use fixed point sizes for body text
-
-// GOOD: allow both orientations in Info.plist
-// UISupportedInterfaceOrientations: all orientations
-```
-
-**Android:**
-```kotlin
-// GOOD: use sp (scalable pixels) for text
-Text(
-    text = "Welcome back",
-    fontSize = 16.sp // scales with system settings
-)
-
-// GOOD: support rotation in AndroidManifest.xml
-// android:screenOrientation="unspecified"
-```
 
 ### 9. Forms (Topic 9)
 
@@ -438,121 +153,12 @@ Text(
 - User must be able to review/modify/confirm data before final submission (9.11 — Level AA)
 - Autocomplete for personal data fields (9.12 — Level AA)
 
-**iOS (SwiftUI):**
-```swift
-// GOOD: labelled text field
-TextField("Email address", text: $email)
-    .textContentType(.emailAddress) // enables autocomplete (9.12)
-    .keyboardType(.emailAddress)
-    .accessibilityLabel("Email address")
-    .accessibilityHint("Required. Format: name@example.com")
-
-// GOOD: field group
-Section(header: Text("Personal information")) {
-    TextField("First name", text: $firstName)
-        .textContentType(.givenName)
-    TextField("Last name", text: $lastName)
-        .textContentType(.familyName)
-}
-
-// GOOD: error message
-TextField("Email address", text: $email)
-    .accessibilityLabel("Email address")
-if let error = emailError {
-    Text(error)
-        .foregroundColor(.red)
-        .accessibilityLabel("Error: \(error)")
-        // Post notification so VoiceOver announces immediately
-}
-```
-
-**Android (Compose):**
-```kotlin
-// GOOD: labelled text field with error
-OutlinedTextField(
-    value = email,
-    onValueChange = { email = it },
-    label = { Text("Email address *") },
-    isError = emailError != null,
-    supportingText = emailError?.let { { Text(it) } },
-    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-    modifier = Modifier.semantics {
-        contentDescription = "Email address, required"
-        if (emailError != null) {
-            error("Error: $emailError")
-        }
-    }
-)
-
-// GOOD: autofill hint (9.12)
-OutlinedTextField(
-    value = firstName,
-    onValueChange = { firstName = it },
-    label = { Text("First name") },
-    modifier = Modifier.autofill(
-        autofillTypes = listOf(AutofillType.PersonFirstName),
-        onFill = { firstName = it }
-    )
-)
-```
-
-**React Native:**
-```jsx
-// GOOD: accessible form field
-<View accessible={true} accessibilityRole="none">
-  <Text nativeID="emailLabel">Email address *</Text>
-  <TextInput
-    accessibilityLabelledBy="emailLabel"
-    accessibilityHint="Required. Format: name@example.com"
-    keyboardType="email-address"
-    textContentType="emailAddress"      // iOS autocomplete
-    autoComplete="email"                // Android autocomplete
-    value={email}
-    onChangeText={setEmail}
-  />
-  {emailError && (
-    <Text accessibilityLiveRegion="polite" accessibilityRole="alert">
-      {emailError}
-    </Text>
-  )}
-</View>
-```
-
 ### 10. Navigation (Topic 10)
 
 - Every interactive component must be accessible and operable by keyboard and any pointing device (10.1)
 - The application must not contain any keyboard or focus traps (10.2)
 - Tab/swipe order must be consistent with visual reading order (10.3)
 - Keyboard shortcuts using a single key must be controllable (disable, remap, or only active on focus) (10.4)
-
-**iOS (SwiftUI):**
-```swift
-// GOOD: logical focus order
-VStack {
-    TextField("First name", text: $firstName)
-    TextField("Last name", text: $lastName)
-    Button("Submit") { submit() }
-}
-.accessibilityElement(children: .contain)
-// SwiftUI follows visual order by default
-
-// BAD: custom accessibility sort that breaks logical order
-// .accessibilitySortPriority() — use only when needed
-```
-
-**Android:**
-```kotlin
-// GOOD: traversal order follows layout
-Column {
-    TextField(/* first name */)
-    TextField(/* last name */)
-    Button(onClick = { submit() }) { Text("Submit") }
-}
-// Compose follows composition order by default
-
-// For XML views, use android:accessibilityTraversalBefore/After
-// sparingly and only to fix non-obvious order issues
-```
 
 ### 11. Consultation (Topic 11)
 
@@ -567,31 +173,6 @@ Column {
 - Pointer target size must be at least 24×24 CSS px (11.14 — Level AA)
 - Dragging actions must have a single-pointer alternative (11.15)
 - Motion-triggered actions (shake, tilt) must have UI alternatives and be disableable (11.16)
-
-**iOS:**
-```swift
-// GOOD: single-pointer alternative to pinch-to-zoom
-// Provide + / - buttons alongside pinch gesture
-ZStack {
-    MapView()
-    VStack {
-        Spacer()
-        HStack {
-            Button(action: { zoomIn() }) {
-                Image(systemName: "plus.magnifyingglass")
-            }
-            .accessibilityLabel("Zoom in")
-            .frame(minWidth: 44, minHeight: 44) // minimum touch target
-
-            Button(action: { zoomOut() }) {
-                Image(systemName: "minus.magnifyingglass")
-            }
-            .accessibilityLabel("Zoom out")
-            .frame(minWidth: 44, minHeight: 44)
-        }
-    }
-}
-```
 
 **Minimum touch target sizes:**
 ```swift
